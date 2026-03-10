@@ -63,17 +63,25 @@ export function schemaToTypebox(schema: any, ctx: SchemaContext, ind: number = 0
     return `Type.Union([${items.join(', ')}]${opts})`
   }
 
-  // const → Literal (null is not a valid Literal value, use Type.Null())
+  // const → Literal (only string/number/boolean are valid TLiteralValue)
   if (schema.const !== undefined) {
     if (schema.const === null) return 'Type.Null()'
-    return `Type.Literal(${JSON.stringify(schema.const)})`
+    if (typeof schema.const === 'string' || typeof schema.const === 'number' || typeof schema.const === 'boolean') {
+      return `Type.Literal(${JSON.stringify(schema.const)})`
+    }
+    // arrays/objects: not valid for Type.Literal, use Type.Unsafe with const constraint
+    return `Type.Unsafe({ const: ${JSON.stringify(schema.const)} })`
   }
 
-  // enum → Union of Literals (null values become Type.Null())
+  // enum → Union of Literals (null values become Type.Null(), non-primitives use Type.Unsafe)
   if (schema.enum) {
-    const literals = schema.enum.map((v: any) =>
-      v === null ? 'Type.Null()' : `Type.Literal(${JSON.stringify(v)})`
-    )
+    const literals = schema.enum.map((v: any) => {
+      if (v === null) return 'Type.Null()'
+      if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') {
+        return `Type.Literal(${JSON.stringify(v)})`
+      }
+      return `Type.Unsafe({ const: ${JSON.stringify(v)} })`
+    })
     const opts = buildOptsStr(schema, ['description'])
     return `Type.Union([${literals.join(', ')}]${opts})`
   }
