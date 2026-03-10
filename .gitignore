@@ -2,4 +2,6 @@ node_modules
 dist
 *.tsbuildinfo
 .DS_Store
-packages/examples/cloudflare/*
+packages/examples/cloudflare/*/
+
+packages/examples/cloudflare/index.ts
