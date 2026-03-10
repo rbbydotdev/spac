@@ -7,6 +7,7 @@
     "petstore": "tsx petstore/index.ts",
     "cloudflare": "tsx cloudflare/index.ts",
     "cloudflare:gen": "pnpm --filter openapi-gen generate -- ../../packages/examples/cloudflare/spec.json --out ../../packages/examples/cloudflare --strip '/accounts/{account_id}' --strip '/zones/{zone_id}'",
+    "cloudflare:dry-run": "pnpm --filter openapi-gen dry-run -- ../../packages/examples/cloudflare/spec.json --strip '/accounts/{account_id}' --strip '/zones/{zone_id}'",
     "test": "vitest run",
     "test:watch": "vitest"
   },

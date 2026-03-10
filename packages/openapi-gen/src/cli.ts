@@ -102,17 +102,9 @@ if (!outDir) {
   console.log()
 
   // Group list
-  if (groups.length <= 30) {
-    console.log('  Groups:')
-    for (const g of groups.sort()) {
-      console.log(`    ${g}`)
-    }
-  } else {
-    console.log(`  Groups (first 30 of ${groups.length}):`)
-    for (const g of groups.sort().slice(0, 30)) {
-      console.log(`    ${g}`)
-    }
-    console.log(`    ... and ${groups.length - 30} more`)
+  console.log('  Groups:')
+  for (const g of groups.sort()) {
+    console.log(`    ${g}`)
   }
 } else {
   // Write mode
