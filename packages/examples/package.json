@@ -1,0 +1,22 @@
+{
+  "name": "spac-examples",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "petstore": "tsx petstore/index.ts",
+    "cloudflare": "tsx cloudflare/index.ts",
+    "cloudflare:gen": "pnpm --filter openapi-gen generate -- ../../packages/examples/cloudflare/spec.json --out ../../packages/examples/cloudflare --strip '/accounts/{account_id}' --strip '/zones/{zone_id}'",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "latest",
+    "spac": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.4"
+  }
+}
