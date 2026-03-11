@@ -378,6 +378,8 @@ export interface RouteNode {
   errors: Map<number, TSchema>
   servers: ServerConfig[]
   extensions: Record<string, unknown>
+  /** @internal Call-site metadata for debug source maps. */
+  _sources: Map<string, string>
 }
 
 /** @internal Internal representation of a route group in the AST. */

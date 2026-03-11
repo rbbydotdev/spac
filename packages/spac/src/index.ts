@@ -12,6 +12,10 @@ export { named, getSchemaName } from './schema'
 // Emission
 export { emitOpenApi } from './emit'
 
+// Debug source map
+export { crc32, objectPath, lookup } from './debug'
+export type { EmitOptions, EmitDebugResult } from './debug'
+
 // Helpers
 export { json, noContent, created, errorSchema, paginated, envelope } from './helpers'
 

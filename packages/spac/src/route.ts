@@ -7,6 +7,7 @@ import type {
   ServerConfig,
   RouteMacro,
 } from './types'
+import { captureCallSite } from './debug'
 
 /**
  * Fluent builder for configuring a single route's metadata after definition.
@@ -44,7 +45,10 @@ export class RouteBuilder {
       errors: new Map(),
       servers: [],
       extensions: {},
+      _sources: new Map(),
     }
+    const site = captureCallSite()
+    if (site) this._node._sources.set('', site)
   }
 
   // -- Metadata chaining ----------------------------------------------------
@@ -62,6 +66,8 @@ export class RouteBuilder {
    */
   summary(text: string): this {
     this._node.summary = text
+    const site = captureCallSite()
+    if (site) this._node._sources.set('summary', site)
     return this
   }
 
@@ -79,6 +85,8 @@ export class RouteBuilder {
    */
   description(text: string): this {
     this._node.description = text
+    const site = captureCallSite()
+    if (site) this._node._sources.set('description', site)
     return this
   }
 
@@ -95,6 +103,8 @@ export class RouteBuilder {
    */
   tag(name: string): this {
     this._node.tags.push(name)
+    const site = captureCallSite()
+    if (site) this._node._sources.set('tags', site)
     return this
   }
 
@@ -111,6 +121,8 @@ export class RouteBuilder {
    */
   tags(...names: string[]): this {
     this._node.tags.push(...names)
+    const site = captureCallSite()
+    if (site) this._node._sources.set('tags', site)
     return this
   }
 
@@ -127,6 +139,8 @@ export class RouteBuilder {
    */
   operationId(id: string): this {
     this._node.operationId = id
+    const site = captureCallSite()
+    if (site) this._node._sources.set('operationId', site)
     return this
   }
 
@@ -144,6 +158,8 @@ export class RouteBuilder {
    */
   deprecated(): this {
     this._node.deprecated = true
+    const site = captureCallSite()
+    if (site) this._node._sources.set('deprecated', site)
     return this
   }
 
@@ -165,6 +181,8 @@ export class RouteBuilder {
    */
   security(...schemes: SecurityRequirement[]): this {
     this._node.security.push(...schemes)
+    const site = captureCallSite()
+    if (site) this._node._sources.set('security', site)
     return this
   }
 
@@ -190,6 +208,8 @@ export class RouteBuilder {
    */
   error(status: number, schema: TSchema): this {
     this._node.errors.set(status, schema)
+    const site = captureCallSite()
+    if (site) this._node._sources.set(`error:${status}`, site)
     return this
   }
 
@@ -209,6 +229,8 @@ export class RouteBuilder {
    */
   server(config: ServerConfig): this {
     this._node.servers.push(config)
+    const site = captureCallSite()
+    if (site) this._node._sources.set('servers', site)
     return this
   }
 
@@ -232,6 +254,8 @@ export class RouteBuilder {
   extension(name: string, value: unknown): this {
     const key = name.startsWith('x-') ? name : `x-${name}`
     this._node.extensions[key] = value
+    const site = captureCallSite()
+    if (site) this._node._sources.set(`ext:${key}`, site)
     return this
   }
 

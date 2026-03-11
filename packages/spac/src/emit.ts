@@ -2,6 +2,8 @@ import { Kind, type TSchema } from '@sinclair/typebox'
 import type { Api } from './api'
 import type { RouteNode, GroupNode, SecurityRequirement, ResponseDef } from './types'
 import { getSchemaName } from './schema'
+import { crc32, objectPath } from './debug'
+import type { EmitOptions, EmitDebugResult } from './debug'
 
 // ---------------------------------------------------------------------------
 // Schema Helpers
@@ -18,36 +20,47 @@ function isTSchema(obj: unknown): obj is TSchema {
 }
 
 // ---------------------------------------------------------------------------
+// Source map collector
+// ---------------------------------------------------------------------------
+
+type SrcCollector = { add(path: string, src: string): void } | undefined
+
+function createCollector(): { add(path: string, src: string): void; build(): Record<string, string> } {
+  const entries: [string, string][] = []
+  return {
+    add(path: string, src: string) { entries.push([path, src]) },
+    build() {
+      const map: Record<string, string> = {}
+      for (const [path, src] of entries) {
+        map[crc32(path)] = src
+      }
+      return map
+    },
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Emit
 // ---------------------------------------------------------------------------
 
 /**
  * Walk the {@link Api} AST and produce a valid OpenAPI 3.1 document.
  *
- * This function:
- * - Flattens all routes from groups (with inherited tags, security, and params)
- * - Resolves TypeBox schemas to JSON Schema, hoisting named schemas to `components.schemas` as `$ref`
- * - Builds the `paths`, `components`, `servers`, `tags`, and `security` sections
- *
- * Typically called indirectly via {@link Api.emit}.
+ * Pass `{ debug: true }` to get a source map linking spec object paths
+ * back to the code locations that defined them.
  *
  * @param api - The Api instance to emit.
- * @returns A JSON-serializable OpenAPI 3.1 document.
- *
- * @example
- * ```ts
- * import { emitOpenApi, Api } from 'spac'
- *
- * const api = new Api('My API')
- * api.get('/health', { response: Type.Object({ status: Type.String() }) })
- *
- * const doc = emitOpenApi(api)
- * // Equivalent to: api.emit()
- * // doc.openapi === '3.1.0'
- * // doc.paths['/health'].get.responses['200'] ...
- * ```
+ * @param options - Optional emit options.
+ * @returns A JSON-serializable OpenAPI 3.1 document, or `{ spec, sourceMap }` when debug is true.
  */
-export function emitOpenApi(api: Api): Record<string, unknown> {
+export function emitOpenApi(api: Api): Record<string, unknown>
+export function emitOpenApi(api: Api, options: { debug: true }): EmitDebugResult
+export function emitOpenApi(api: Api, options?: EmitOptions): Record<string, unknown>
+export function emitOpenApi(api: Api, options?: EmitOptions): Record<string, unknown> | EmitDebugResult {
+  const debug = options?.debug === true
+  const collector = debug ? createCollector() : undefined
+  const src: SrcCollector = collector
+
   const namedSchemas = new Map<string, TSchema>()
   const components: Record<string, unknown> = {}
   const paths: Record<string, Record<string, unknown>> = {}
@@ -151,6 +164,7 @@ export function emitOpenApi(api: Api): Record<string, unknown> {
     if (!paths[pathKey]) paths[pathKey] = {}
 
     const operation: Record<string, unknown> = {}
+    const s = route._sources
 
     // Tags
     const allTags = [...new Set([...inheritedTags, ...route.tags])]
@@ -302,6 +316,47 @@ export function emitOpenApi(api: Api): Record<string, unknown> {
     }
 
     paths[pathKey][route.method] = operation
+
+    // ---- Source map entries for this operation ----
+    if (src) {
+      const opSrc = s.get('')
+
+      // The operation itself
+      if (opSrc) {
+        src.add(objectPath('paths', pathKey, route.method), opSrc)
+
+        // Config-derived blocks: params, body, responses from config
+        if (operation.parameters) src.add(objectPath('paths', pathKey, route.method, 'parameters'), opSrc)
+        if (operation.requestBody) src.add(objectPath('paths', pathKey, route.method, 'requestBody'), opSrc)
+        if (route.config.response) src.add(objectPath('paths', pathKey, route.method, 'responses', '200'), opSrc)
+        if (route.config.responses) {
+          for (const status of Object.keys(route.config.responses)) {
+            src.add(objectPath('paths', pathKey, route.method, 'responses', String(status)), opSrc)
+          }
+        }
+      }
+
+      // Error responses from .error() — override config source for same status
+      for (const [status] of route.errors) {
+        const errSrc = s.get(`error:${status}`)
+        if (errSrc) src.add(objectPath('paths', pathKey, route.method, 'responses', String(status)), errSrc)
+      }
+
+      // Chain method metadata
+      const chainKeys = ['summary', 'description', 'tags', 'operationId', 'deprecated', 'security', 'servers'] as const
+      for (const key of chainKeys) {
+        const cs = s.get(key)
+        if (cs && key in operation) src.add(objectPath('paths', pathKey, route.method, key), cs)
+      }
+
+      // Extensions
+      for (const [key, cs] of s) {
+        if (key.startsWith('ext:')) {
+          const extKey = key.slice(4)
+          if (extKey in operation) src.add(objectPath('paths', pathKey, route.method, extKey), cs)
+        }
+      }
+    }
   }
 
   // ------------------------------------------------------------------
@@ -368,5 +423,47 @@ export function emitOpenApi(api: Api): Record<string, unknown> {
     })
   }
 
+  // ---- Source map entries for top-level Api sections ----
+  if (src) {
+    const as = api._sources
+
+    // info
+    const infoSrc = as.get('info')
+    if (infoSrc) src.add(objectPath('info'), infoSrc)
+
+    // servers
+    for (let i = 0; i < api._servers.length; i++) {
+      const ss = as.get(`server:${i}`)
+      if (ss) src.add(objectPath('servers', i), ss)
+    }
+
+    // security schemes
+    for (const name of Object.keys(api._securitySchemes)) {
+      const ss = as.get(`securityScheme:${name}`)
+      if (ss) src.add(objectPath('components', 'securitySchemes', name), ss)
+    }
+
+    // named schemas (explicitly registered via api.schema())
+    for (const [name] of api._schemas) {
+      const ss = as.get(`schema:${name}`)
+      if (ss) src.add(objectPath('components', 'schemas', name), ss)
+    }
+
+    // global security
+    for (let i = 0; i < api._security.length; i++) {
+      const ss = as.get(`security:${i}`)
+      if (ss) src.add(objectPath('security', i), ss)
+    }
+
+    // tags
+    for (let i = 0; i < api._tags.length; i++) {
+      const ss = as.get(`tag:${i}`)
+      if (ss) src.add(objectPath('tags', i), ss)
+    }
+  }
+
+  if (debug) {
+    return { spec: doc, sourceMap: collector!.build() }
+  }
   return doc
 }

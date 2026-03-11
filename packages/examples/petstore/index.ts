@@ -612,3 +612,5 @@ api
 
 const spec = api.emit();
 console.log(JSON.stringify(spec, null, 2));
+
+export { api };

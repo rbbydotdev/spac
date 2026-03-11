@@ -16,6 +16,8 @@ import type {
 import { RouteBuilder } from './route'
 import { GroupBuilder } from './group'
 import { emitOpenApi } from './emit'
+import { captureCallSite } from './debug'
+import type { EmitOptions, EmitDebugResult } from './debug'
 
 /**
  * The main entry point for defining an OpenAPI specification.
@@ -66,6 +68,7 @@ export class Api {
   /** @internal */ readonly _tags: TagConfig[] = []
   /** @internal */ readonly _schemas: Map<string, TSchema> = new Map()
   /** @internal */ readonly _security: SecurityRequirement[] = []
+  /** @internal */ readonly _sources: Map<string, string> = new Map()
 
   /**
    * Create a new API definition.
@@ -82,6 +85,8 @@ export class Api {
   constructor(name: string, config: ApiConfig = {}) {
     this.name = name
     this.config = { version: '1.0.0', ...config }
+    const site = captureCallSite()
+    if (site) this._sources.set('info', site)
   }
 
   // -- Top-level route helpers ----------------------------------------------
@@ -294,6 +299,8 @@ export class Api {
    */
   server(config: ServerConfig): this {
     this._servers.push(config)
+    const site = captureCallSite()
+    if (site) this._sources.set(`server:${this._servers.length - 1}`, site)
     return this
   }
 
@@ -313,6 +320,8 @@ export class Api {
    */
   securityScheme(name: string, config: SecuritySchemeConfig): this {
     this._securitySchemes[name] = config
+    const site = captureCallSite()
+    if (site) this._sources.set(`securityScheme:${name}`, site)
     return this
   }
 
@@ -339,6 +348,8 @@ export class Api {
     } else {
       this._tags.push(config)
     }
+    const site = captureCallSite()
+    if (site) this._sources.set(`tag:${this._tags.length - 1}`, site)
     return this
   }
 
@@ -359,6 +370,8 @@ export class Api {
    */
   schema(name: string, schema: TSchema): this {
     this._schemas.set(name, schema)
+    const site = captureCallSite()
+    if (site) this._sources.set(`schema:${name}`, site)
     return this
   }
 
@@ -375,7 +388,14 @@ export class Api {
    * ```
    */
   security(...schemes: SecurityRequirement[]): this {
+    const startIdx = this._security.length
     this._security.push(...schemes)
+    const site = captureCallSite()
+    if (site) {
+      for (let i = startIdx; i < this._security.length; i++) {
+        this._sources.set(`security:${i}`, site)
+      }
+    }
     return this
   }
 
@@ -407,19 +427,24 @@ export class Api {
    * Walks the internal AST, resolves schemas (hoisting named schemas to
    * `components.schemas` as `$ref`), and assembles the full document.
    *
-   * @returns The OpenAPI 3.1 specification as a plain object.
+   * Pass `{ debug: true }` to get a source map linking spec object paths
+   * back to the code locations that defined them.
+   *
+   * @returns The OpenAPI 3.1 specification, or `{ spec, sourceMap }` when debug is true.
    *
    * @example
    * ```ts
    * const spec = api.emit()
-   * console.log(JSON.stringify(spec, null, 2))
    *
-   * // spec.openapi === '3.1.0'
-   * // spec.info.title === api.name
-   * // spec.paths['/pets'].get.responses['200'] ...
+   * // With debug source map
+   * const { spec, sourceMap } = api.emit({ debug: true })
+   * // sourceMap: { [crc32(objectPath)]: "file:line:col" }
    * ```
    */
-  emit(): Record<string, unknown> {
-    return emitOpenApi(this)
+  emit(): Record<string, unknown>
+  emit(options: { debug: true }): EmitDebugResult
+  emit(options: EmitOptions): Record<string, unknown>
+  emit(options?: EmitOptions): Record<string, unknown> | EmitDebugResult {
+    return emitOpenApi(this, options)
   }
 }
