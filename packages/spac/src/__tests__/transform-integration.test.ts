@@ -1,19 +1,16 @@
 import { describe, it, expect } from 'vitest'
-import { transform } from '../index.js'
-import { Api, named } from 'spac'
+import { transform } from '../transform'
+import { Api, named, lookup } from '../index'
 import { Type } from '@sinclair/typebox'
 
 describe('integration: transform → runtime → emit', () => {
   it('transformed code produces valid OpenAPI with fine-grained source map', () => {
-    // This test manually exercises the _src and __src runtime paths
-    // that the transformer would produce
     const Pet = named('Pet', Type.Object({
       id: Type.String(),
       name: Type.String(),
     }))
 
     const api = new Api('Petstore')
-    // Simulate what the transformer injects
     api._src('info', ['/src/petstore.ts', 1, 1])
     api._src('__server', ['/src/petstore.ts', 3, 1])
     api.server({ url: 'https://api.example.com' })
@@ -22,7 +19,6 @@ describe('integration: transform → runtime → emit', () => {
     api.securityScheme('bearer', { type: 'http', scheme: 'bearer' })
 
     api.group('/pets', g => {
-      // Simulate __src in config object
       g.get('/', {
         response: Type.Array(Pet),
         __src: {
@@ -39,25 +35,16 @@ describe('integration: transform → runtime → emit', () => {
 
     const debug = api.emit({ debug: true })
 
-    // Verify spec is valid
     expect(debug.spec.openapi).toBe('3.1.0')
     expect((debug.spec.info as any).title).toBe('Petstore')
-
-    // Verify source map has entries
     expect(debug.files.length).toBeGreaterThan(0)
     expect(Object.keys(debug.sourceMap).length).toBeGreaterThan(0)
-
-    // Verify the source locations reference our injected file
     expect(debug.files).toContain('/src/petstore.ts')
-
-    // Verify V3 source map is present
     expect(debug.v3).toBeDefined()
     expect(debug.v3.version).toBe(3)
     expect(debug.v3.sources).toContain('/src/petstore.ts')
     expect(typeof debug.v3.mappings).toBe('string')
     expect(debug.v3.mappings.length).toBeGreaterThan(0)
-
-    // Verify JSON output is present and valid
     expect(debug.json).toBeDefined()
     expect(JSON.parse(debug.json)).toEqual(debug.spec)
   })
@@ -79,10 +66,7 @@ describe('integration: transform → runtime → emit', () => {
 
     const debug = api.emit({ debug: true })
 
-    // The injected source should be used, not the runtime-captured one
     expect(debug.files).toContain('/test.ts')
-
-    // Check that the source map has entries from our injected file
     const entries = Object.values(debug.sourceMap)
     const testFileId = debug.files.indexOf('/test.ts')
     const hasTestFileEntries = entries.some(e => e.startsWith(`${testFileId}:`))
@@ -106,8 +90,6 @@ describe('integration: transform → runtime → emit', () => {
     } as any)
 
     const debug = api.emit({ debug: true })
-
-    // Should have separate source entries for params, query, response
     expect(Object.keys(debug.sourceMap).length).toBeGreaterThanOrEqual(3)
   })
 
@@ -124,23 +106,16 @@ api.get('/pets', {
 `
     const result = transform(code, '/src/petstore.ts')
 
-    // Should be valid TypeScript (no syntax errors)
     expect(result).toContain('import { Api } from')
     expect(result).toContain('_src')
     expect(result).toContain('__src')
-
-    // Should contain source file references
     expect(result).toContain('/src/petstore.ts')
   })
 })
 
 describe('source map round-trip accuracy', () => {
-  it('injected _src positions survive emit and resolve via lookup', async () => {
-    const { Api, lookup } = await import('spac')
-    const { Type } = await import('@sinclair/typebox')
-
+  it('injected _src positions survive emit and resolve via lookup', () => {
     const api = new Api('RoundTrip')
-    // Simulate exactly what the transformer produces
     api._src('info', ['/src/app.ts', 5, 13])
     api._src('__server', ['/src/app.ts', 7, 1])
     api.server({ url: 'https://api.example.com' })
@@ -166,7 +141,6 @@ describe('source map round-trip accuracy', () => {
 
     const debug = api.emit({ debug: true })
 
-    // Verify every injected position resolves correctly
     expect(lookup(debug, 'info')!.src).toBe('/src/app.ts:5:13')
     expect(lookup(debug, 'servers', 0)!.src).toBe('/src/app.ts:7:1')
     expect(lookup(debug, 'components', 'securitySchemes', 'bearer')!.src).toBe('/src/app.ts:8:1')
@@ -176,23 +150,16 @@ describe('source map round-trip accuracy', () => {
     expect(lookup(debug, 'paths', '/items', 'get', 'tags')!.src).toBe('/src/routes.ts:19:3')
     expect(lookup(debug, 'paths', '/items', 'get', 'responses', '404')!.src).toBe('/src/routes.ts:20:3')
 
-    // parameters entry should use the per-property params source
     const params = lookup(debug, 'paths', '/items', 'get', 'parameters')
     expect(params).toBeDefined()
     expect(params!.src).toBe('/src/routes.ts:16:3')
 
-    // V3 source map should reference both files
     expect(debug.v3.sources).toContain('/src/app.ts')
     expect(debug.v3.sources).toContain('/src/routes.ts')
-
-    // JSON output should parse back to the spec
     expect(JSON.parse(debug.json)).toEqual(debug.spec)
   })
 
-  it('group callback routes preserve injected sources through emit', async () => {
-    const { Api, lookup } = await import('spac')
-    const { Type } = await import('@sinclair/typebox')
-
+  it('group callback routes preserve injected sources through emit', () => {
     const api = new Api('GroupTest')
     api._src('info', ['/src/api.ts', 1, 1])
 
@@ -224,20 +191,15 @@ describe('source map round-trip accuracy', () => {
 
     const debug = api.emit({ debug: true })
 
-    // List pets
     expect(lookup(debug, 'paths', '/pets', 'get')!.src).toBe('/src/pets.ts:10:5')
     expect(lookup(debug, 'paths', '/pets', 'get', 'responses', '200')!.src).toBe('/src/pets.ts:11:7')
     expect(lookup(debug, 'paths', '/pets', 'get', 'summary')!.src).toBe('/src/pets.ts:12:7')
 
-    // Get pet
     expect(lookup(debug, 'paths', '/pets/:petId', 'get')!.src).toBe('/src/pets.ts:15:5')
     expect(lookup(debug, 'paths', '/pets/:petId', 'get', 'summary')!.src).toBe('/src/pets.ts:18:7')
   })
 
-  it('V3 source map has mappings on lines where spec keys appear', async () => {
-    const { Api } = await import('spac')
-    const { Type } = await import('@sinclair/typebox')
-
+  it('V3 source map has mappings on lines where spec keys appear', () => {
     const api = new Api('V3Test')
     api._src('info', ['/src/test.ts', 1, 1])
     api.get('/test', {
@@ -253,10 +215,8 @@ describe('source map round-trip accuracy', () => {
     const mappingLines = debug.v3.mappings.split(';')
     const nonEmptyCount = mappingLines.filter(l => l.length > 0).length
 
-    // There should be at least several mapped lines (info, paths, operation, responses, etc.)
     expect(nonEmptyCount).toBeGreaterThanOrEqual(3)
 
-    // Total lines in mapping should match total lines in JSON output
     const jsonLineCount = debug.json.split('\n').length
     expect(mappingLines.length).toBeLessThanOrEqual(jsonLineCount)
   })

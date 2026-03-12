@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { transform } from '../index.js'
+import { transform } from '../transform'
 
-describe('spac-transform', () => {
+describe('transform', () => {
   describe('import detection', () => {
     it('does not transform code without spac imports', () => {
       const code = `

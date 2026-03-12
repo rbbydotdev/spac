@@ -15,12 +15,14 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "dependencies": {
+    "typescript": "^5.7.0"
+  },
   "peerDependencies": {
     "@sinclair/typebox": ">=0.34.0"
   },
   "devDependencies": {
     "@sinclair/typebox": "latest",
-    "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   }
 }

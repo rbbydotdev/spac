@@ -10,6 +10,7 @@ sourcemap.json
 !packages/examples/cloudflare/spec.json
 
 
+.index.transformed.ts
 .agents/
 
 skills-lock.json

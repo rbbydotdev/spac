@@ -420,3 +420,32 @@ export function createSpacTransformerFactory(): ts.TransformerFactory<ts.SourceF
     }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Convenience: transform source code string
+// ---------------------------------------------------------------------------
+
+/**
+ * Transform spac TypeScript source code, injecting compile-time source
+ * location metadata for fine-grained source maps.
+ *
+ * @param code - The TypeScript source code
+ * @param fileName - The file path (used in source locations)
+ * @returns The transformed source code
+ */
+export function transform(code: string, fileName: string): string {
+  const sourceFile = ts.createSourceFile(
+    fileName,
+    code,
+    ts.ScriptTarget.ESNext,
+    /* setParentNodes */ true,
+    ts.ScriptKind.TS,
+  )
+
+  const result = ts.transform(sourceFile, [createSpacTransformerFactory()])
+  const printer = ts.createPrinter({ newLine: ts.NewLineKind.LineFeed })
+  const output = printer.printFile(result.transformed[0])
+  result.dispose()
+
+  return output
+}

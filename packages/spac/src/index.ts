@@ -16,6 +16,9 @@ export { emitOpenApi } from './emit'
 export { crc32, objectPath, lookup, vlqEncode, buildV3SourceMap, serializeJsonWithPositions } from './debug'
 export type { EmitOptions, EmitDebugResult, V3SourceMap, V3Mapping, JsonPositions } from './debug'
 
+// Transform (compile-time source location injection)
+export { transform, createSpacTransformerFactory } from './transform'
+
 // Helpers
 export { json, noContent, created, errorSchema, paginated, envelope } from './helpers'
 
