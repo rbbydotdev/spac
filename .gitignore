@@ -5,3 +5,6 @@ dist
 packages/examples/cloudflare/*/
 
 packages/examples/cloudflare/index.ts
+spec.json
+sourcemap.json
+!packages/examples/cloudflare/spec.json

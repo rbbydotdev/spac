@@ -263,3 +263,41 @@ Result: 254 files, 136 groups, ~93K lines, ~5.7 MB. All schema imports verified 
 
 - 88/88 tests passing
 - Run: `pnpm --filter openapi-gen test`
+
+---
+
+## Debug Source Map
+
+Added a debug source map feature to `api.emit({ debug: true })` that connects every object path in the emitted OpenAPI spec back to the user code that created it.
+
+### How it works
+
+1. **Call-site capture** — every DSL method (`api.get()`, `.summary()`, `.tag()`, etc.) captures its call site via `new Error().stack`, skipping spac-internal frames.
+2. **CRC32-keyed entries** — object paths like `["paths"]["/pets"]["get"]` are hashed with CRC32 to keep keys short.
+3. **File table** — unique file paths are stored once in a `files` array. Source map entries use `fileId:line:col` instead of repeating full paths, reducing map size.
+4. **`lookup()`** — walks up the object path tree to find the nearest mapped ancestor, resolving file IDs back to full paths.
+
+### Source map format
+
+```json
+{
+  "files": ["/path/to/petstore/index.ts"],
+  "entries": {
+    "8b4b9a8a": "0:261:5",
+    "95581615": "0:271:6"
+  }
+}
+```
+
+### Files
+
+- `packages/spac/src/debug.ts` — CRC32, call-site capture, `objectPath`, `lookup`, types
+- `packages/spac/src/emit.ts` — source map collector, wiring in `emitOpenApi`
+- `packages/spac/src/api.ts` — `_sources` map, `captureCallSite()` calls, `emit()` overloads
+- `packages/spac/src/route.ts` — `_sources` on `RouteNode`, call-site capture per chain method
+- `packages/examples/petstore/debug.ts` — demo script that emits spec + source map
+
+### Current state
+
+- 662/662 spac tests passing
+- Run: `pnpm --filter spac test`

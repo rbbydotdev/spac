@@ -430,15 +430,16 @@ export class Api {
    * Pass `{ debug: true }` to get a source map linking spec object paths
    * back to the code locations that defined them.
    *
-   * @returns The OpenAPI 3.1 specification, or `{ spec, sourceMap }` when debug is true.
+   * @returns The OpenAPI 3.1 specification, or `{ spec, files, sourceMap }` when debug is true.
    *
    * @example
    * ```ts
    * const spec = api.emit()
    *
    * // With debug source map
-   * const { spec, sourceMap } = api.emit({ debug: true })
-   * // sourceMap: { [crc32(objectPath)]: "file:line:col" }
+   * const debug = api.emit({ debug: true })
+   * // debug.files: ["path/to/file.ts", ...]
+   * // debug.sourceMap: { [crc32(objectPath)]: "fileId:line:col" }
    * ```
    */
   emit(): Record<string, unknown>

@@ -95,26 +95,30 @@ export function objectPath(...segments: (string | number)[]): string {
  *
  * @example
  * ```ts
- * const { spec, sourceMap } = api.emit({ debug: true })
+ * const debug = api.emit({ debug: true })
  *
  * // Exact match
- * lookup(sourceMap, 'paths', '/pets', 'get')
+ * lookup(debug, 'paths', '/pets', 'get')
  * // => { src: 'src/api.ts:15:3', path: '["paths"]["/pets"]["get"]' }
  *
  * // Walks up — no entry for "parameters", finds the operation
- * lookup(sourceMap, 'paths', '/pets', 'get', 'parameters')
+ * lookup(debug, 'paths', '/pets', 'get', 'parameters')
  * // => { src: 'src/api.ts:15:3', path: '["paths"]["/pets"]["get"]' }
  * ```
  */
 export function lookup(
-  sourceMap: Record<string, string>,
+  debug: { files: string[]; sourceMap: Record<string, string> },
   ...segments: (string | number)[]
 ): { src: string; path: string } | undefined {
   for (let len = segments.length; len > 0; len--) {
     const path = objectPath(...segments.slice(0, len))
     const key = crc32(path)
-    if (key in sourceMap) {
-      return { src: sourceMap[key], path }
+    if (key in debug.sourceMap) {
+      const raw = debug.sourceMap[key]
+      const c1 = raw.indexOf(':')
+      const fileId = Number(raw.slice(0, c1))
+      const rest = raw.slice(c1 + 1)
+      return { src: `${debug.files[fileId]}:${rest}`, path }
     }
   }
   return undefined
@@ -134,6 +138,8 @@ export interface EmitOptions {
 export interface EmitDebugResult {
   /** The OpenAPI 3.1 spec. */
   spec: Record<string, unknown>
-  /** CRC32(objectPath) → file:line:col */
+  /** Incremental file ID → full file path */
+  files: string[]
+  /** CRC32(objectPath) → fileId:line:col */
   sourceMap: Record<string, string>
 }

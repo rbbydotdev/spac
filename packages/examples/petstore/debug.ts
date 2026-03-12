@@ -6,10 +6,10 @@ import { api } from "./index";
 
 const outDir = dirname(fileURLToPath(import.meta.url));
 
-const { spec, sourceMap } = api.emit({ debug: true });
+const debug = api.emit({ debug: true });
 
-writeFileSync(join(outDir, "spec.json"), JSON.stringify(spec, null, 2));
-writeFileSync(join(outDir, "sourcemap.json"), JSON.stringify(sourceMap, null, 2));
+writeFileSync(join(outDir, "spec.json"), JSON.stringify(debug.spec, null, 2));
+writeFileSync(join(outDir, "sourcemap.json"), JSON.stringify({ files: debug.files, entries: debug.sourceMap }, null, 2));
 
 // Demo: look up a few paths
 const demos = [
@@ -23,7 +23,7 @@ const demos = [
 
 console.log("Source map demo:\n");
 for (const segments of demos) {
-  const result = lookup(sourceMap, ...segments);
+  const result = lookup(debug, ...segments);
   const path = segments.map((s) => `[${JSON.stringify(s)}]`).join("");
   if (result) {
     console.log(`  ${path}`);

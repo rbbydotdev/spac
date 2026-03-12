@@ -115,6 +115,29 @@ api.post('/items', {
 })
 ```
 
+### Debug source maps
+
+Pass `{ debug: true }` to `emit()` to get a source map linking spec object paths back to the code that defined them.
+
+```ts
+const debug = api.emit({ debug: true })
+// debug.spec       — the OpenAPI 3.1 document
+// debug.files      — unique file paths: ["/path/to/index.ts", ...]
+// debug.sourceMap  — CRC32(objectPath) → "fileId:line:col"
+```
+
+Use `lookup()` to resolve a spec object path to its source location. It walks up the path tree until it finds a match.
+
+```ts
+import { lookup } from 'spac'
+
+lookup(debug, 'paths', '/pets', 'get')
+// => { src: '/path/to/index.ts:261:5', path: '["paths"]["/pets"]["get"]' }
+
+lookup(debug, 'paths', '/pets', 'get', 'parameters')
+// => walks up to the operation: { src: '...', path: '["paths"]["/pets"]["get"]' }
+```
+
 ### Generate spac code from an existing OpenAPI spec
 
 ```sh
@@ -144,6 +167,7 @@ pnpm --filter openapi-gen generate -- spec.json --out ./generated \
 | `.security(name)` | Apply global security |
 | `.use(macro)` | Apply an API-level macro |
 | `.emit()` | Produce the OpenAPI 3.1 JSON document |
+| `.emit({ debug: true })` | Produce the spec with a source map (`{ spec, files, sourceMap }`) |
 
 ### Route config
 
@@ -189,6 +213,7 @@ spac/
 │   │       ├── group.ts   # GroupBuilder
 │   │       ├── emit.ts    # AST → OpenAPI 3.1
 │   │       ├── schema.ts  # named() and schema resolution
+│   │       ├── debug.ts   # source map: CRC32, call-site capture, lookup
 │   │       ├── helpers.ts # json, noContent, created, etc.
 │   │       ├── macros.ts  # macro.route, macro.group, macro.api
 │   │       └── validate.ts # OAS 3.1 object validators (30 functions, 532 tests)

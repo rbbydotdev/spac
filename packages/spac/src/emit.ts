@@ -25,16 +25,31 @@ function isTSchema(obj: unknown): obj is TSchema {
 
 type SrcCollector = { add(path: string, src: string): void } | undefined
 
-function createCollector(): { add(path: string, src: string): void; build(): Record<string, string> } {
-  const entries: [string, string][] = []
+function parseSrc(src: string): { file: string; line: string; col: string } {
+  const c1 = src.lastIndexOf(':')
+  const c2 = src.lastIndexOf(':', c1 - 1)
+  return { file: src.slice(0, c2), line: src.slice(c2 + 1, c1), col: src.slice(c1 + 1) }
+}
+
+function createCollector(): { add(path: string, src: string): void; build(): { files: string[]; entries: Record<string, string> } } {
+  const raw: [string, string][] = []
   return {
-    add(path: string, src: string) { entries.push([path, src]) },
+    add(path: string, src: string) { raw.push([path, src]) },
     build() {
-      const map: Record<string, string> = {}
-      for (const [path, src] of entries) {
-        map[crc32(path)] = src
+      const fileToId = new Map<string, number>()
+      const files: string[] = []
+      const entries: Record<string, string> = {}
+      for (const [path, src] of raw) {
+        const { file, line, col } = parseSrc(src)
+        let id = fileToId.get(file)
+        if (id === undefined) {
+          id = files.length
+          files.push(file)
+          fileToId.set(file, id)
+        }
+        entries[crc32(path)] = `${id}:${line}:${col}`
       }
-      return map
+      return { files, entries }
     },
   }
 }
@@ -463,7 +478,8 @@ export function emitOpenApi(api: Api, options?: EmitOptions): Record<string, unk
   }
 
   if (debug) {
-    return { spec: doc, sourceMap: collector!.build() }
+    const { files, entries } = collector!.build()
+    return { spec: doc, files, sourceMap: entries }
   }
   return doc
 }
