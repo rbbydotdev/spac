@@ -266,41 +266,121 @@ Result: 254 files, 136 groups, ~93K lines, ~5.7 MB. All schema imports verified 
 
 ---
 
-## Debug Source Map
+## Debug Source Map & `spac-transform` Compiler
 
-Added a debug source map feature to `api.emit({ debug: true })` that connects every object path in the emitted OpenAPI spec back to the user code that created it.
+Comprehensive source mapping system with two complementary approaches:
+
+1. **Runtime call-site capture** (original) — captures `new Error().stack` at each DSL method call
+2. **Compile-time AST instrumentation** (new) — TypeScript transformer injects precise source locations for every config property, chain method, and constructor call
 
 ### How it works
 
-1. **Call-site capture** — every DSL method (`api.get()`, `.summary()`, `.tag()`, etc.) captures its call site via `new Error().stack`, skipping spac-internal frames.
-2. **CRC32-keyed entries** — object paths like `["paths"]["/pets"]["get"]` are hashed with CRC32 to keep keys short.
-3. **File table** — unique file paths are stored once in a `files` array. Source map entries use `fileId:line:col` instead of repeating full paths, reducing map size.
-4. **`lookup()`** — walks up the object path tree to find the nearest mapped ancestor, resolving file IDs back to full paths.
+**Runtime (fallback)**: Every DSL method captures its call site via `new Error().stack`, skipping spac-internal frames. Used when code is NOT transformed.
 
-### Source map format
+**Compile-time (recommended)**: The `spac-transform` package provides a TypeScript AST transformer that:
+1. Detects imports from `spac` and tracks `Api` instances
+2. Injects `__src` metadata into config objects with per-property source positions (params, query, body, response, etc.)
+3. Injects `._src(key, [file, line, col])` calls before chain methods (`.summary()`, `.tag()`, etc.)
+4. Propagates taint through method chains and group callback parameters
 
-```json
+**Output formats**:
+- **CRC32/entries** (legacy): `crc32(objectPath) → "fileId:line:col"` — compact, object-path-based
+- **V3 source map** (new): Standard format with VLQ-encoded mappings — maps output JSON positions to source TS positions, compatible with existing tooling
+
+### Transform example
+
+```ts
+// Input:
+api.get('/pets', {
+  params: Type.Object({ id: Type.String() }),
+  response: Pet,
+}).summary('List pets').tag('pets')
+
+// Transformed output:
+api.get('/pets', {
+  params: Type.Object({ id: Type.String() }),
+  response: Pet,
+  __src: {
+    __file: "/src/petstore.ts",
+    __call: [5, 1],
+    params: [6, 3],
+    response: [7, 3]
+  }
+})._src("summary", ["/src/petstore.ts", 8, 3]).summary('List pets')
+  ._src("tags", ["/src/petstore.ts", 8, 25]).tag('pets')
+```
+
+### Debug output format
+
+`api.emit({ debug: true })` returns:
+
+```ts
 {
-  "files": ["/path/to/petstore/index.ts"],
-  "entries": {
-    "8b4b9a8a": "0:261:5",
-    "95581615": "0:271:6"
+  spec: Record<string, unknown>     // The OpenAPI 3.1 spec
+  files: string[]                    // File ID → full path (legacy)
+  sourceMap: Record<string, string>  // CRC32 → "fileId:line:col" (legacy)
+  json: string                       // Formatted JSON output
+  v3: {                              // Standard V3 source map
+    version: 3,
+    file: "spec.json",
+    sources: ["src/petstore.ts"],
+    names: [],
+    mappings: "AAAA;AACA;..."        // VLQ-encoded position mappings
   }
 }
 ```
 
+### Runtime API
+
+Builders accept compile-time source injection:
+
+- `api._src(key, [file, line, col])` — set source location for next method call
+- `route._src(key, [file, line, col])` — set source location on route node
+- Config `__src` property — per-property source locations in route config objects
+- Chain methods check for pre-set sources before falling back to runtime capture
+
 ### Files
 
-- `packages/spac/src/debug.ts` — CRC32, call-site capture, `objectPath`, `lookup`, types
-- `packages/spac/src/emit.ts` — source map collector, wiring in `emitOpenApi`
-- `packages/spac/src/api.ts` — `_sources` map, `captureCallSite()` calls, `emit()` overloads
-- `packages/spac/src/route.ts` — `_sources` on `RouteNode`, call-site capture per chain method
-- `packages/examples/petstore/debug.ts` — demo script that emits spec + source map
+```
+packages/spac/src/
+├── types.ts       # SrcLoc, ConfigSrcMeta types
+├── debug.ts       # CRC32, call-site capture, VLQ encoding, V3 source map builder,
+│                  # JSON serializer with position tracking, objectPath, lookup
+├── emit.ts        # Source map collector, V3 generation during emit
+├── api.ts         # _src() method, staged source consumption
+├── route.ts       # _src() method, __src config extraction, pre-set source checks
+├── group.ts       # _src() method (reserved for future use)
+
+packages/spac-transform/
+├── src/
+│   ├── index.ts          # transform(code, fileName) convenience function
+│   ├── transformer.ts    # TypeScript AST transformer factory (import tracking,
+│   │                     # taint propagation, config injection, chain wrapping)
+│   ├── vlq.ts            # Base64 VLQ encoding for V3 source maps
+│   ├── sourcemap.ts      # V3 source map generator
+│   ├── serialize.ts      # JSON serializer with output position tracking
+│   └── __tests__/
+│       ├── transformer.test.ts  # 23 tests — import detection, HTTP methods,
+│       │                        # chain methods, Api-level methods, groups
+│       ├── integration.test.ts  # 4 tests — full transform → emit pipeline
+│       ├── vlq.test.ts          # 5 tests — VLQ encoding correctness
+│       ├── sourcemap.test.ts    # 5 tests — V3 generation
+│       └── serialize.test.ts    # 7 tests — JSON position tracking
+```
+
+### Key design decisions
+
+- **Backward compatible**: untransformed code still works via runtime `captureCallSite()`. The transformer is opt-in.
+- **Import tracking + taint propagation**: transformer identifies spac calls without a type checker by tracking imports from `spac` and propagating "taint" through variable assignments and method chains.
+- **Api vs RouteBuilder disambiguation**: `isApiReceiver()` checks whether the call target is an Api instance (uses staged keys like `__server`) vs RouteBuilder (uses direct keys like `servers`).
+- **Group callback taint**: callback parameters to `.group()` are automatically tainted, so `g.get(...)` inside groups is instrumented.
+- **VLQ encoding**: standard Base64 VLQ for compact source map size, delta-encoded across segments.
 
 ### Current state
 
-- 662/662 spac tests passing
-- Run: `pnpm --filter spac test`
+- 684/684 spac tests passing (676 existing + 8 new debug/source map tests)
+- 44/44 spac-transform tests passing
+- Run: `pnpm --filter spac test` and `pnpm --filter spac-transform test`
 
 ---
 
@@ -337,6 +417,12 @@ Project was scaffolded with the official shadcn CLI:
 pnpm dlx shadcn@latest init -t vite -n spacview --no-monorepo -d
 pnpm dlx shadcn@latest add resizable
 ```
+
+### V3 source map support
+
+The source-map.ts module now also exports V3 source map types and a `lookupV3()` function
+that decodes VLQ-encoded mappings and maps output JSON positions to source TypeScript positions.
+This can be used as an alternative to the CRC32/entries lookup.
 
 ### Files
 

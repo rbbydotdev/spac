@@ -10,6 +10,7 @@ import type {
   SecurityRequirement,
   ServerConfig,
   GroupMacro,
+  SrcLoc,
 } from './types'
 import { RouteBuilder } from './route'
 
@@ -59,6 +60,15 @@ export class GroupBuilder<Prefix extends string = string> {
       security: [],
       servers: [],
     }
+  }
+
+  /**
+   * @internal Set a source location for a specific key.
+   * Injected by spac-transform at compile time — not for direct use.
+   */
+  _src(_key: string, _loc: SrcLoc): this {
+    // GroupBuilder doesn't currently track sources; reserved for future use.
+    return this
   }
 
   // -- Route helpers --------------------------------------------------------

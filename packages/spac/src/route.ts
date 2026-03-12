@@ -6,6 +6,7 @@ import type {
   SecurityRequirement,
   ServerConfig,
   RouteMacro,
+  SrcLoc,
 } from './types'
 import { captureCallSite } from './debug'
 
@@ -47,8 +48,27 @@ export class RouteBuilder {
       extensions: {},
       _sources: new Map(),
     }
-    const site = captureCallSite()
-    if (site) this._node._sources.set('', site)
+    // If spac-transform injected __src, extract per-property positions
+    if (config.__src) {
+      const file = config.__src.__file as string
+      for (const [key, val] of Object.entries(config.__src)) {
+        if (key === '__file' || !Array.isArray(val)) continue
+        const srcKey = key === '__call' ? '' : key
+        this._node._sources.set(srcKey, `${file}:${val[0]}:${val[1]}`)
+      }
+    } else {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('', site)
+    }
+  }
+
+  /**
+   * @internal Set a source location for the next chained method call.
+   * Injected by spac-transform at compile time — not for direct use.
+   */
+  _src(key: string, loc: SrcLoc): this {
+    this._node._sources.set(key, `${loc[0]}:${loc[1]}:${loc[2]}`)
+    return this
   }
 
   // -- Metadata chaining ----------------------------------------------------
@@ -66,8 +86,10 @@ export class RouteBuilder {
    */
   summary(text: string): this {
     this._node.summary = text
-    const site = captureCallSite()
-    if (site) this._node._sources.set('summary', site)
+    if (!this._node._sources.has('summary')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('summary', site)
+    }
     return this
   }
 
@@ -85,8 +107,10 @@ export class RouteBuilder {
    */
   description(text: string): this {
     this._node.description = text
-    const site = captureCallSite()
-    if (site) this._node._sources.set('description', site)
+    if (!this._node._sources.has('description')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('description', site)
+    }
     return this
   }
 
@@ -103,8 +127,10 @@ export class RouteBuilder {
    */
   tag(name: string): this {
     this._node.tags.push(name)
-    const site = captureCallSite()
-    if (site) this._node._sources.set('tags', site)
+    if (!this._node._sources.has('tags')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('tags', site)
+    }
     return this
   }
 
@@ -121,8 +147,10 @@ export class RouteBuilder {
    */
   tags(...names: string[]): this {
     this._node.tags.push(...names)
-    const site = captureCallSite()
-    if (site) this._node._sources.set('tags', site)
+    if (!this._node._sources.has('tags')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('tags', site)
+    }
     return this
   }
 
@@ -139,8 +167,10 @@ export class RouteBuilder {
    */
   operationId(id: string): this {
     this._node.operationId = id
-    const site = captureCallSite()
-    if (site) this._node._sources.set('operationId', site)
+    if (!this._node._sources.has('operationId')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('operationId', site)
+    }
     return this
   }
 
@@ -158,8 +188,10 @@ export class RouteBuilder {
    */
   deprecated(): this {
     this._node.deprecated = true
-    const site = captureCallSite()
-    if (site) this._node._sources.set('deprecated', site)
+    if (!this._node._sources.has('deprecated')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('deprecated', site)
+    }
     return this
   }
 
@@ -181,8 +213,10 @@ export class RouteBuilder {
    */
   security(...schemes: SecurityRequirement[]): this {
     this._node.security.push(...schemes)
-    const site = captureCallSite()
-    if (site) this._node._sources.set('security', site)
+    if (!this._node._sources.has('security')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('security', site)
+    }
     return this
   }
 
@@ -208,8 +242,10 @@ export class RouteBuilder {
    */
   error(status: number, schema: TSchema): this {
     this._node.errors.set(status, schema)
-    const site = captureCallSite()
-    if (site) this._node._sources.set(`error:${status}`, site)
+    if (!this._node._sources.has(`error:${status}`)) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set(`error:${status}`, site)
+    }
     return this
   }
 
@@ -229,8 +265,10 @@ export class RouteBuilder {
    */
   server(config: ServerConfig): this {
     this._node.servers.push(config)
-    const site = captureCallSite()
-    if (site) this._node._sources.set('servers', site)
+    if (!this._node._sources.has('servers')) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set('servers', site)
+    }
     return this
   }
 
@@ -254,8 +292,10 @@ export class RouteBuilder {
   extension(name: string, value: unknown): this {
     const key = name.startsWith('x-') ? name : `x-${name}`
     this._node.extensions[key] = value
-    const site = captureCallSite()
-    if (site) this._node._sources.set(`ext:${key}`, site)
+    if (!this._node._sources.has(`ext:${key}`)) {
+      const site = captureCallSite()
+      if (site) this._node._sources.set(`ext:${key}`, site)
+    }
     return this
   }
 

@@ -12,6 +12,7 @@ import type {
   TagConfig,
   SecuritySchemeConfig,
   ApiMacro,
+  SrcLoc,
 } from './types'
 import { RouteBuilder } from './route'
 import { GroupBuilder } from './group'
@@ -87,6 +88,15 @@ export class Api {
     this.config = { version: '1.0.0', ...config }
     const site = captureCallSite()
     if (site) this._sources.set('info', site)
+  }
+
+  /**
+   * @internal Set a source location for a specific key.
+   * Injected by spac-transform at compile time — not for direct use.
+   */
+  _src(key: string, loc: SrcLoc): this {
+    this._sources.set(key, `${loc[0]}:${loc[1]}:${loc[2]}`)
+    return this
   }
 
   // -- Top-level route helpers ----------------------------------------------
@@ -299,8 +309,16 @@ export class Api {
    */
   server(config: ServerConfig): this {
     this._servers.push(config)
-    const site = captureCallSite()
-    if (site) this._sources.set(`server:${this._servers.length - 1}`, site)
+    const key = `server:${this._servers.length - 1}`
+    // Check for staged source from _src('__server', loc)
+    const staged = this._sources.get('__server')
+    if (staged) {
+      this._sources.delete('__server')
+      this._sources.set(key, staged)
+    } else {
+      const site = captureCallSite()
+      if (site) this._sources.set(key, site)
+    }
     return this
   }
 
@@ -320,8 +338,11 @@ export class Api {
    */
   securityScheme(name: string, config: SecuritySchemeConfig): this {
     this._securitySchemes[name] = config
-    const site = captureCallSite()
-    if (site) this._sources.set(`securityScheme:${name}`, site)
+    const key = `securityScheme:${name}`
+    if (!this._sources.has(key)) {
+      const site = captureCallSite()
+      if (site) this._sources.set(key, site)
+    }
     return this
   }
 
@@ -348,8 +369,16 @@ export class Api {
     } else {
       this._tags.push(config)
     }
-    const site = captureCallSite()
-    if (site) this._sources.set(`tag:${this._tags.length - 1}`, site)
+    const key = `tag:${this._tags.length - 1}`
+    // Check for staged source from _src('__tag', loc)
+    const staged = this._sources.get('__tag')
+    if (staged) {
+      this._sources.delete('__tag')
+      this._sources.set(key, staged)
+    } else {
+      const site = captureCallSite()
+      if (site) this._sources.set(key, site)
+    }
     return this
   }
 
@@ -370,8 +399,11 @@ export class Api {
    */
   schema(name: string, schema: TSchema): this {
     this._schemas.set(name, schema)
-    const site = captureCallSite()
-    if (site) this._sources.set(`schema:${name}`, site)
+    const key = `schema:${name}`
+    if (!this._sources.has(key)) {
+      const site = captureCallSite()
+      if (site) this._sources.set(key, site)
+    }
     return this
   }
 
@@ -390,10 +422,19 @@ export class Api {
   security(...schemes: SecurityRequirement[]): this {
     const startIdx = this._security.length
     this._security.push(...schemes)
-    const site = captureCallSite()
-    if (site) {
+    // Check for staged source from _src('__security', loc)
+    const staged = this._sources.get('__security')
+    if (staged) {
+      this._sources.delete('__security')
       for (let i = startIdx; i < this._security.length; i++) {
-        this._sources.set(`security:${i}`, site)
+        this._sources.set(`security:${i}`, staged)
+      }
+    } else {
+      const site = captureCallSite()
+      if (site) {
+        for (let i = startIdx; i < this._security.length; i++) {
+          this._sources.set(`security:${i}`, site)
+        }
       }
     }
     return this

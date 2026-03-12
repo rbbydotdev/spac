@@ -55,6 +55,22 @@ importers:
         specifier: ^3.0.0
         version: 3.2.4(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.10(@types/node@24.12.0)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
 
+  packages/spac-transform:
+    dependencies:
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+    devDependencies:
+      '@sinclair/typebox':
+        specifier: latest
+        version: 0.34.48
+      spac:
+        specifier: workspace:*
+        version: link:../spac
+      vitest:
+        specifier: ^3.0.0
+        version: 3.2.4(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.31.1)(msw@2.12.10(@types/node@24.12.0)(typescript@5.9.3))(tsx@4.21.0)(yaml@2.8.2)
+
   packages/spacview:
     dependencies:
       '@base-ui/react':

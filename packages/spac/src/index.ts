@@ -13,8 +13,8 @@ export { named, getSchemaName } from './schema'
 export { emitOpenApi } from './emit'
 
 // Debug source map
-export { crc32, objectPath, lookup } from './debug'
-export type { EmitOptions, EmitDebugResult } from './debug'
+export { crc32, objectPath, lookup, vlqEncode, buildV3SourceMap, serializeJsonWithPositions } from './debug'
+export type { EmitOptions, EmitDebugResult, V3SourceMap, V3Mapping, JsonPositions } from './debug'
 
 // Helpers
 export { json, noContent, created, errorSchema, paginated, envelope } from './helpers'
@@ -41,6 +41,8 @@ export type {
   RouteMacro,
   GroupMacro,
   ApiMacro,
+  SrcLoc,
+  ConfigSrcMeta,
 } from './types'
 
 // Validation (from the OAS 3.1 spec validators)

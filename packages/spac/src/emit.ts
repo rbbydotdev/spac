@@ -2,8 +2,8 @@ import { Kind, type TSchema } from '@sinclair/typebox'
 import type { Api } from './api'
 import type { RouteNode, GroupNode, SecurityRequirement, ResponseDef } from './types'
 import { getSchemaName } from './schema'
-import { crc32, objectPath } from './debug'
-import type { EmitOptions, EmitDebugResult } from './debug'
+import { crc32, objectPath, serializeJsonWithPositions, buildV3SourceMap } from './debug'
+import type { EmitOptions, EmitDebugResult, V3Mapping } from './debug'
 
 // ---------------------------------------------------------------------------
 // Schema Helpers
@@ -340,10 +340,10 @@ export function emitOpenApi(api: Api, options?: EmitOptions): Record<string, unk
       if (opSrc) {
         src.add(objectPath('paths', pathKey, route.method), opSrc)
 
-        // Config-derived blocks: params, body, responses from config
-        if (operation.parameters) src.add(objectPath('paths', pathKey, route.method, 'parameters'), opSrc)
-        if (operation.requestBody) src.add(objectPath('paths', pathKey, route.method, 'requestBody'), opSrc)
-        if (route.config.response) src.add(objectPath('paths', pathKey, route.method, 'responses', '200'), opSrc)
+        // Config-derived blocks: use per-property source from __src if available, else fall back to opSrc
+        if (operation.parameters) src.add(objectPath('paths', pathKey, route.method, 'parameters'), s.get('params') || opSrc)
+        if (operation.requestBody) src.add(objectPath('paths', pathKey, route.method, 'requestBody'), s.get('body') || opSrc)
+        if (route.config.response) src.add(objectPath('paths', pathKey, route.method, 'responses', '200'), s.get('response') || opSrc)
         if (route.config.responses) {
           for (const status of Object.keys(route.config.responses)) {
             src.add(objectPath('paths', pathKey, route.method, 'responses', String(status)), opSrc)
@@ -479,7 +479,38 @@ export function emitOpenApi(api: Api, options?: EmitOptions): Record<string, unk
 
   if (debug) {
     const { files, entries } = collector!.build()
-    return { spec: doc, files, sourceMap: entries }
+
+    // Generate V3 source map
+    const { json, positions } = serializeJsonWithPositions(doc)
+    const v3Mappings: V3Mapping[] = []
+
+    // For each source map entry, find its position in the JSON output
+    for (const [crcKey, srcRef] of Object.entries(entries)) {
+      // Find the object path that produced this CRC key by checking all positions
+      for (const [objPath, outPos] of positions) {
+        if (crc32(objPath) === crcKey) {
+          // Parse srcRef: fileId:line:col
+          const c1 = srcRef.indexOf(':')
+          const c2 = srcRef.indexOf(':', c1 + 1)
+          const fileId = Number(srcRef.slice(0, c1))
+          const srcLine = Number(srcRef.slice(c1 + 1, c2))
+          const srcCol = Number(srcRef.slice(c2 + 1))
+
+          v3Mappings.push({
+            outLine: outPos.line,
+            outCol: outPos.col,
+            srcFile: files[fileId],
+            srcLine: srcLine - 1, // Convert 1-based to 0-based
+            srcCol: srcCol - 1,
+          })
+          break
+        }
+      }
+    }
+
+    const v3 = buildV3SourceMap('spec.json', v3Mappings)
+
+    return { spec: doc, files, sourceMap: entries, json, v3 }
   }
   return doc
 }

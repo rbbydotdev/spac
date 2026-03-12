@@ -4,6 +4,23 @@ import type { GroupBuilder } from './group'
 import type { Api } from './api'
 
 // ---------------------------------------------------------------------------
+// Source location (injected by spac-transform)
+// ---------------------------------------------------------------------------
+
+/** A source location tuple: [file, line, col]. Injected by spac-transform at compile time. */
+export type SrcLoc = [file: string, line: number, col: number]
+
+/** @internal Source location metadata injected into config objects by spac-transform. */
+export interface ConfigSrcMeta {
+  /** Source file path */
+  __file: string
+  /** Call-site position [line, col] */
+  __call?: [number, number]
+  /** Property source locations: name → [line, col] */
+  [key: string]: string | [number, number] | undefined
+}
+
+// ---------------------------------------------------------------------------
 // HTTP
 // ---------------------------------------------------------------------------
 
@@ -75,6 +92,8 @@ interface BaseRouteConfig {
   body?: TSchema
   /** Shorthand for a single `200` response schema. Mutually convenient with {@link responses}. */
   response?: TSchema
+  /** @internal Injected by spac-transform with per-property source locations. */
+  __src?: ConfigSrcMeta
   /**
    * Explicit map of status codes to response schemas or {@link ResponseDef} objects.
    * Use this when you need multiple status codes or custom descriptions/headers.

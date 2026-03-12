@@ -125,6 +125,168 @@ export function lookup(
 }
 
 // ---------------------------------------------------------------------------
+// VLQ encoding (for V3 source maps)
+// ---------------------------------------------------------------------------
+
+const B64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+
+export function vlqEncode(value: number): string {
+  let vlq = value < 0 ? ((-value) << 1) + 1 : value << 1
+  let encoded = ''
+  do {
+    let digit = vlq & 0b11111
+    vlq >>>= 5
+    if (vlq > 0) digit |= 0b100000
+    encoded += B64[digit]
+  } while (vlq > 0)
+  return encoded
+}
+
+// ---------------------------------------------------------------------------
+// V3 source map builder
+// ---------------------------------------------------------------------------
+
+export interface V3Mapping {
+  outLine: number
+  outCol: number
+  srcFile: string
+  srcLine: number
+  srcCol: number
+}
+
+export function buildV3SourceMap(
+  outputFile: string,
+  mappings: V3Mapping[],
+): V3SourceMap {
+  const fileToIdx = new Map<string, number>()
+  const sources: string[] = []
+
+  for (const m of mappings) {
+    if (!fileToIdx.has(m.srcFile)) {
+      fileToIdx.set(m.srcFile, sources.length)
+      sources.push(m.srcFile)
+    }
+  }
+
+  const byLine = new Map<number, V3Mapping[]>()
+  let maxLine = 0
+  for (const m of mappings) {
+    if (m.outLine > maxLine) maxLine = m.outLine
+    let arr = byLine.get(m.outLine)
+    if (!arr) { arr = []; byLine.set(m.outLine, arr) }
+    arr.push(m)
+  }
+
+  const state = { prevSrcFile: 0, prevSrcLine: 0, prevSrcCol: 0 }
+  const lines: string[] = []
+
+  for (let line = 0; line <= maxLine; line++) {
+    const lineMap = byLine.get(line)
+    if (!lineMap || lineMap.length === 0) { lines.push(''); continue }
+    lineMap.sort((a, b) => a.outCol - b.outCol)
+
+    const parts: string[] = []
+    let prevOutCol = 0
+
+    for (const m of lineMap) {
+      const srcIdx = fileToIdx.get(m.srcFile)!
+      let seg = vlqEncode(m.outCol - prevOutCol)
+      seg += vlqEncode(srcIdx - state.prevSrcFile)
+      seg += vlqEncode(m.srcLine - state.prevSrcLine)
+      seg += vlqEncode(m.srcCol - state.prevSrcCol)
+      parts.push(seg)
+
+      prevOutCol = m.outCol
+      state.prevSrcFile = srcIdx
+      state.prevSrcLine = m.srcLine
+      state.prevSrcCol = m.srcCol
+    }
+
+    lines.push(parts.join(','))
+  }
+
+  return {
+    version: 3,
+    file: outputFile,
+    sources,
+    names: [],
+    mappings: lines.join(';'),
+  }
+}
+
+// ---------------------------------------------------------------------------
+// JSON serializer with position tracking
+// ---------------------------------------------------------------------------
+
+export interface JsonPositions {
+  json: string
+  positions: Map<string, { line: number; col: number }>
+}
+
+export function serializeJsonWithPositions(value: unknown, indent = 2): JsonPositions {
+  const positions = new Map<string, { line: number; col: number }>()
+  let line = 0
+  let col = 0
+  const parts: string[] = []
+
+  function write(s: string) {
+    for (const ch of s) {
+      if (ch === '\n') { line++; col = 0 } else { col++ }
+    }
+    parts.push(s)
+  }
+
+  function opStr(segments: (string | number)[]): string {
+    return segments.map(s => `[${JSON.stringify(s)}]`).join('')
+  }
+
+  function writeValue(val: unknown, path: (string | number)[], depth: number) {
+    if (val === null) { write('null'); return }
+    if (typeof val === 'boolean' || typeof val === 'number') { write(String(val)); return }
+    if (typeof val === 'string') { write(JSON.stringify(val)); return }
+    if (Array.isArray(val)) {
+      if (val.length === 0) { write('[]'); return }
+      write('[\n')
+      for (let i = 0; i < val.length; i++) {
+        const pad = ' '.repeat(indent * (depth + 1))
+        write(pad)
+        const cp = [...path, i]
+        positions.set(opStr(cp), { line, col: col - pad.length })
+        writeValue(val[i], cp, depth + 1)
+        if (i < val.length - 1) write(',')
+        write('\n')
+      }
+      write(' '.repeat(indent * depth) + ']')
+      return
+    }
+    if (typeof val === 'object') {
+      const entries = Object.entries(val as Record<string, unknown>)
+      if (entries.length === 0) { write('{}'); return }
+      write('{\n')
+      for (let i = 0; i < entries.length; i++) {
+        const [key, v] = entries[i]
+        const pad = ' '.repeat(indent * (depth + 1))
+        write(pad)
+        const cp = [...path, key]
+        positions.set(opStr(cp), { line, col: col - pad.length })
+        write(JSON.stringify(key) + ': ')
+        writeValue(v, cp, depth + 1)
+        if (i < entries.length - 1) write(',')
+        write('\n')
+      }
+      write(' '.repeat(indent * depth) + '}')
+      return
+    }
+    write(JSON.stringify(val))
+  }
+
+  positions.set('', { line: 0, col: 0 })
+  writeValue(value, [], 0)
+
+  return { json: parts.join(''), positions }
+}
+
+// ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
@@ -132,6 +294,15 @@ export function lookup(
 export interface EmitOptions {
   /** When true, returns `{ spec, sourceMap }` with CRC32-keyed source locations. */
   debug?: boolean
+}
+
+/** V3 source map following the standard format with VLQ-encoded mappings. */
+export interface V3SourceMap {
+  version: 3
+  file: string
+  sources: string[]
+  names: string[]
+  mappings: string
 }
 
 /** Result of emit when `debug: true`. */
@@ -142,4 +313,8 @@ export interface EmitDebugResult {
   files: string[]
   /** CRC32(objectPath) → fileId:line:col */
   sourceMap: Record<string, string>
+  /** Formatted JSON output — use with v3 for position-based source mapping. */
+  json: string
+  /** Standard V3 source map mapping positions in `json` to source TypeScript positions. */
+  v3: V3SourceMap
 }
