@@ -301,3 +301,75 @@ Added a debug source map feature to `api.emit({ debug: true })` that connects ev
 
 - 662/662 spac tests passing
 - Run: `pnpm --filter spac test`
+
+---
+
+## `spacview` — Source Map Viewer
+
+New package at `packages/spacview`. A Vite + React + TypeScript + Tailwind v4 + shadcn/ui + CodeMirror 6 web app that visualizes how spac source code produces the resulting OpenAPI spec.
+
+### How it works
+
+Split-screen layout: **TypeScript source** on the left, **OpenAPI YAML spec** on the right. Click anywhere in the YAML and the app:
+
+1. Determines the object path at the click position (e.g. `["paths"]["/pets"]["get"]["summary"]`) by walking the YAML AST with character position ranges
+2. CRC32-hashes the bracket-notation path string
+3. Looks up the hash in the source map to find the originating source file, line, and column
+4. If the exact path isn't in the source map, walks up parent-by-parent (findClosest) until a match is found
+5. Scrolls to and highlights the corresponding line in the source editor
+
+### Architecture
+
+```
+Click in YAML editor
+  → posAtCoords (CodeMirror)
+  → findPathAtOffset (YAML AST position → object path segments)
+  → objectPath(...segments) → bracket notation string
+  → crc32(path) → hash key
+  → lookup(sourceMap, ...segments) → { file, line, col } (walks up if needed)
+  → highlight + scrollIntoView in source editor
+```
+
+### Scaffolding
+
+Project was scaffolded with the official shadcn CLI:
+```sh
+pnpm dlx shadcn@latest init -t vite -n spacview --no-monorepo -d
+pnpm dlx shadcn@latest add resizable
+```
+
+### Files
+
+```
+packages/spacview/
+├── package.json
+├── components.json           # shadcn config
+├── vite.config.ts
+├── tsconfig.json
+├── index.html
+└── src/
+    ├── main.tsx              # React entry
+    ├── App.tsx               # Split-screen layout, CodeMirror editors, click handling
+    ├── index.css             # Tailwind v4 + shadcn theme + highlight styles
+    ├── lib/
+    │   ├── utils.ts          # shadcn cn() helper
+    │   ├── source-map.ts     # CRC32, objectPath, lookup — ported from spac/src/debug.ts
+    │   └── yaml-path.ts      # YAML AST → position-to-path map, findPathAtOffset
+    └── components/
+        └── ui/
+            └── resizable.tsx # shadcn resizable panel component
+```
+
+### Data
+
+Currently loads the petstore example data via Vite imports:
+- Source code: `../../examples/petstore/index.ts` (raw import)
+- Spec: `../../examples/petstore/spec.json`
+- Source map: `../../examples/petstore/sourcemap.json`
+
+Generate these with: `pnpm --filter spac-examples petstore:debug`
+
+### Current state
+
+- WIP — initial scaffold and wiring complete
+- Run: `pnpm --filter spacview dev`

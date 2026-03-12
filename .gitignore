@@ -8,3 +8,8 @@ packages/examples/cloudflare/index.ts
 spec.json
 sourcemap.json
 !packages/examples/cloudflare/spec.json
+
+
+.agents/
+
+skills-lock.json
