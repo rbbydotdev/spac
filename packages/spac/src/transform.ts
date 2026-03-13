@@ -179,6 +179,48 @@ function addSrcToConfig(
     }
   }
 
+  // Descend into `responses` to track per-status and per-sub-property positions
+  for (const prop of configObj.properties) {
+    if (!ts.isPropertyAssignment(prop)) continue
+    const name = ts.isIdentifier(prop.name) ? prop.name.text : null
+    if (name !== 'responses' || !ts.isObjectLiteralExpression(prop.initializer)) continue
+
+    for (const statusProp of prop.initializer.properties) {
+      if (!ts.isPropertyAssignment(statusProp)) continue
+      const statusKey = ts.isIdentifier(statusProp.name) ? statusProp.name.text
+        : ts.isNumericLiteral(statusProp.name) ? statusProp.name.text
+        : ts.isStringLiteral(statusProp.name) ? statusProp.name.text
+        : null
+      if (!statusKey) continue
+
+      // Record the status code entry position
+      const [sLine, sCol] = getLineCol(sourceFile, statusProp.getStart(sourceFile))
+      srcProps.push(factory.createPropertyAssignment(
+        factory.createStringLiteral(`responses:${statusKey}`),
+        factory.createArrayLiteralExpression([
+          factory.createNumericLiteral(sLine),
+          factory.createNumericLiteral(sCol),
+        ]),
+      ))
+
+      // If the status value is an object literal (ResponseDef), track its sub-properties
+      if (ts.isObjectLiteralExpression(statusProp.initializer)) {
+        for (const subProp of statusProp.initializer.properties) {
+          if (!ts.isPropertyAssignment(subProp) || !ts.isIdentifier(subProp.name)) continue
+          const subName = subProp.name.text
+          const [spLine, spCol] = getLineCol(sourceFile, subProp.getStart(sourceFile))
+          srcProps.push(factory.createPropertyAssignment(
+            factory.createStringLiteral(`responses:${statusKey}:${subName}`),
+            factory.createArrayLiteralExpression([
+              factory.createNumericLiteral(spLine),
+              factory.createNumericLiteral(spCol),
+            ]),
+          ))
+        }
+      }
+    }
+  }
+
   const srcObj = factory.createObjectLiteralExpression(srcProps, true)
   const srcProp = factory.createPropertyAssignment('__src', srcObj)
 

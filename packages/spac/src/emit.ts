@@ -345,8 +345,26 @@ export function emitOpenApi(api: Api, options?: EmitOptions): Record<string, unk
         if (operation.requestBody) src.add(objectPath('paths', pathKey, route.method, 'requestBody'), s.get('body') || opSrc)
         if (route.config.response) src.add(objectPath('paths', pathKey, route.method, 'responses', '200'), s.get('response') || opSrc)
         if (route.config.responses) {
-          for (const status of Object.keys(route.config.responses)) {
-            src.add(objectPath('paths', pathKey, route.method, 'responses', String(status)), opSrc)
+          for (const [status, def] of Object.entries(route.config.responses)) {
+            const statusSrc = s.get(`responses:${status}`) || opSrc
+            src.add(objectPath('paths', pathKey, route.method, 'responses', String(status)), statusSrc)
+
+            // Sub-properties of ResponseDef objects
+            if (!isTSchema(def)) {
+              const rd = def as ResponseDef
+              if (rd.headers) {
+                const hdrSrc = s.get(`responses:${status}:headers`) || statusSrc
+                src.add(objectPath('paths', pathKey, route.method, 'responses', String(status), 'headers'), hdrSrc)
+              }
+              if (rd.description) {
+                const descSrc = s.get(`responses:${status}:description`) || statusSrc
+                src.add(objectPath('paths', pathKey, route.method, 'responses', String(status), 'description'), descSrc)
+              }
+              if (rd.schema) {
+                const schemaSrc = s.get(`responses:${status}:schema`) || statusSrc
+                src.add(objectPath('paths', pathKey, route.method, 'responses', String(status), 'content'), schemaSrc)
+              }
+            }
           }
         }
       }
