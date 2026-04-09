@@ -1,4 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
+import { ExternalLink, Zap } from "lucide-react";
 
 export const gitConfig = {
   user: "rbbydotdev",
@@ -23,8 +24,21 @@ export function baseOptions(): BaseLayoutProps {
     },
     links: [
       {
-        text: "Playground",
+        text: (
+          <span className="inline-flex items-center gap-1">
+            Playground
+            <ExternalLink className="size-3" />
+          </span>
+        ),
         url: "/spac/playground",
+        external: true,
+      },
+      {
+        type: "icon",
+        icon: <Zap className="size-4" />,
+        label: "rbby.dev",
+        text: "rbby.dev",
+        url: "https://rbby.dev",
         external: true,
       },
     ],

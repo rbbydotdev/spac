@@ -83,4 +83,12 @@ test.describe("playground", () => {
     expect(yamlText).toContain("openapi");
     expect(yamlText).toContain("paths");
   });
+
+  test("deep link to example and file", async ({ page }) => {
+    await page.goto("/plantstore?file=plants/index.ts");
+    await expect(
+      page.getByRole("button", { name: "plantstore" }),
+    ).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator("header").getByText("plants/index.ts")).toBeVisible();
+  });
 });

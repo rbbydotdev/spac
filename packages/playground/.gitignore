@@ -11,6 +11,7 @@ node_modules
 dist
 public/data
 public/declarations.json
+public/og
 dist-ssr
 test-results
 playwright-report

@@ -8,6 +8,14 @@ TypeScript DSL for authoring OpenAPI 3.1+ specs. Uses [TypeBox](https://github.c
 
 **[Docs](https://rbbydotdev.github.io/spac/)** · **[Playground](https://rbbydotdev.github.io/spac/playground)** · **[Getting Started](https://rbbydotdev.github.io/spac/docs/tutorials/getting-started)** · **[API Reference](https://rbbydotdev.github.io/spac/docs/reference/api)**
 
+### Hover docs in the playground
+
+![Hover tooltip showing .get() method signature and JSDoc in the plantstore example](assets/hover-get-route.png)
+
+### Source mapping — TypeScript to OpenAPI YAML
+
+![Playground showing TypeScript source on the left mapped to generated OpenAPI YAML on the right](assets/overview-breadcrumb.png)
+
 ---
 
 ```ts
@@ -218,7 +226,81 @@ result.sourceTable // Map<jsonPath, SourceEntry>
 
 ## Contributing
 
-See [INDEX.md](INDEX.md) for the full repo layout, build instructions, and the examples branch workflow.
+### Prerequisites
+
+- Node.js 22+
+- [pnpm](https://pnpm.io/) 10+
+
+### Setup
+
+```sh
+git clone https://github.com/rbbydotdev/spac.git
+cd spac
+pnpm install
+```
+
+### Monorepo structure
+
+```
+packages/
+  spac/            — Core library (@spec-spac/spac)
+  from-openapi/    — CLI + library for reverse-generating spac from OpenAPI
+  playground/      — Interactive playground (Vite + React + CodeMirror)
+  website/         — Documentation site (Next.js + Fumadocs)
+  theme/           — Shared Shiki syntax themes
+  spac-vscode/     — VS Code extension
+  examples/        — Example projects (petstore, plantstore, serpapi, etc.)
+```
+
+### Build & test
+
+```sh
+# Build the core library
+pnpm --filter @spec-spac/spac build
+
+# Run core tests
+pnpm --filter @spec-spac/spac test
+
+# Build + test the from-openapi package
+pnpm --filter @spec-spac/from-openapi build
+pnpm --filter @spec-spac/from-openapi test
+```
+
+### Running locally
+
+**Docs site** (Next.js):
+```sh
+pnpm --filter website dev
+# → http://localhost:3000
+```
+
+**Playground** (Vite):
+```sh
+# Generate fixtures first (required once, or after changing examples/spac source)
+pnpm --filter spac-playground generate
+
+# Start dev server
+pnpm --filter spac-playground dev
+```
+
+The `generate` step bundles type declarations, builds source maps, and creates example fixtures the playground needs. Re-run it after modifying example specs or the spac package.
+
+### Playground e2e tests
+
+```sh
+# Install browser (first time only)
+pnpm exec --filter spac-playground playwright install chromium
+
+# Run tests
+pnpm --filter spac-playground test:e2e
+```
+
+### Formatting
+
+```sh
+pnpm format        # auto-fix with Biome
+pnpm format:check  # check only (used in CI)
+```
 
 ## License
 

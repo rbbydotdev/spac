@@ -1,0 +1,113 @@
+---
+title: Contributing
+description: Set up the monorepo, run packages locally, and submit changes
+---
+
+## Prerequisites
+
+- Node.js 22+
+- [pnpm](https://pnpm.io/) 10+
+
+## Setup
+
+```bash
+git clone https://github.com/rbbydotdev/spac.git
+cd spac
+pnpm install
+```
+
+## Monorepo structure
+
+```
+packages/
+  spac/            — Core library (@spec-spac/spac)
+  from-openapi/    — CLI + library for reverse-generating spac from OpenAPI
+  playground/      — Interactive playground (Vite + React + CodeMirror)
+  website/         — Documentation site (Next.js + Fumadocs)
+  theme/           — Shared Shiki syntax themes
+  spac-vscode/     — VS Code extension
+  examples/        — Example projects (petstore, plantstore, serpapi, etc.)
+```
+
+## Build and test
+
+Build and test the core library:
+
+```bash
+pnpm --filter @spec-spac/spac build
+pnpm --filter @spec-spac/spac test
+```
+
+Build and test the from-openapi package:
+
+```bash
+pnpm --filter @spec-spac/from-openapi build
+pnpm --filter @spec-spac/from-openapi test
+```
+
+## Running locally
+
+### Docs site
+
+The documentation site uses Next.js with [Fumadocs](https://fumadocs.dev):
+
+```bash
+pnpm --filter website dev
+```
+
+This starts the dev server at `http://localhost:3000` with hot reload.
+
+### Playground
+
+The playground is a Vite + React app with CodeMirror editors and a TypeScript language service running in a web worker:
+
+```bash
+# Generate fixtures first (required once, or after changing examples/spac source)
+pnpm --filter spac-playground generate
+
+# Start dev server
+pnpm --filter spac-playground dev
+```
+
+The `generate` step:
+- Runs the `from-openapi` codegen on example specs
+- Builds source maps and fixture data
+- Bundles type declarations (`.d.ts` files) for the in-browser TypeScript language service
+- Validates all fixtures
+
+Re-run `generate` after modifying example specs or the spac package source.
+
+## Playground e2e tests
+
+The playground has Playwright end-to-end tests that verify loading, navigation, hover tooltips, and source mapping:
+
+```bash
+# Install browser (first time only)
+npx playwright install chromium
+
+# Run tests
+pnpm --filter spac-playground test:e2e
+```
+
+These tests also run in CI on every push.
+
+## Formatting
+
+The repo uses [Biome](https://biomejs.dev/) for formatting:
+
+```bash
+pnpm format        # auto-fix
+pnpm format:check  # check only (used in CI)
+```
+
+## CI
+
+The GitHub Actions CI workflow runs on every push and PR to `master`:
+
+1. Builds and tests `@spec-spac/spac`
+2. Builds and tests `@spec-spac/from-openapi`
+3. Generates playground fixtures
+4. Builds the playground
+5. Runs Playwright e2e tests
+
+A separate deploy workflow builds and publishes the docs site and playground to GitHub Pages.

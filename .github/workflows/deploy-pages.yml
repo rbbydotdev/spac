@@ -61,8 +61,10 @@ jobs:
           var p = window.location.pathname;
           if (p.startsWith('/spac/playground')) {
             var base = '/spac/playground/';
-            var route = p.slice(base.length);
-            window.location.replace(base + '?route=' + encodeURIComponent(route) + window.location.hash);
+            var route = p.slice(base.length).split('?')[0];
+            var search = window.location.search;
+            var sep = search ? search + '&' : '?';
+            window.location.replace(base + sep + '__route=' + encodeURIComponent(route) + window.location.hash);
           }
           </script></head><body></body></html>
           FOUROHFOUR
