@@ -1,5 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
-import { ExternalLink, Zap } from "lucide-react";
+import { BookOpen, SquareTerminal, Zap } from "lucide-react";
 
 export const gitConfig = {
   user: "rbbydotdev",
@@ -22,26 +22,37 @@ export function baseOptions(): BaseLayoutProps {
         </span>
       ),
     },
+    githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
     links: [
       {
         text: (
-          <span className="inline-flex items-center gap-1">
-            Playground
-            <ExternalLink className="size-3" />
+          <span className="inline-flex items-center gap-1.5">
+            <BookOpen className="size-4" />
+            Documentation
           </span>
         ),
-        url: "/spac/playground",
+        url: "/docs",
+      },
+      {
+        text: (
+          <span className="inline-flex items-center gap-1.5">
+            <SquareTerminal className="size-4" />
+            Playground
+          </span>
+        ),
+        url: "https://rbby.dev/spac/playground",
         external: true,
       },
       {
-        type: "icon",
-        icon: <Zap className="size-4" />,
-        label: "rbby.dev",
-        text: "rbby.dev",
+        text: (
+          <span className="inline-flex items-center gap-1.5">
+            <Zap className="size-4" />
+            rbby.dev
+          </span>
+        ),
         url: "https://rbby.dev",
         external: true,
       },
     ],
-    githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
   };
 }
