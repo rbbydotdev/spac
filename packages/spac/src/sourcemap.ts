@@ -2,6 +2,12 @@
 // Source Mapping — debug-mode call-site capture for OpenAPI ↔ source linking
 // ---------------------------------------------------------------------------
 
+declare global {
+  interface ErrorConstructor {
+    captureStackTrace(target: object, constructorOpt?: Function): void;
+  }
+}
+
 /**
  * A location in the user's source file.
  * Captured at runtime via `Error.captureStackTrace` when debug mode is on.
