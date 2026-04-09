@@ -43,9 +43,6 @@ jobs:
 
       # Build playground (Vite)
       - run: pnpm --filter spac-playground generate
-      - run: npx playwright install --with-deps chromium
-        working-directory: packages/playground
-      - run: pnpm --filter spac-playground generate:og
       - run: pnpm --filter spac-playground build
         env:
           GITHUB_PAGES: true
