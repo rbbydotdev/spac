@@ -1,0 +1,90 @@
+{
+  "search_metadata": {
+    "id": "61afb3ace7d08a685b3bcbb1",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/c292c1c1fe17fc58/61afb3ace7d08a685b3bcbb1.json",
+    "created_at": "2021-12-07 19:19:08 UTC",
+    "processed_at": "2021-12-07 19:19:08 UTC",
+    "google_url": "https://www.google.com/search?q=coffee&oq=coffee&hl=en&gl=us",
+    "total_time_taken": 1.52
+  },
+  "search_parameters": {
+    "engine": "google",
+    "q": "coffee",
+    "location_requested": "Austin, Texas, United States",
+    "location_used": "Austin,Texas,United States",
+    "google_domain": "google.com",
+    "hl": "en",
+    "gl": "us",
+    "device": "desktop"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling",
+    "query_displayed": "coffee",
+    "total_results": 1340000000,
+    "time_taken_displayed": 0.99
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Coffee - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Coffee",
+      "displayed_link": "https://en.wikipedia.org › wiki › Coffee",
+      "snippet": "Coffee is a brewed drink prepared from roasted coffee beans, the seeds of berries from certain flowering plants in the Coffea genus.",
+      "snippet_highlighted_words": ["Coffee"],
+      "sitelinks": {
+        "inline": [
+          { "title": "History", "link": "https://en.wikipedia.org/wiki/History_of_coffee" },
+          { "title": "Coffee bean", "link": "https://en.wikipedia.org/wiki/Coffee_bean" },
+          { "title": "Coffee preparation", "link": "https://en.wikipedia.org/wiki/Coffee_preparation" }
+        ]
+      },
+      "about_this_result": {
+        "source": { "description": "Wikipedia is a free content, multilingual online encyclopedia written and maintained by a community of volunteers through a model of open collaboration, using a wiki-based editing system." }
+      }
+    },
+    {
+      "position": 2,
+      "title": "The Health Benefits of Coffee",
+      "link": "https://www.healthline.com/nutrition/top-evidence-based-health-benefits-of-coffee",
+      "displayed_link": "https://www.healthline.com › nutrition",
+      "snippet": "Coffee is one of the world's most popular beverages. Thanks to its high levels of antioxidants and beneficial nutrients, it's quite healthy too.",
+      "snippet_highlighted_words": ["Coffee"],
+      "rich_snippet": {
+        "top": {
+          "extensions": ["Rating: 4.5", "45 reviews"],
+          "detected_extensions": { "rating": 4.5, "reviews": 45 }
+        }
+      }
+    },
+    {
+      "position": 3,
+      "title": "What is Coffee? - National Coffee Association",
+      "link": "https://www.ncausa.org/About-Coffee/What-is-Coffee",
+      "displayed_link": "https://www.ncausa.org › About-Coffee",
+      "snippet": "Everyone recognizes a roasted coffee bean, but you might not recognize an actual coffee plant."
+    }
+  ],
+  "knowledge_graph": {
+    "title": "Coffee",
+    "type": "Drink",
+    "description": "Coffee is a brewed drink prepared from roasted coffee beans, the seeds of berries from certain flowering plants in the Coffea genus.",
+    "kgmid": "/m/02vqfm",
+    "header_images": [{ "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS..." }],
+    "source": { "name": "Wikipedia", "link": "https://en.wikipedia.org/wiki/Coffee" }
+  },
+  "related_questions": [
+    { "question": "What is the most popular coffee?", "snippet": "The most popular coffee drinks include..." },
+    { "question": "Is coffee good for you?", "snippet": "When consumed in moderation, coffee can be part of a healthy diet..." }
+  ],
+  "related_searches": [
+    { "query": "types of coffee", "link": "https://www.google.com/search?q=types+of+coffee" },
+    { "query": "coffee benefits", "link": "https://www.google.com/search?q=coffee+benefits" },
+    { "query": "best coffee brands", "link": "https://www.google.com/search?q=best+coffee+brands" }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.google.com/search?q=coffee&start=10",
+    "other_pages": { "2": "https://www.google.com/search?q=coffee&start=10" }
+  }
+}

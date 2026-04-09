@@ -1,0 +1,107 @@
+{
+  "search_metadata": {
+    "id": "5d8cb082de983409f4a1aa21",
+    "status": "Success",
+    "google_scholar_url": "https://scholar.google.com/scholar?q=biology&hl=en",
+    "total_time_taken": 1.43
+  },
+  "search_parameters": {
+    "engine": "google_scholar",
+    "q": "biology",
+    "hl": "en"
+  },
+  "search_information": {
+    "total_results": 5880000,
+    "time_taken_displayed": 0.08,
+    "query_displayed": "biology"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Population biology of plants",
+      "result_id": "PLkJP4dW7gQJ",
+      "link": "https://scholar.google.com/citations?view_op=view_citation&citation_for_view=PLkJP4dW7gQJ",
+      "snippet": "A comprehensive treatment of population biology covering plant demography, reproductive strategies, competition, herbivory, and community dynamics.",
+      "publication_info": {
+        "summary": "JL Harper - Academic Press, 1977",
+        "authors": [
+          { "name": "JL Harper", "author_id": "Ha4mB5UAAAAJ" }
+        ]
+      },
+      "inline_links": {
+        "cited_by": {
+          "total": 14003,
+          "link": "https://scholar.google.com/scholar?cites=14591498737498688264"
+        },
+        "related_pages_link": "https://scholar.google.com/scholar?q=related:PLkJP4dW7gQJ",
+        "versions": {
+          "total": 8,
+          "link": "https://scholar.google.com/scholar?cluster=14591498737498688264"
+        }
+      }
+    },
+    {
+      "position": 2,
+      "title": "Molecular cell biology",
+      "result_id": "R2u2N0bZeGAJ",
+      "link": "https://www.ncbi.nlm.nih.gov/books/NBK21475/",
+      "snippet": "A foundational textbook integrating molecular biology with cell biology, covering gene expression, protein structure, membrane transport, and signaling.",
+      "publication_info": {
+        "summary": "H Lodish, A Berk, SL Zipursky, P Matsudaira - W.H. Freeman, 2000",
+        "authors": [
+          { "name": "H Lodish", "author_id": "Kk3bXFcAAAAJ" },
+          { "name": "A Berk", "author_id": "9H2wMREAAAAJ" }
+        ]
+      },
+      "inline_links": {
+        "cited_by": {
+          "total": 9196,
+          "link": "https://scholar.google.com/scholar?cites=7352868369037001557"
+        },
+        "related_pages_link": "https://scholar.google.com/scholar?q=related:R2u2N0bZeGAJ",
+        "versions": {
+          "total": 14,
+          "link": "https://scholar.google.com/scholar?cluster=7352868369037001557"
+        }
+      }
+    },
+    {
+      "position": 3,
+      "title": "Brock biology of microorganisms",
+      "result_id": "Xm3VbEw43JYJ",
+      "link": "https://www.pearson.com/store/p/brock-biology-of-microorganisms/P100002518204",
+      "snippet": "The authoritative text on general microbiology, covering microbial evolution, metabolism, molecular biology, ecology, and pathogenesis.",
+      "publication_info": {
+        "summary": "MT Madigan, JM Martinko, J Parker - Prentice Hall, 2003",
+        "authors": [
+          { "name": "MT Madigan", "author_id": "TF3cqGUAAAAJ" },
+          { "name": "JM Martinko", "author_id": "V3h4gd4AAAAJ" }
+        ]
+      },
+      "inline_links": {
+        "cited_by": {
+          "total": 9710,
+          "link": "https://scholar.google.com/scholar?cites=8609070568991753820"
+        },
+        "related_pages_link": "https://scholar.google.com/scholar?q=related:Xm3VbEw43JYJ",
+        "versions": {
+          "total": 10,
+          "link": "https://scholar.google.com/scholar?cluster=8609070568991753820"
+        }
+      }
+    }
+  ],
+  "related_searches": [
+    { "query": "biology textbook", "link": "https://scholar.google.com/scholar?q=biology+textbook" },
+    { "query": "cell biology", "link": "https://scholar.google.com/scholar?q=cell+biology" },
+    { "query": "molecular biology", "link": "https://scholar.google.com/scholar?q=molecular+biology" }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://scholar.google.com/scholar?start=10&q=biology&hl=en",
+    "other_pages": {
+      "2": "https://scholar.google.com/scholar?start=10&q=biology&hl=en",
+      "3": "https://scholar.google.com/scholar?start=20&q=biology&hl=en"
+    }
+  }
+}

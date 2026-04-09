@@ -1,0 +1,79 @@
+{
+  "search_metadata": {
+    "id": "64afe2d915afff17e18d922f",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/dadfa7408bfa2d66/64afe2d915afff17e18d922f.json",
+    "created_at": "2023-07-13 11:41:13 UTC",
+    "processed_at": "2023-07-13 11:41:13 UTC",
+    "google_patents_url": "https://patents.google.com/xhr/query?url=q%3D%2528Coffee%2529",
+    "raw_html_file": "https://serpapi.com/searches/dadfa7408bfa2d66/64afe2d915afff17e18d922f.html",
+    "total_time_taken": 1.09
+  },
+  "search_parameters": {
+    "engine": "google_patents",
+    "q": "(Coffee)"
+  },
+  "search_information": {
+    "total_results": 125048,
+    "total_pages": 100,
+    "page_number": 0
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "rank": 0,
+      "patent_id": "patent/US8110241B2/en",
+      "patent_link": "https://patents.google.com/patent/US8110241B2/en",
+      "serpapi_link": "https://serpapi.com/search.json?engine=google_patents_details&patent_id=patent%2FUS8110241B2%2Fen",
+      "title": "Foaming soluble coffee powder containing pressurized gas",
+      "snippet": "An instant coffee powder has dried soluble coffee in the form of particles or granules having internal voids filled with entrapped pressurized gas.",
+      "priority_date": "2004-08-17",
+      "filing_date": "2010-04-27",
+      "grant_date": "2012-02-07",
+      "publication_date": "2012-02-07",
+      "inventor": "Bary Lyn Zeller",
+      "assignee": "Kraft Foods Global Brands Llc",
+      "publication_number": "US8110241B2",
+      "language": "en",
+      "thumbnail": "https://patentimages.storage.googleapis.com/25/a4/3c/08a69758ca974c/US08110241-20120207-D00000.png",
+      "pdf": "https://patentimages.storage.googleapis.com/86/1c/bd/89a41d9faca215/US8110241.pdf",
+      "figures": [
+        {
+          "thumbnail": "https://patentimages.storage.googleapis.com/bc/43/8a/befe307de64c7c/US08110241-20120207-D00000.png",
+          "full": "https://patentimages.storage.googleapis.com/e0/9e/10/d0a025032833eb/US08110241-20120207-D00000.png"
+        }
+      ],
+      "country_status": {
+        "EP": "ACTIVE",
+        "US": "ACTIVE",
+        "AR": "UNKNOWN",
+        "AT": "NOT_ACTIVE"
+      }
+    }
+  ],
+  "summary": {
+    "assignee": [
+      { "key": "Total", "percentage": 100.0 },
+      { "key": "Nestec S.A.", "percentage": 1.5 },
+      { "key": "Societe Des Produits Nestle S.A.", "percentage": 1.2 }
+    ],
+    "inventor": [
+      { "key": "Total", "percentage": 100.0 },
+      { "key": "Ernesto Illy", "percentage": 0.6 },
+      { "key": "Daniel Fischer", "percentage": 0.6 }
+    ],
+    "cpc": [
+      { "key": "Total", "percentage": 100.0 },
+      { "key": "A47J", "percentage": 66.7 },
+      { "key": "A23F", "percentage": 19.5 }
+    ]
+  },
+  "pagination": {
+    "current": 0,
+    "next": "https://patents.google.com/xhr/query?url=q%3D%2528Coffee%2529%26page%3D1"
+  },
+  "serpapi_pagination": {
+    "current": 0,
+    "next": "https://serpapi.com/search.json?engine=google_patents&page=1&q=%28Coffee%29"
+  }
+}

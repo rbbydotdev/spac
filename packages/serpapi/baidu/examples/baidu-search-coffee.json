@@ -1,0 +1,50 @@
+{
+  "search_metadata": {
+    "id": "5cfc676056794c051f463d6d",
+    "status": "Success",
+    "created_at": "2019-06-09 01:56:48 UTC",
+    "processed_at": "2019-06-09 01:56:48 UTC",
+    "baidu_url": "https://www.baidu.com/s?wd=coffee&oq=coffee&tn=baidu&ie=UTF-8",
+    "total_time_taken": 5.45
+  },
+  "search_parameters": { "q": "coffee" },
+  "search_information": {
+    "query_displayed": "coffee",
+    "total_results": 34600000
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "coffee_百度百科",
+      "link": "http://www.baidu.com/link?url=DNWHTn_p1BapENFtevzgFns-9NaodAnMIxW0GXLuaFhvCD8iVYMd6eHchdrqN7SB",
+      "displayed_brand": "baike.baidu.com/",
+      "snippet": "简介：咖啡是用经过烘焙的咖啡豆制作出来的饮料，与可可、茶同为流行于世界的主要饮品。"
+    },
+    {
+      "position": 2,
+      "title": "The Best Coffee from Starbucks Coffee",
+      "link": "http://www.baidu.com/link?url=CpzBvhCO9_vRSW-Snvbm6jMj6oml26g_GhHZFTcGM0Jae70N_5GNK4Pk_98GFwzS",
+      "displayed_link": "https://www.starbucks.com/coffee",
+      "snippet": "Starbucks Coffee Finder. Our coffee masters have distilled their years of tasting knowledge..."
+    }
+  ],
+  "answer_box": [
+    {
+      "position": 1,
+      "title": "coffee_百度翻译",
+      "type": "dictionary_results",
+      "english_word": "coffee",
+      "british": { "phonetic": "[ˈkɒfi]" },
+      "american": { "phonetic": "[ˈkɔːfi]" },
+      "definitions": [["n. (烘烤过的) 咖啡豆; 咖啡粉; 咖啡(热饮料); 一杯咖啡;"]]
+    }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.baidu.com/s?wd=coffee&pn=10"
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next": "https://serpapi.com/search.json?device=desktop&engine=baidu&f=8&oq=coffee&pn=10&q=coffee"
+  }
+}

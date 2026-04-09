@@ -1,0 +1,21 @@
+{
+  "name": "serpapi",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch-examples": "tsx fetch-examples.ts",
+    "generate": "tsx generate.ts",
+    "build": "tsx index.ts",
+    "spec": "tsx index.ts > spec.json",
+    "all": "tsx fetch-examples.ts && tsx generate.ts && tsx index.ts > spec.json"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "0.34.48",
+    "spac": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0"
+  }
+}

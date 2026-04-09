@@ -1,0 +1,80 @@
+{
+  "search_metadata": {
+    "id": "695e5760fe1c6b0dfce576e7",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/53ea218ec31fbf8e/695e5760fe1c6b0dfce576e7.json",
+    "created_at": "2026-01-07T12:53:52.165Z",
+    "processed_at": "2026-01-07T12:53:52.171Z",
+    "total_time_taken": 2.64
+  },
+  "search_parameters": {
+    "engine": "google_hotels",
+    "q": "Bali Resorts",
+    "gl": "us",
+    "hl": "en",
+    "currency": "USD",
+    "check_in_date": "2026-04-08",
+    "check_out_date": "2026-04-09",
+    "adults": 2,
+    "children": 0
+  },
+  "search_information": { "total_results": 15000 },
+  "brands": [
+    { "id": 33, "name": "Accor Live Limitless", "children": [{ "id": 67, "name": "Banyan Tree" }] },
+    { "id": 223, "name": "Archipelago International", "children": [{ "id": 229, "name": "Aston" }] }
+  ],
+  "properties": [
+    {
+      "type": "hotel",
+      "name": "The Ritz-Carlton, Bali",
+      "description": "Zen-like quarters, some with butler service, in an upscale property offering refined dining & a spa.",
+      "property_token": "ChkIv_HyiNKHpf6yARoML2cvMXozdGJnZ3BzEAE",
+      "gps_coordinates": { "latitude": -8.8306709, "longitude": 115.2153312 },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "12:00 PM",
+      "rate_per_night": { "lowest": "$332", "extracted_lowest": 332 },
+      "total_rate": { "lowest": "$332", "extracted_lowest": 332 },
+      "hotel_class": "5-star hotel",
+      "extracted_hotel_class": 5,
+      "overall_rating": 4.6,
+      "reviews": 4272,
+      "ratings": [
+        { "stars": 5, "count": 3422 },
+        { "stars": 4, "count": 467 },
+        { "stars": 3, "count": 141 }
+      ],
+      "location_rating": 3,
+      "reviews_breakdown": [
+        { "name": "Service", "total_mentioned": 784, "positive": 669, "negative": 88, "neutral": 27 },
+        { "name": "Property", "total_mentioned": 724, "positive": 641, "negative": 53, "neutral": 30 },
+        { "name": "Nature", "total_mentioned": 326, "positive": 272, "negative": 30, "neutral": 24 }
+      ],
+      "amenities": ["Breakfast ($)", "Free Wi-Fi", "Free parking"],
+      "nearby_places": [
+        {
+          "name": "I Gusti Ngurah Rai International Airport",
+          "transportations": [{ "type": "Taxi", "duration": "29 min" }]
+        }
+      ]
+    },
+    {
+      "type": "vacation rental",
+      "name": "Le Sabot Ubud",
+      "property_token": "ChoQ5YiTp-rKmO60ARoNL2cvMTFzc2djMTNqcRAC",
+      "gps_coordinates": { "latitude": -8.509249687194824, "longitude": 115.25045776367188 },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "12:00 PM",
+      "rate_per_night": { "lowest": "$114", "extracted_lowest": 114 },
+      "overall_rating": 4.44,
+      "reviews": 123,
+      "amenities": ["Air conditioning", "Kid-friendly", "Crib"],
+      "essential_info": ["Entire villa", "Sleeps 10", "9 bedrooms"]
+    }
+  ],
+  "serpapi_pagination": {
+    "current_from": 1,
+    "current_to": 20,
+    "next_page_token": "CBI=",
+    "next": "https://serpapi.com/search.json?adults=2&check_in_date=2026-03-28&check_out_date=2026-03-29&children=0&currency=USD&engine=google_hotels&gl=us&hl=en&next_page_token=CBI%3D&q=Bali+Resorts"
+  }
+}

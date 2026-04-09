@@ -1,0 +1,72 @@
+{
+  "search_metadata": {
+    "id": "66b21cfa10a07127b90afedd",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/997a66feb1ae28d8/66b21cfa10a07127b90afedd.json",
+    "created_at": "2024-08-06 12:54:18 UTC",
+    "processed_at": "2024-08-06 12:54:18 UTC",
+    "google_jobs_url": "https://www.google.com/search?q=barista+new+york&udm=8",
+    "raw_html_file": "https://serpapi.com/searches/997a66feb1ae28d8/66b21cfa10a07127b90afedd.html",
+    "total_time_taken": 0.84
+  },
+  "search_parameters": {
+    "q": "barista new york",
+    "engine": "google_jobs",
+    "google_domain": "google.com"
+  },
+  "jobs_results": [
+    {
+      "title": "Barista",
+      "company_name": "Caffe Vita",
+      "location": "New York, NY",
+      "via": "ZipRecruiter",
+      "extensions": ["25 days ago", "Full-time", "No degree mentioned"],
+      "detected_extensions": {
+        "paid_time_off": true,
+        "health_insurance": true,
+        "dental_coverage": true,
+        "posted_at": "25 days ago",
+        "schedule_type": "Full-time"
+      },
+      "description": "Caffe Vita baristas are passionate about coffee and committed to preparing top-quality coffee drinks...",
+      "job_highlights": [
+        {
+          "title": "Qualifications",
+          "items": ["This position requires excellent customer service skills"]
+        },
+        {
+          "title": "Benefits",
+          "items": ["New York $16.50/hr + Tips", "Tips typically average $10-$20 per hour"]
+        },
+        {
+          "title": "Responsibilities",
+          "items": ["Prepare excellent coffee and espresso drinks", "Demonstrate proficiency in milk texturing and latte art"]
+        }
+      ],
+      "apply_options": [
+        { "title": "ZipRecruiter", "link": "https://www.ziprecruiter.com/c/Caffe-Vita/Job/Barista/-in-New-York,NY" },
+        { "title": "BeBee", "link": "https://us.bebee.com/job/6757b6ab30d5a9f7534dab2d16173d7a" },
+        { "title": "Talent.com", "link": "https://www.talent.com/view?id=11250ab261ca" }
+      ]
+    },
+    {
+      "title": "Barista - Full Time",
+      "company_name": "Blue Bottle Coffee",
+      "location": "New York, NY",
+      "via": "Lever",
+      "extensions": ["Full-time", "No degree mentioned", "Health insurance"],
+      "detected_extensions": {
+        "health_insurance": true,
+        "paid_time_off": true,
+        "dental_coverage": true,
+        "schedule_type": "Full-time"
+      },
+      "description": "At Blue Bottle, our mission is to connect the world to delicious coffee...",
+      "apply_options": [
+        { "title": "Lever", "link": "https://jobs.lever.co/bluebottlecoffee/bc7e35ed-e80a-4868-a953-67d627de3deb" },
+        { "title": "ZipRecruiter", "link": "https://www.ziprecruiter.com/c/Blue-Bottle-Coffee/Job/Barista-Full-Time/-in-New-York,NY" },
+        { "title": "Indeed", "link": "https://www.indeed.com/viewjob?jk=1d67b343245e0e9c" }
+      ]
+    }
+  ]
+}

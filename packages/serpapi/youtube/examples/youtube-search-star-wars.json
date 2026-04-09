@@ -1,0 +1,79 @@
+{
+  "search_metadata": {
+    "id": "5f9d52acde9834001e61e69e",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/eb41ab73971449d5/5f9d52acde9834001e61e69e.json",
+    "created_at": "2020-10-31 12:03:56 UTC",
+    "processed_at": "2020-10-31 12:03:56 UTC",
+    "youtube_url": "https://www.youtube.com/results?search_query=star+wars",
+    "total_time_taken": 1.96
+  },
+  "search_parameters": {
+    "engine": "youtube",
+    "search_query": "star wars"
+  },
+  "search_information": {
+    "total_results": 68518653,
+    "video_results_state": "Results for exact spelling"
+  },
+  "video_results": [
+    {
+      "position_on_page": 3,
+      "title": "Mandalorian Season 2 Episode 1 HUGE STAR WARS SPOILER Explained",
+      "link": "https://www.youtube.com/watch?v=4ATKQVaehnM",
+      "video_id": "4ATKQVaehnM",
+      "channel": {
+        "name": "The Den of Nerds",
+        "link": "https://www.youtube.com/channel/UC7luyQa73O17d1o-VMwxc7Q"
+      },
+      "published_date": "18 hours ago",
+      "views": 21375,
+      "length": "9:28",
+      "description": "Star Wars The Mandalorian Season 2 Episode 1 is here!",
+      "thumbnail": {
+        "static": "https://i.ytimg.com/vi/4ATKQVaehnM/hq720.jpg",
+        "rich": "https://i.ytimg.com/an_webp/4ATKQVaehnM/mqdefault_6s.webp"
+      }
+    },
+    {
+      "position_on_page": 4,
+      "title": "Every Lightsaber Duel from Star Wars (Episodes 1-6)",
+      "link": "https://www.youtube.com/watch?v=esnMDtMysHo",
+      "video_id": "esnMDtMysHo",
+      "channel": {
+        "name": "G",
+        "link": "https://www.youtube.com/channel/UC-iQfm48s_9f0-2jz_J5KeA"
+      },
+      "published_date": "5 years ago",
+      "views": 20950776,
+      "length": "22:08",
+      "description": "Every lightsaber duel in all first 6 major Star Wars films."
+    }
+  ],
+  "movie_results": [
+    {
+      "position_on_page": 2,
+      "title": "Star Wars: The Empire Strikes Back",
+      "link": "https://www.youtube.com/watch?v=Ooh3k8cJDBg",
+      "channel": { "name": "YouTube Movies", "verified": true },
+      "length": "2:07:22",
+      "info": ["Action & Adventure", "1980", "PG"],
+      "thumbnail": "https://i.ytimg.com/vi_webp/Ooh3k8cJDBg/movieposter.webp"
+    }
+  ],
+  "channel_results": [
+    {
+      "position_on_page": 16,
+      "title": "Star Wars",
+      "link": "https://www.youtube.com/@starwars",
+      "verified": true,
+      "handle": "@StarWars",
+      "subscribers": 3440000,
+      "description": "Welcome to the official Star Wars YouTube channel."
+    }
+  ],
+  "pagination": {
+    "current": "https://www.youtube.com/results?search_query=star+wars",
+    "next_page_token": "SBSCAQtlZnp1Zm9XcVdRNII..."
+  }
+}

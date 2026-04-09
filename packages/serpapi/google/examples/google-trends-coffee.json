@@ -1,0 +1,37 @@
+{
+  "search_metadata": {
+    "id": "628e1083de983400a3b29c2e",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/c1bde9cbd0a44437/628e1083de983400a3b29c2e.json",
+    "created_at": "2022-05-25 11:18:27 UTC",
+    "processed_at": "2022-05-25 11:18:27 UTC",
+    "google_trends_url": "https://trends.google.com/trends/api/explore",
+    "raw_html_file": "https://serpapi.com/searches/c1bde9cbd0a44437/628e1083de983400a3b29c2e.html",
+    "total_time_taken": 1.89
+  },
+  "search_parameters": {
+    "engine": "google_trends",
+    "q": "coffee,milk,bread,pasta,steak",
+    "date": "today 12-m",
+    "tz": "420",
+    "data_type": "TIMESERIES"
+  },
+  "interest_over_time": {
+    "timeline_data": [
+      {
+        "date": "May 30 – Jun 5, 2021",
+        "timestamp": "1622304000",
+        "values": [
+          { "query": "coffee", "value": "80", "extracted_value": 80 },
+          { "query": "milk", "value": "58", "extracted_value": 58 },
+          { "query": "bread", "value": "35", "extracted_value": 35 }
+        ]
+      }
+    ],
+    "averages": [
+      { "query": "coffee", "value": 84 },
+      { "query": "milk", "value": 55 },
+      { "query": "bread", "value": 39 }
+    ]
+  }
+}

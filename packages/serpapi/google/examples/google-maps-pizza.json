@@ -1,0 +1,99 @@
+{
+  "search_metadata": {
+    "id": "65a1d5f03a218a9a3fdc0a9f",
+    "status": "Success",
+    "google_maps_url": "https://www.google.com/maps/search/pizza",
+    "total_time_taken": 1.87
+  },
+  "search_parameters": {
+    "engine": "google_maps",
+    "q": "pizza",
+    "type": "search",
+    "ll": "@40.7128,-74.006,14z",
+    "google_domain": "google.com",
+    "hl": "en"
+  },
+  "search_information": {
+    "local_results_state": "Results for exact spelling",
+    "query_displayed": "pizza"
+  },
+  "local_results": [
+    {
+      "position": 1,
+      "title": "Joe's Pizza",
+      "place_id": "ChIJRYNxUmBZwokRGHPwcTsyBDY",
+      "gps_coordinates": {
+        "latitude": 40.7580,
+        "longitude": -73.9855
+      },
+      "rating": 4.5,
+      "reviews": 17266,
+      "price": "$",
+      "type": "Pizza restaurant",
+      "types": ["Pizza restaurant", "Italian restaurant"],
+      "address": "1435 Broadway, New York, NY 10018",
+      "open_state": "Open - Closes 2AM",
+      "phone": "+1 212-391-7777",
+      "website": "https://www.joespizzanyc.com",
+      "description": "No-frills, old-school pizzeria serving thin-crust slices since 1975.",
+      "service_options": {
+        "dine_in": true,
+        "takeout": true,
+        "delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipN_example1/s1600-w400"
+    },
+    {
+      "position": 2,
+      "title": "Little Italy Pizza",
+      "place_id": "ChIJK3vOQilZwokReqamgQHwBFo",
+      "gps_coordinates": {
+        "latitude": 40.7527,
+        "longitude": -73.9772
+      },
+      "rating": 4.2,
+      "reviews": 3634,
+      "price": "$",
+      "type": "Pizza restaurant",
+      "types": ["Pizza restaurant", "Italian restaurant"],
+      "address": "180 Varick St, New York, NY 10014",
+      "open_state": "Open - Closes 12AM",
+      "phone": "+1 212-929-2050",
+      "website": "https://www.littleitalypizza.com",
+      "service_options": {
+        "dine_in": true,
+        "takeout": true,
+        "delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipN_example2/s1600-w400"
+    },
+    {
+      "position": 3,
+      "title": "Angelo's Pizza",
+      "place_id": "ChIJM4wLSyBZwokROSqGE0ncCvg",
+      "gps_coordinates": {
+        "latitude": 40.7614,
+        "longitude": -73.9776
+      },
+      "rating": 4.2,
+      "reviews": 2036,
+      "price": "$",
+      "type": "Pizza restaurant",
+      "types": ["Pizza restaurant", "Italian restaurant"],
+      "address": "117 W 57th St, New York, NY 10019",
+      "open_state": "Open - Closes 11PM",
+      "phone": "+1 212-333-4333",
+      "website": "https://www.angelospizzanyc.com",
+      "service_options": {
+        "dine_in": true,
+        "takeout": true,
+        "delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipN_example3/s1600-w400"
+    }
+  ],
+  "serpapi_pagination": {
+    "next": "https://serpapi.com/search.json?engine=google_maps&q=pizza&start=20",
+    "next_page_token": "CAoSBkVnSUlDZw=="
+  }
+}

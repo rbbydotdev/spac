@@ -1,0 +1,87 @@
+{
+  "search_metadata": {
+    "id": "643744bc7708441b6723c1fe",
+    "status": "Success",
+    "created_at": "2023-04-12 21:05:16 UTC",
+    "ebay_url": "https://www.ebay.com/sch/i.html?_nkw=Coffee",
+    "total_time_taken": 2.89
+  },
+  "search_parameters": {
+    "engine": "ebay",
+    "_nkw": "Coffee",
+    "ebay_domain": "ebay.com"
+  },
+  "search_information": {
+    "total_results": 81000,
+    "query_displayed": "Coffee"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Lavazza Super Crema Whole Bean Coffee Blend, Medium Espresso Roast, 2.2 LB Bag",
+      "product_id": "175632891024",
+      "condition": "Brand New",
+      "price": {
+        "raw": "$18.99",
+        "extracted": 18.99
+      },
+      "shipping": "Free shipping",
+      "thumbnail": "https://i.ebayimg.com/thumbs/images/g/lavazza-super-crema.jpg",
+      "seller": {
+        "username": "coffeedirect_us",
+        "reviews": 12450,
+        "positive_feedback_in_percentage": 99.2
+      }
+    },
+    {
+      "position": 2,
+      "title": "Starbucks French Roast Dark Roast Whole Bean Coffee, 40 oz",
+      "product_id": "185294710385",
+      "condition": "Brand New",
+      "price": {
+        "raw": "$24.95",
+        "extracted": 24.95
+      },
+      "shipping": "Free shipping",
+      "thumbnail": "https://i.ebayimg.com/thumbs/images/g/starbucks-french-roast.jpg",
+      "seller": {
+        "username": "bestvalue_deals",
+        "reviews": 8320,
+        "positive_feedback_in_percentage": 98.7
+      }
+    },
+    {
+      "position": 3,
+      "title": "Death Wish Coffee, Organic, Fair Trade, Dark Roast Ground Coffee, 16 oz",
+      "product_id": "294518203746",
+      "condition": "Brand New",
+      "price": {
+        "raw": "$19.99",
+        "extracted": 19.99
+      },
+      "shipping": "$4.99",
+      "thumbnail": "https://i.ebayimg.com/thumbs/images/g/death-wish-coffee.jpg",
+      "seller": {
+        "username": "organic_pantry",
+        "reviews": 3215,
+        "positive_feedback_in_percentage": 97.9
+      }
+    }
+  ],
+  "related_searches": [
+    {
+      "query": "ground coffee"
+    },
+    {
+      "query": "coffee maker"
+    },
+    {
+      "query": "coffee beans"
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "total_results": 81000,
+    "results_per_page": 60
+  }
+}

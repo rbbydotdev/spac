@@ -1,0 +1,58 @@
+{
+  "search_metadata": {
+    "id": "6388c16740c4a97ebd51c24a",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/09d784a9c00ba057/6388c16740c4a97ebd51c24a.json",
+    "created_at": "2022-12-01 14:59:51 UTC",
+    "processed_at": "2022-12-01 14:59:51 UTC",
+    "bing_url": "https://www.bing.com/search?form=QBRE&q=Coffee",
+    "total_time_taken": 2.89
+  },
+  "search_parameters": {
+    "q": "Coffee",
+    "device": "desktop",
+    "engine": "bing"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "link": "https://www.britannica.com/topic/coffee",
+      "title": "Coffee | Origin, Types, Uses, History, & Facts | Britannica",
+      "displayed_link": "https://www.britannica.com/topic/coffee",
+      "snippet": "Coffee, beverage brewed from the roasted and ground seeds of the tropical evergreen coffee plants of African origin.",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee&d=4924738525200733"
+    },
+    {
+      "position": 2,
+      "link": "https://en.wikipedia.org/wiki/Coffee",
+      "title": "Coffee - Wikipedia",
+      "displayed_link": "https://en.wikipedia.org/wiki/Coffee",
+      "rich_snippet": {
+        "extensions": ["Ingredients: Roasted coffee beans", "Introduced: 15th century", "Region of origin: Horn of Africa and South Arabia"]
+      },
+      "snippet": "Coffee is a drink prepared from roasted coffee beans. Darkly colored, bitter, and slightly acidic, coffee has a stimulating effect on humans.",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee&d=4760194031881288"
+    },
+    {
+      "position": 3,
+      "link": "https://www.ncausa.org/About-Coffee/What-is-Coffee",
+      "title": "What is Coffee? - National Coffee Association",
+      "displayed_link": "https://www.ncausa.org/About-Coffee/What-is-Coffee",
+      "snippet": "Everyone recognizes a roasted coffee bean, but you might not recognize an actual coffee plant."
+    }
+  ],
+  "knowledge_graph": {
+    "title": "Coffee",
+    "type": "Drink",
+    "description": "A brewed drink prepared from roasted coffee beans."
+  },
+  "related_searches": [
+    { "query": "what is the best tasting coffee" },
+    { "query": "health benefits of coffee study" },
+    { "query": "top 10 best tasting coffee" }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.bing.com/search?q=Coffee&first=5&FORM=PORE"
+  }
+}

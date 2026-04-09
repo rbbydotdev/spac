@@ -1,0 +1,77 @@
+{
+  "search_metadata": {
+    "id": "62430771de983400a4038f8d",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/84258a6c70981a89/62430771de983400a4038f8d.json",
+    "created_at": "2022-03-29 13:19:45 UTC",
+    "processed_at": "2022-03-29 13:19:45 UTC",
+    "yelp_url": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA",
+    "raw_html_file": "https://serpapi.com/searches/84258a6c70981a89/62430771de983400a4038f8d.html",
+    "total_time_taken": 2.71
+  },
+  "search_parameters": {
+    "engine": "yelp",
+    "find_desc": "Coffee",
+    "find_loc": "New York, NY, USA"
+  },
+  "filters": {
+    "distance": [
+      { "text": "Bird's-eye View", "value": "g:-74.09660339355469,40.62750334315296,-73.89198303222656,40.783660996197945" },
+      { "text": "Driving (5 mi.)", "value": "g:-74.04544830322266,40.666316664620794,-73.9431381225586,40.744395800976775" }
+    ],
+    "price": [
+      { "text": "$", "value": "RestaurantsPriceRange2.1" },
+      { "text": "$$", "value": "RestaurantsPriceRange2.2" },
+      { "text": "$$$", "value": "RestaurantsPriceRange2.3" }
+    ]
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "place_ids": ["ED7A7vDdg8yLNKJTSVHHmg", "arabica-brooklyn"],
+      "title": "% Arabica",
+      "link": "https://www.yelp.com/biz/arabica-brooklyn?osq=Coffee",
+      "categories": [{ "title": "Coffee & Tea" }],
+      "price": "$$",
+      "rating": 4,
+      "reviews": 114,
+      "neighborhoods": "Brooklyn Heights",
+      "snippet": "Coffee was good overall. Their customer service was great and attentive.",
+      "service_options": { "outdoor_dining": true }
+    },
+    {
+      "position": 2,
+      "place_ids": ["K6fkejf2ZBUdlsVrm5RbrA", "kore-coffee-new-york-2"],
+      "title": "Kore Coffee",
+      "link": "https://www.yelp.com/biz/kore-coffee-new-york-2?osq=Coffee",
+      "categories": [{ "title": "Coffee & Tea" }],
+      "rating": 5,
+      "reviews": 10,
+      "neighborhoods": "Chinatown",
+      "highlights": ["Opened 5 weeks ago"],
+      "snippet": "A small coffee shop in the middle of Chinatown."
+    },
+    {
+      "position": 3,
+      "place_ids": ["pimuUR-TEHIjUla3S3jemQ", "coffee-project-new-york-east-village-new-york"],
+      "title": "Coffee Project New York | East Village",
+      "link": "https://www.yelp.com/biz/coffee-project-new-york-east-village-new-york?osq=Coffee",
+      "categories": [{ "title": "Coffee & Tea" }, { "title": "Sandwiches" }],
+      "price": "$",
+      "rating": 4.5,
+      "reviews": 716,
+      "neighborhoods": "East Village",
+      "phone": "(347) 815-6690",
+      "snippet": "I really enjoyed the place. The coffee itself was really good.",
+      "service_options": { "outdoor_dining": true, "delivery": true, "takeout": true }
+    }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New%20York%2C%20NY%2C%20USA&start=10"
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next": "https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA&start=10"
+  }
+}

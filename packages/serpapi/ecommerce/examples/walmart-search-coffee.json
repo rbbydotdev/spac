@@ -1,0 +1,60 @@
+{
+  "search_metadata": {
+    "id": "5ea9a63b260ca9b224124fab",
+    "status": "Success",
+    "walmart_url": "https://www.walmart.com/search?q=coffee+maker",
+    "total_time_taken": 2.14
+  },
+  "search_parameters": {
+    "engine": "walmart",
+    "query": "coffee maker",
+    "device": "desktop"
+  },
+  "search_information": {
+    "total_results": 1834,
+    "query_displayed": "coffee maker"
+  },
+  "organic_results": [
+    {
+      "us_item_id": "643159571",
+      "product_id": "2SBAFLHF2O1P",
+      "title": "Hamilton Beach 12 Cup Digital Automatic LCD Programmable Coffeemaker",
+      "description": "Hamilton Beach 12 Cup Digital Automatic LCD Programmable Coffeemaker Brewer with Auto Shutoff...",
+      "thumbnail": "https://i5.walmartimages.com/asr/643159571_main.jpg",
+      "rating": 4.5,
+      "reviews": 110,
+      "primary_offer": {
+        "offer_price": 39.99,
+        "currency": "USD"
+      },
+      "product_page_url": "https://www.walmart.com/ip/643159571"
+    },
+    {
+      "us_item_id": "111848544",
+      "product_id": "4QF0GHIJ8K2M",
+      "title": "Hamilton Beach FlexBrew 2-Way Coffee Maker",
+      "description": "Hamilton Beach FlexBrew 2-Way Coffee Maker with 12-Cup Carafe and Single-Serve K-Cup Compatible...",
+      "thumbnail": "https://i5.walmartimages.com/asr/111848544_main.jpg",
+      "rating": 4,
+      "reviews": 660,
+      "primary_offer": {
+        "offer_price": 99,
+        "currency": "USD"
+      },
+      "product_page_url": "https://www.walmart.com/ip/111848544"
+    }
+  ],
+  "related_queries": [
+    { "suggested": "keurig coffee maker" },
+    { "suggested": "single serve coffee maker" },
+    { "suggested": "hamilton beach coffee maker" }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.walmart.com/search?q=coffee+maker&page=2",
+    "other_pages": {
+      "2": "https://www.walmart.com/search?q=coffee+maker&page=2",
+      "3": "https://www.walmart.com/search?q=coffee+maker&page=3"
+    }
+  }
+}

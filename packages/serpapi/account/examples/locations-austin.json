@@ -1,0 +1,38 @@
+[
+  {
+    "id": "200635",
+    "name": "Austin, Texas",
+    "canonical_name": "Austin,Texas,United States",
+    "country_code": "US",
+    "target_type": "DMA Region",
+    "reach": 5560000,
+    "gps": [-97.7430608, 30.267153],
+    "keys": {
+      "google": "w+CAIQICIaQXVzdGluLFRleGFzLFVuaXRlZCBTdGF0ZXM"
+    }
+  },
+  {
+    "id": "1026437",
+    "name": "Austin, Indiana",
+    "canonical_name": "Austin,Indiana,United States",
+    "country_code": "US",
+    "target_type": "City",
+    "reach": 4370,
+    "gps": [-85.8079979, 38.7583874],
+    "keys": {
+      "google": "w+CAIQICIdQXVzdGluLEluZGlhbmEsVW5pdGVkIFN0YXRlcw"
+    }
+  },
+  {
+    "id": "1026438",
+    "name": "Austin, Minnesota",
+    "canonical_name": "Austin,Minnesota,United States",
+    "country_code": "US",
+    "target_type": "City",
+    "reach": 24850,
+    "gps": [-92.9746367, 43.6666296],
+    "keys": {
+      "google": "w+CAIQICIfQXVzdGluLE1pbm5lc290YSxVbml0ZWQgU3RhdGVz"
+    }
+  }
+]

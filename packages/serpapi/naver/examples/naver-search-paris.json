@@ -1,0 +1,36 @@
+{
+  "search_metadata": {
+    "id": "61af93eab5c11d385cfc4388",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/81176b6c0b79e02c/61af93eab5c11d385cfc4388.json",
+    "created_at": "2021-12-07 17:03:38 UTC",
+    "processed_at": "2021-12-07 17:03:39 UTC",
+    "naver_url": "https://search.naver.com/search.naver?query=paris",
+    "raw_html_file": "https://serpapi.com/searches/81176b6c0b79e02c/61af93eab5c11d385cfc4388.html",
+    "total_time_taken": 2.37
+  },
+  "search_parameters": {
+    "query": "paris",
+    "engine": "naver"
+  },
+  "ads_results": [
+    {
+      "title": "11번가 PARIS",
+      "sub_title": "T멤버십 최대 22% 할인",
+      "description": "PARIS, 11일 월간십일절 단 하루! 최대 74% 할인+전 고객 2천원쿠폰",
+      "site": "www.11st.co.kr",
+      "link": "https://adcr.naver.com/adcr?x=Mdmh0BrgYaM..."
+    },
+    {
+      "title": "발란, 연말결산 ~90%세일",
+      "sub_title": "누구나 20만원 즉시할인!",
+      "description": "명품을 왜 백화점에서 사? 발란에선 연말결산 ~90% 할인에 매일 쿠폰 증정!",
+      "price_list": [
+        { "title": "누구나 즉시할인 받기", "price": "200,000원" },
+        { "title": "신규회원 할인쿠폰", "price": "200,000원" }
+      ],
+      "site": "balaan.co.kr",
+      "link": "https://adcr.naver.com/adcr?x=KHc3Y..."
+    }
+  ]
+}

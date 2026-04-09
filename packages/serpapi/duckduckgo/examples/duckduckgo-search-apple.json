@@ -1,0 +1,73 @@
+{
+  "search_metadata": {
+    "id": "60cc8866de9834008ca37cb7",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/42494655f019bca9/60cc8866de9834008ca37cb7.json",
+    "created_at": "2021-06-18 11:49:58 UTC",
+    "processed_at": "2021-06-18 11:49:58 UTC",
+    "duckduckgo_url": "https://duckduckgo.com/?q=apple+inc.&kl=us-en",
+    "raw_html_file": "https://serpapi.com/searches/42494655f019bca9/60cc8866de9834008ca37cb7.html",
+    "total_time_taken": 1.93
+  },
+  "search_parameters": {
+    "engine": "duckduckgo",
+    "q": "apple inc.",
+    "kl": "us-en"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Apple",
+      "link": "https://www.apple.com/",
+      "snippet": "Apple. Shop online and get Specialist help, free no-contact delivery, and more.",
+      "favicon": "https://external-content.duckduckgo.com/ip3/www.apple.com.ico",
+      "sitelinks": [
+        { "title": "Support", "link": "https://support.apple.com/" },
+        { "title": "Mac", "link": "https://www.apple.com/mac/" },
+        { "title": "iPhone", "link": "https://www.apple.com/iphone/" }
+      ]
+    },
+    {
+      "position": 2,
+      "title": "Apple Inc. - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Apple_Inc.",
+      "snippet": "Apple Inc. is an American multinational technology company...",
+      "favicon": "https://external-content.duckduckgo.com/ip3/en.wikipedia.org.ico"
+    }
+  ],
+  "knowledge_graph": {
+    "title": "Apple Inc.",
+    "description": "Apple Inc. is an American multinational technology company...",
+    "thumbnail": "https://duckduckgo.com/i/b2e38b1b.png",
+    "facts": {
+      "type": "Public",
+      "industry": "Computer hardware, Computer software, Consumer electronics",
+      "founded": "April 01, 1976",
+      "founders": "Steve Jobs, Steve Wozniak, Ronald Wayne",
+      "key_people": "Chairman: Arthur D. Levinson, CEO: Tim Cook, COO: Jeff Williams",
+      "revenue": "US$ 274.515 billion (2020)",
+      "number_of_employees": "147,000(2020)"
+    },
+    "profiles": [
+      { "name": "Wikipedia", "link": "https://en.wikipedia.org/wiki/Apple_Inc." },
+      { "name": "GitHub profile", "link": "https://github.com/apple" },
+      { "name": "Twitter profile", "link": "https://twitter.com/Apple" }
+    ]
+  },
+  "news_results": [
+    {
+      "position": 1,
+      "title": "Apple Supplier Biel Weighs Up to $2 Billion Hong Kong IPO",
+      "link": "https://www.msn.com/en-us/money/other/apple-supplier-biel-weighs-up-to-dollar2-billion-hong-kong-ipo/ar-AALau6B",
+      "source": "Bloomberg on MSN.com",
+      "date": "8 hours ago"
+    }
+  ],
+  "related_searches": [
+    { "query": "apple inc company overview", "link": "https://duckduckgo.com/?q=apple%20inc%20company%20overview" },
+    { "query": "apple inc website", "link": "https://duckduckgo.com/?q=apple%20inc%20website" }
+  ]
+}

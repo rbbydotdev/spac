@@ -1,0 +1,78 @@
+{
+  "search_metadata": {
+    "id": "64b2f8a1e7d08a3c2b1bcdd4",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/abc123/64b2f8a1e7d08a3c2b1bcdd4.json",
+    "created_at": "2024-07-15 14:22:09 UTC",
+    "processed_at": "2024-07-15 14:22:10 UTC",
+    "amazon_url": "https://www.amazon.com/s?k=Coffee",
+    "total_time_taken": 2.34
+  },
+  "search_parameters": {
+    "engine": "amazon",
+    "k": "Coffee"
+  },
+  "search_information": {
+    "total_results": 60000,
+    "query_displayed": "Coffee",
+    "amazon_url": "https://www.amazon.com/s?k=Coffee"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "asin": "B00T8BSKMQ",
+      "title": "Folgers Classic Roast Medium Roast Ground Coffee, 30.5 Ounce",
+      "link": "https://www.amazon.com/dp/B00T8BSKMQ",
+      "link_clean": "https://www.amazon.com/dp/B00T8BSKMQ",
+      "thumbnail": "https://m.media-amazon.com/images/I/81fO3gSiYvL._AC_UL320_.jpg",
+      "rating": 4.7,
+      "reviews": 84521,
+      "price": "$9.98",
+      "extracted_price": 9.98,
+      "prime": true,
+      "delivery": {
+        "tagline": "FREE delivery Thu, Jul 18",
+        "price": "FREE"
+      }
+    },
+    {
+      "position": 2,
+      "asin": "B07WZSYCQH",
+      "title": "Lavazza Super Crema Whole Bean Coffee Blend, Medium Espresso Roast, 2.2 Pound",
+      "link": "https://www.amazon.com/dp/B07WZSYCQH",
+      "link_clean": "https://www.amazon.com/dp/B07WZSYCQH",
+      "thumbnail": "https://m.media-amazon.com/images/I/71K1mOBnBCL._AC_UL320_.jpg",
+      "rating": 4.6,
+      "reviews": 52347,
+      "price": "$18.98",
+      "extracted_price": 18.98,
+      "prime": true,
+      "delivery": {
+        "tagline": "FREE delivery Wed, Jul 17",
+        "price": "FREE"
+      }
+    },
+    {
+      "position": 3,
+      "asin": "B001EQ55RW",
+      "title": "Starbucks Medium Roast Whole Bean Coffee, Pike Place, 12 Ounce",
+      "link": "https://www.amazon.com/dp/B001EQ55RW",
+      "link_clean": "https://www.amazon.com/dp/B001EQ55RW",
+      "thumbnail": "https://m.media-amazon.com/images/I/71kZ+qHMXaL._AC_UL320_.jpg",
+      "rating": 4.7,
+      "reviews": 39876,
+      "price": "$10.48",
+      "extracted_price": 10.48,
+      "prime": true,
+      "delivery": {
+        "tagline": "FREE delivery Thu, Jul 18",
+        "price": "FREE"
+      }
+    }
+  ],
+  "pagination": {
+    "current_page": 1,
+    "next_page_link": "https://www.amazon.com/s?k=Coffee&page=2",
+    "total_pages": 400
+  }
+}

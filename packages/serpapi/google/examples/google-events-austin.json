@@ -1,0 +1,65 @@
+{
+  "search_metadata": {
+    "id": "6935589bfc8a2b38f6ea30a0",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/6a5185898c8c34e4/6935589bfc8a2b38f6ea30a0.json",
+    "created_at": "2025-12-07 10:36:11 UTC",
+    "processed_at": "2025-12-07 10:36:11 UTC",
+    "google_events_url": "https://www.google.com/search?q=Events+in+Austin&ibp=htl;events&hl=en&gl=us",
+    "raw_html_file": "https://serpapi.com/searches/6a5185898c8c34e4/6935589bfc8a2b38f6ea30a0.html",
+    "total_time_taken": 1.12
+  },
+  "search_parameters": {
+    "q": "Events in Austin",
+    "engine": "google_events",
+    "hl": "en",
+    "gl": "us"
+  },
+  "search_information": {
+    "events_results_state": "Results for exact spelling"
+  },
+  "events_results": [
+    {
+      "title": "Austin Comedy Killers",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Dec 2, 9:00 PM – Dec 30, 10:30 PM CST"
+      },
+      "address": ["Sunset Strip Comedy & Entertainment, 214 E 6th St unit c", "Austin, TX"],
+      "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/122196v-austin-comedy-killers",
+      "event_location_map": {
+        "image": "https://www.google.com/maps/vt/data=PTUM43HXdjd-zcbPUhM7oblmTLTUq0nNCznrdbD4RF7zLHSc5KEgv2aY8a3-EhPS39shys4ethWNdrMDVhaqix4zw-tCz5lIUkJOdbEmIJT5cQGFRUY",
+        "link": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x8644b51226ee594b:0x94c03421174f98a6"
+      },
+      "description": "Every Tuesday at 9:00 PM to Dec 30 Don't miss Austin Comedy Killers...",
+      "ticket_info": [
+        { "source": "Eventvesta.com", "link": "https://www.eventvesta.com/events/122196/t/tickets", "link_type": "tickets" },
+        { "source": "Austin American-Statesman", "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/122196v-austin-comedy-killers", "link_type": "more info" }
+      ],
+      "venue": {
+        "name": "Sunset Strip Comedy & Entertainment",
+        "rating": 4.6,
+        "reviews": 132
+      },
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJJWXxq-JOWgofIh9Qv7QXeXp-N6xSA15q3A5VbTep6dcBQBXeF04tlbw&s"
+    },
+    {
+      "title": "The Market at Zach",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Nov 22, 4 PM – Dec 20, 8 PM CST"
+      },
+      "address": ["Zach Theater, 202 S Lamar Blvd", "Austin, TX"],
+      "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/117965v-the-market-at-zach",
+      "description": "An all-new experience at Zach: a vibrant, open-air pop-up featuring Austin and Central...",
+      "ticket_info": [
+        { "source": "Eventbrite.com", "link": "https://www.eventbrite.com/e/the-market-at-zach-holiday-series-tickets-1557542434349", "link_type": "tickets" }
+      ],
+      "venue": {
+        "name": "Zach Theater",
+        "rating": 4.8,
+        "reviews": 1480
+      }
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "search_metadata": {
+    "id": "64258265de9834046d8db0c9",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/0ef12fb919bdd3a2/64258265de9834046d8db0c9.json",
+    "created_at": "2023-03-30 12:36:53 UTC",
+    "processed_at": "2023-03-30 12:36:53 UTC",
+    "google_local_url": "https://www.google.com/search?q=Coffee&uule=w+CAIQICIfTmV3IFlvcmssTmV3IFlvcmssVW5pdGVkIFN0YXRlcw&hl=en&gl=us&tbm=lcl",
+    "raw_html_file": "https://serpapi.com/searches/0ef12fb919bdd3a2/64258265de9834046d8db0c9.html",
+    "total_time_taken": 2.05
+  },
+  "search_parameters": {
+    "engine": "google_local",
+    "q": "Coffee",
+    "location_requested": "New York, New York, United States",
+    "location_used": "New York,New York,United States",
+    "google_domain": "google.com",
+    "hl": "en",
+    "gl": "us",
+    "device": "desktop"
+  },
+  "local_results": [
+    {
+      "position": 1,
+      "title": "Variety Coffee Roasters",
+      "rating": 4.3,
+      "reviews_original": "(34)",
+      "reviews": 34,
+      "type": "Coffee shop",
+      "address": "140 Nassau St",
+      "place_id": "15667002398697190332",
+      "gps_coordinates": { "latitude": 40.803405, "longitude": -74.01922499999999 },
+      "service_options": { "dine_in": true, "takeout": true, "no_delivery": true }
+    },
+    {
+      "position": 2,
+      "title": "Blue Spoon Coffee Company",
+      "rating": 4.2,
+      "reviews_original": "(148)",
+      "reviews": 148,
+      "price": "$",
+      "type": "Coffee shop",
+      "address": "76 Chambers St",
+      "description": "Independent coffee house & lunch spot",
+      "place_id": "8277114589593241915",
+      "gps_coordinates": { "latitude": 40.711192499999996, "longitude": -74.00621629999999 }
+    },
+    {
+      "position": 3,
+      "title": "Starbucks",
+      "rating": 3.8,
+      "reviews_original": "(1K)",
+      "reviews": 1000,
+      "price": "$$",
+      "type": "Coffee shop",
+      "address": "38 Park Row #4",
+      "description": "Iconic Seattle-based coffeehouse chain",
+      "place_id": "10988205551705517188",
+      "gps_coordinates": { "latitude": 40.714297699999996, "longitude": -74.0069062 }
+    }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.google.com/search?q=Coffee&hl=en&gl=us&start=20&tbm=lcl"
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next": "https://serpapi.com/search.json?device=desktop&engine=google_local&gl=us&google_domain=google.com&hl=en&location=New+York%2C+New+York%2C+United+States&q=Coffee&start=20"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "search_metadata": {
+    "id": "6895ae51fc8a2b4359020342",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/cbb345c0f9de6f20/6895ae51fc8a2b4359020342.json",
+    "created_at": "2025-08-08 07:59:13 UTC",
+    "processed_at": "2025-08-08 07:59:13 UTC",
+    "google_shopping_url": "https://www.google.com/search?udm=28&q=Office+Chair&hl=en&gl=us",
+    "raw_html_file": "https://serpapi.com/searches/cbb345c0f9de6f20/6895ae51fc8a2b4359020342.html",
+    "total_time_taken": 3.32
+  },
+  "search_parameters": {
+    "engine": "google_shopping",
+    "q": "Office Chair",
+    "google_domain": "google.com",
+    "hl": "en",
+    "gl": "us",
+    "device": "desktop"
+  },
+  "search_information": {
+    "query_displayed": "Office Chair",
+    "shopping_results_state": "Results for exact spelling"
+  },
+  "filters": [
+    {
+      "type": "Refine results",
+      "input_type": "link_with_icon",
+      "options": [
+        { "text": "Nearby" },
+        { "text": "On sale" },
+        { "text": "Get it today" },
+        { "text": "Small business" }
+      ]
+    }
+  ],
+  "shopping_results": [
+    {
+      "position": 1,
+      "title": "Mainstays Executive Ergonomic High Back Leather Home Office Desk Chair",
+      "product_id": "7349398578013612374",
+      "source": "Walmart",
+      "multiple_sources": true,
+      "price": "$92.00",
+      "extracted_price": 92,
+      "rating": 4.3,
+      "reviews": 64,
+      "snippet": "Easy to set up (24 user reviews)",
+      "extensions": ["In store, 3 mi"],
+      "delivery": "Get it today ($10)"
+    },
+    {
+      "position": 2,
+      "title": "Realspace Modern Comfort Pizana Bouclé Fabric High-Back Executive Office Chair",
+      "product_id": "16877169727909013824",
+      "source": "Office Depot",
+      "multiple_sources": true,
+      "price": "$319.99",
+      "extracted_price": 319.99,
+      "rating": 4.4,
+      "reviews": 55,
+      "snippet": "Comfortable (15 user reviews)",
+      "extensions": ["In store, 7 mi"],
+      "delivery": "Free delivery"
+    }
+  ],
+  "serpapi_pagination": {
+    "next": "https://serpapi.com/search.json?device=desktop&engine=google_shopping&gl=us&google_domain=google.com&hl=en&q=Office+Chair&start=10"
+  }
+}

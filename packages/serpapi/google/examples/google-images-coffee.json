@@ -1,0 +1,78 @@
+{
+  "search_metadata": {
+    "id": "642d73b7de9834017010c43c",
+    "status": "Success",
+    "google_images_url": "https://www.google.com/search?q=Coffee&tbm=isch",
+    "total_time_taken": 1.34
+  },
+  "search_parameters": {
+    "engine": "google_images",
+    "q": "Coffee",
+    "location_used": "Austin,Texas,United States",
+    "hl": "en",
+    "gl": "us",
+    "device": "desktop"
+  },
+  "search_information": {
+    "image_results_state": "Results for exact spelling"
+  },
+  "suggested_searches": [
+    {
+      "name": "Cup",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_cup_example"
+    },
+    {
+      "name": "Latte",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_latte_example"
+    },
+    {
+      "name": "Beans",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_beans_example"
+    }
+  ],
+  "images_results": [
+    {
+      "position": 1,
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_thumb1",
+      "source": "Wikipedia",
+      "title": "Coffee - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Coffee",
+      "original": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Latte_and_dark_coffee.jpg",
+      "original_width": 3200,
+      "original_height": 2000,
+      "is_product": false
+    },
+    {
+      "position": 2,
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_thumb2",
+      "source": "Tasting Table",
+      "title": "31 Coffee Brands, Ranked",
+      "link": "https://www.tastingtable.com/718678/coffee-brands-ranked/",
+      "original": "https://www.tastingtable.com/img/gallery/coffee-brands-ranked/l-intro-1645231221.jpg",
+      "original_width": 1600,
+      "original_height": 900,
+      "is_product": false
+    },
+    {
+      "position": 3,
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_thumb3",
+      "source": "CNN",
+      "title": "Is coffee healthy?",
+      "link": "https://www.cnn.com/2017/09/29/health/coffee-healthy/",
+      "original": "https://media.cnn.com/api/v1/images/stellar/prod/150929101049-black-coffee-stock.jpg",
+      "original_width": 1280,
+      "original_height": 720,
+      "is_product": false
+    }
+  ],
+  "related_searches": [
+    {
+      "query": "coffee beans",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_related1"
+    },
+    {
+      "query": "coffee cup",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_related2"
+    }
+  ]
+}

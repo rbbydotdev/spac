@@ -1,0 +1,74 @@
+{
+  "search_metadata": {
+    "id": "651a585815afff2d53eb9a5e",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/e65fd34e00db9b2b/651a585815afff2d53eb9a5e.json",
+    "created_at": "2023-10-02 05:42:48 UTC",
+    "processed_at": "2023-10-02 05:42:48 UTC",
+    "google_flights_url": "https://www.google.com/travel/flights?hl=en",
+    "raw_html_file": "https://serpapi.com/searches/e65fd34e00db9b2b/651a585815afff2d53eb9a5e.html",
+    "total_time_taken": 0.71
+  },
+  "search_parameters": {
+    "engine": "google_flights",
+    "hl": "en",
+    "departure_id": "PEK",
+    "arrival_id": "AUS",
+    "outbound_date": "2023-10-03",
+    "return_date": "2023-10-09",
+    "currency": "USD"
+  },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": { "name": "Beijing Capital International Airport", "id": "PEK", "time": "2023-10-03 15:10" },
+          "arrival_airport": { "name": "Haneda Airport", "id": "HND", "time": "2023-10-03 19:35" },
+          "duration": 205,
+          "airplane": "Boeing 787",
+          "airline": "ANA",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/NH.png",
+          "travel_class": "Economy",
+          "flight_number": "NH 962",
+          "legroom": "31 in",
+          "extensions": ["Average legroom (31 in)", "Wi-Fi for a fee", "In-seat power & USB outlets"]
+        },
+        {
+          "departure_airport": { "name": "Haneda Airport", "id": "HND", "time": "2023-10-03 21:05" },
+          "arrival_airport": { "name": "Los Angeles International Airport", "id": "LAX", "time": "2023-10-03 15:10" },
+          "duration": 605,
+          "airplane": "Boeing 787",
+          "airline": "ANA",
+          "flight_number": "NH 126",
+          "travel_class": "Economy",
+          "legroom": "32 in",
+          "overnight": true
+        },
+        {
+          "departure_airport": { "name": "Los Angeles International Airport", "id": "LAX", "time": "2023-10-03 19:01" },
+          "arrival_airport": { "name": "Austin-Bergstrom International Airport", "id": "AUS", "time": "2023-10-03 23:59" },
+          "duration": 178,
+          "airplane": "Boeing 737MAX 9 Passenger",
+          "airline": "United",
+          "flight_number": "UA 2175",
+          "travel_class": "Economy",
+          "legroom": "30 in"
+        }
+      ],
+      "layovers": [
+        { "duration": 90, "name": "Haneda Airport", "id": "HND" },
+        { "duration": 231, "name": "Los Angeles International Airport", "id": "LAX" }
+      ],
+      "total_duration": 1309,
+      "carbon_emissions": { "this_flight": 1106000, "typical_for_this_route": 949000, "difference_percent": 17 },
+      "price": 2512,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png"
+    }
+  ],
+  "price_insights": {
+    "lowest_price": 2512,
+    "price_level": "high",
+    "typical_price_range": [1500, 1900]
+  }
+}

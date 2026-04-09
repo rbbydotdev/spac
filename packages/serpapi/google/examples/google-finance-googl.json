@@ -1,0 +1,62 @@
+{
+  "search_metadata": {
+    "id": "68511fb2bd6b297da7ae5669",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/2b6c4a75cac4a1f7/68511fb2bd6b297da7ae5669.json",
+    "created_at": "2025-06-17 07:56:34 UTC",
+    "processed_at": "2025-06-17 07:56:34 UTC",
+    "google_finance_url": "https://www.google.com/finance/quote/GOOGL:NASDAQ?hl=en",
+    "raw_html_file": "https://serpapi.com/searches/2b6c4a75cac4a1f7/68511fb2bd6b297da7ae5669.html",
+    "total_time_taken": 1.52
+  },
+  "search_parameters": {
+    "engine": "google_finance",
+    "q": "GOOGL:NASDAQ",
+    "hl": "en"
+  },
+  "markets": {
+    "us": [{ "stock": ".DJI:INDEXDJX", "name": "Dow Jones", "price": 42515.09, "price_movement": { "percentage": 0.75, "value": 317.3, "movement": "Up" } }],
+    "europe": [{ "stock": "DAX:INDEXDB", "name": "DAX", "price": 23388.94, "price_movement": { "percentage": 1.31, "movement": "Down" } }],
+    "asia": [{ "stock": "NI225:INDEXNIKKEI", "name": "Nikkei 225", "price": 38536.74, "price_movement": { "percentage": 0.59, "movement": "Up" } }],
+    "currencies": [{ "stock": "EUR-USD", "name": "EUR / USD", "price": 1.156085, "price_movement": { "percentage": 0.09, "movement": "Up" } }],
+    "crypto": [{ "stock": "BTC-USD", "name": "Bitcoin", "price": 106756.9, "price_movement": { "percentage": 0.05, "movement": "Down" } }]
+  },
+  "summary": {
+    "title": "Alphabet Inc Class A",
+    "stock": "GOOGL",
+    "exchange": "NASDAQ",
+    "price": "$176.77",
+    "extracted_price": 176.77,
+    "currency": "USD",
+    "price_movement": { "percentage": 1.2, "value": 2.1, "movement": "Up" },
+    "extensions": ["Closed: Jun 16, 7:59:48 PM GMT-4", "USD", "NASDAQ"]
+  },
+  "knowledge_graph": {
+    "about": [
+      {
+        "title": "About",
+        "description": {
+          "snippet": "Alphabet Inc. is an American multinational technology conglomerate holding company...",
+          "link": "https://en.wikipedia.org/wiki/Alphabet_Inc."
+        },
+        "info": [
+          { "label": "CEO", "value": "Sundar Pichai" },
+          { "label": "Founded", "value": "Oct 2, 2015" },
+          { "label": "Headquarters", "value": "Mountain View, California" }
+        ]
+      }
+    ]
+  },
+  "financials": [
+    {
+      "title": "Income Statement",
+      "results": [
+        {
+          "date": "Mar 2025",
+          "period_type": "Quarterly",
+          "table": [{ "title": "Revenue", "value": "90234000000", "change": "12.04%" }]
+        }
+      ]
+    }
+  ]
+}

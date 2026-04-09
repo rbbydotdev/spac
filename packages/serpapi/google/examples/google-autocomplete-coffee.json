@@ -1,0 +1,42 @@
+{
+  "search_metadata": {
+    "id": "605881c3de9834001cb9a014",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/e577b8c1681b6153/605881c3de9834001cb9a014.json",
+    "created_at": "2021-03-22 11:38:43 UTC",
+    "processed_at": "2021-03-22 11:38:44 UTC",
+    "google_autocomplete_url": "https://www.google.com/complete/search?q=coffee&gl=us&hl=en&client=chrome",
+    "raw_html_file": "https://serpapi.com/searches/e577b8c1681b6153/605881c3de9834001cb9a014.html",
+    "total_time_taken": 0.26
+  },
+  "search_parameters": {
+    "engine": "google_autocomplete",
+    "q": "coffee",
+    "gl": "us",
+    "hl": "en"
+  },
+  "search_information": {
+    "autocomplete_results_state": "Showing completion results."
+  },
+  "suggestions": [
+    {
+      "value": "coffee near me",
+      "relevance": 1250,
+      "type": "QUERY",
+      "serpapi_link": "https://serpapi.com/search.json?engine=google_autocomplete&q=coffee+near+me"
+    },
+    {
+      "value": "coffee nearby",
+      "relevance": 601,
+      "type": "QUERY",
+      "serpapi_link": "https://serpapi.com/search.json?engine=google_autocomplete&q=coffee+nearby"
+    },
+    {
+      "value": "coffee shops near me",
+      "relevance": 600,
+      "type": "QUERY",
+      "serpapi_link": "https://serpapi.com/search.json?engine=google_autocomplete&q=coffee+shops+near+me"
+    }
+  ],
+  "verbatim_relevance": 886
+}

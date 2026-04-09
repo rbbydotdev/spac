@@ -1,0 +1,16 @@
+{
+  "account_id": "5ac54d6adefb2f1dba1663f5",
+  "api_key": "SECRET_API_KEY",
+  "account_email": "demo@serpapi.com",
+  "plan_id": "bigdata",
+  "plan_name": "Big Data Plan",
+  "plan_monthly_price": 250.0,
+  "plan_next_renewal_date": "2026-04-27",
+  "searches_per_month": 30000,
+  "plan_searches_left": 5958,
+  "extra_credits": 0,
+  "total_searches_left": 5958,
+  "this_month_usage": 24042,
+  "last_hour_searches": 42,
+  "account_rate_limit_per_hour": 6000
+}
