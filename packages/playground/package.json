@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "codegen": "tsx scripts/codegen-from-specs.ts",
-    "generate": "tsx scripts/codegen-from-specs.ts && tsx scripts/generate-fixtures.ts && tsx scripts/bundle-declarations.ts && tsx scripts/validate-fixtures.ts && tsx scripts/generate-og-images.ts",
+    "generate": "tsx scripts/codegen-from-specs.ts && tsx scripts/generate-fixtures.ts && tsx scripts/bundle-declarations.ts && tsx scripts/validate-fixtures.ts",
+    "generate:og": "tsx scripts/generate-og-images.ts",
     "test:e2e": "playwright test"
   },
   "dependencies": {
