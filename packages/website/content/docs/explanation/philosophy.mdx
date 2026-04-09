@@ -1,0 +1,43 @@
+---
+title: Philosophy
+description: Why spac exists and the design decisions behind it
+---
+
+## OpenAPI is the output, not the authoring experience
+
+Most OpenAPI tools start with YAML or JSON and try to make editing it bearable. spac flips this: you write TypeScript, and OpenAPI is the *output*.
+
+This means you get:
+- **Type inference** from TypeBox schemas — your editor knows the shape of every request and response
+- **Refactoring** — rename a type and every reference updates
+- **Composition** — use functions, loops, and variables to build specs programmatically
+- **Testing** — validate your spec with vitest alongside your application tests
+
+## No wrapper DSL
+
+spac uses [TypeBox](https://github.com/sinclairzx81/typebox) schemas directly. There is no `spac.string()` or `spac.object()` — you use `Type.String()` and `Type.Object()` from TypeBox. This means:
+
+- Zero learning curve if you already know TypeBox
+- Full JSON Schema support out of the box
+- Schemas are portable — use them in runtime validation too
+
+## Named schemas and `$ref` hoisting
+
+When you wrap a schema with `named('Pet', schema)`, spac attaches a symbol to it. During emit, any named schema is:
+
+1. Hoisted to `components.schemas`
+2. Replaced with a `$ref` pointer wherever it appears
+
+This happens recursively — nested named schemas in `properties`, `items`, `allOf/oneOf/anyOf`, etc. are all resolved.
+
+## Explicit versioning
+
+The `Api` constructor requires a spec version as the first argument: `new Api('3.1', ...)`. This is deliberate:
+
+- When OpenAPI 4.0 arrives, the library can gate features per version
+- In multi-team monorepos, `Api<'3.1'>` in function signatures provides compile-time version safety
+- Patch versions (3.1.0 → 3.1.2) are handled internally — you declare major.minor intent
+
+## Group inheritance
+
+Tags and security set on a group automatically cascade to child routes. This mirrors how teams typically organize APIs — the `/users` group is tagged `users` and requires auth, so every route inside inherits that.

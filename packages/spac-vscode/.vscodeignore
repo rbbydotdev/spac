@@ -1,0 +1,9 @@
+src/**
+fixtures/**
+*.config.*
+tsconfig.json
+.vscode-test.*
+**/*.test.ts
+**/__tests__/**
+**/__integration__/**
+node_modules/**

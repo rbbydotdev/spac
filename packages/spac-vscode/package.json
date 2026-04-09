@@ -1,0 +1,74 @@
+{
+  "name": "spac-vscode",
+  "displayName": "Spac OpenAPI Preview",
+  "description": "Live OpenAPI preview and source-map navigation for spac TypeScript DSL",
+  "version": "0.0.1",
+  "private": true,
+  "publisher": "spac",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Visualization"
+  ],
+  "activationEvents": [
+    "onCommand:spac.openPreview",
+    "workspaceContains:**/node_modules/spac/package.json"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "spac.openPreview",
+        "title": "Spac: Open OpenAPI Preview"
+      },
+      {
+        "command": "spac.recompile",
+        "title": "Spac: Recompile Now"
+      },
+      {
+        "command": "spac.toggleLive",
+        "title": "Spac: Toggle Live Recompilation"
+      }
+    ],
+    "configuration": {
+      "title": "Spac",
+      "properties": {
+        "spac.entryFile": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the spac entry file (TypeScript file exporting an Api instance)"
+        },
+        "spac.debounceMs": {
+          "type": "number",
+          "default": 300,
+          "description": "Debounce interval for live recompilation (milliseconds)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.config.mjs",
+    "watch": "node esbuild.config.mjs --watch",
+    "test": "vitest run",
+    "test:integration": "vscode-test",
+    "package": "vsce package --no-dependencies",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@jridgewell/trace-mapping": "^0.3.31"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "@jridgewell/gen-mapping": "^0.3.13",
+    "esbuild": "^0.24.0",
+    "@spec-spac/spac": "workspace:*",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

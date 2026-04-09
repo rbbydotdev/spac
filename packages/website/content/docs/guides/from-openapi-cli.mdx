@@ -1,0 +1,161 @@
+---
+title: spac-from-openapi CLI
+description: Generate spac TypeScript from existing OpenAPI specs
+---
+
+## Install
+
+<Tabs items={['npm', 'pnpm', 'bun']}>
+  <Tab value="npm">
+  ```bash
+  npm install -g @spec-spac/from-openapi
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm add -g @spec-spac/from-openapi
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun add -g @spec-spac/from-openapi
+  ```
+  </Tab>
+</Tabs>
+
+Or run directly without installing:
+
+<Tabs items={['npx', 'pnpm', 'bunx']}>
+  <Tab value="npx">
+  ```bash
+  npx spac-from-openapi spec.json
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx spac-from-openapi spec.json
+  ```
+  </Tab>
+  <Tab value="bunx">
+  ```bash
+  bunx spac-from-openapi spec.json
+  ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```bash
+spac-from-openapi <spec.json> [options]
+```
+
+Without `--out`, runs in **dry-run mode** — prints file list, stats, and group breakdown without writing anything.
+
+With `--out`, generates spac TypeScript files to the output directory.
+
+## Options
+
+| Flag | Description |
+|------|-------------|
+| `--out <dir>` | Output directory (omit for dry-run) |
+| `--strip <prefix>` | Path prefix to strip before grouping (repeatable) |
+| `--name <name>` | Override API title |
+| `--spec-version <ver>` | Override OpenAPI version (default: from spec) |
+| `--debug` | Emit `debug: true` in Api constructor for source map support |
+
+## Examples
+
+### Dry run — preview what will be generated
+
+```bash
+spac-from-openapi petstore.json
+```
+
+Output:
+
+```
+Dry run — 8 files generated in 125ms
+
+  Files:       8
+  Groups:      4
+  Total lines: 342
+  Total size:  12 KB
+
+  Groups:
+    health
+    pets
+    store
+    users
+```
+
+### Generate to a directory
+
+```bash
+spac-from-openapi petstore.json --out ./generated
+```
+
+### Strip path prefixes for cleaner grouping
+
+When your API has paths scoped under context prefixes (like account or zone IDs), use `--strip` to remove them before grouping:
+
+```bash
+spac-from-openapi cloudflare.json --out ./generated \
+  --strip '/accounts/{account_id}' \
+  --strip '/zones/{zone_id}'
+```
+
+Without `--strip`, a path like `/accounts/{account_id}/dns/records` would create a deeply nested group. With `--strip '/accounts/{account_id}'`, it groups under `dns` instead.
+
+### Enable source maps
+
+```bash
+spac-from-openapi spec.json --out ./generated --debug
+```
+
+The `--debug` flag adds `debug: true` to the generated `Api` constructor, enabling source map output when calling `.emit({ sourceMap: true })`.
+
+## Generated output structure
+
+```
+generated/
+  index.ts              — Api setup, imports all groups
+  shared/schemas.ts     — Schemas used by 2+ endpoint groups
+  <group>/index.ts      — Routes for that group
+  <group>/schemas.ts    — Schemas only used by that group
+```
+
+Groups are determined by the first path segment after stripping prefixes.
+
+## Programmatic API
+
+```ts
+import { generate } from '@spec-spac/from-openapi'
+
+const files = await generate({
+  spec: myOpenApiJson,
+  stripPrefixes: ['/accounts/{account_id}'],
+  debug: true,
+})
+
+for (const [path, content] of files) {
+  console.log(path, content.length)
+}
+```
+
+## Formatter plugins
+
+By default, generated code is formatted with Biome. You can swap in Prettier or Biome with custom settings via plugins:
+
+```ts
+import { generate } from '@spec-spac/from-openapi'
+import { prettierPlugin } from '@spec-spac/from-openapi-prettier'
+
+const files = await generate({
+  spec: mySpec,
+  plugins: [prettierPlugin({ singleQuote: true })],
+})
+```
+
+Available plugins:
+- [`@spec-spac/from-openapi-biome`](https://github.com/rbbydotdev/spac/tree/master/packages/from-openapi/plugins/biome) — Biome formatter
+- [`@spec-spac/from-openapi-prettier`](https://github.com/rbbydotdev/spac/tree/master/packages/from-openapi/plugins/prettier) — Prettier formatter

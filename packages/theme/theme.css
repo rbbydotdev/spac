@@ -1,0 +1,49 @@
+/* ═══════════════════════════════════════════════════════════
+ *  GENERATED — do not edit directly.
+ *  Edit colors.ts then run: pnpm --filter @spac/theme build
+ * ═══════════════════════════════════════════════════════════ */
+
+/* Font imports moved to consuming app's global.css (must precede all rules) */
+
+:root {
+  --spac-bg: #262335;
+  --spac-surface: #241b2f;
+  --spac-surface-alt: #2a2139;
+  --spac-surface-hover: #34294f;
+  --spac-surface-menu: #463465;
+  --spac-surface-deep: #171520;
+  --spac-surface-tab: #232530;
+  --spac-text: #b6b1b1;
+  --spac-text-strong: #ffffff;
+  --spac-text-muted: #848bbd;
+  --spac-text-faint: #ffffff80;
+  --spac-text-fainter: #ffffff59;
+  --spac-pink: #ff7edb;
+  --spac-cyan: #36f9f6;
+  --spac-cyan-bright: #03edf9;
+  --spac-cyan-alt: #2ee2fa;
+  --spac-yellow: #fede5d;
+  --spac-green: #72f1b8;
+  --spac-orange: #ff8b39;
+  --spac-coral: #f97e72;
+  --spac-red: #fe4450;
+  --spac-purple: #b893ce;
+  --spac-lavender: #9d8bca;
+  --spac-border: #495495;
+  --spac-border-subtle: #1f212b;
+  --spac-border-muted: #444251;
+  --spac-border-highlight: #7059AB;
+  --spac-button: #614D85;
+  --spac-selection: #ffffff20;
+  --spac-glow-cyan: 0 0 10px rgba(54, 249, 246, 0.35), 0 0 40px rgba(54, 249, 246, 0.1);
+  --spac-glow-pink: 0 0 10px rgba(255, 126, 219, 0.35), 0 0 40px rgba(255, 126, 219, 0.1);
+  --spac-glow-yellow: 0 0 10px rgba(254, 222, 93, 0.3), 0 0 40px rgba(254, 222, 93, 0.08);
+  --spac-font-display: 'Orbitron', sans-serif;
+  --spac-font-body: 'Outfit', sans-serif;
+  --spac-font-code: 'Fira Code', 'JetBrains Mono', 'SF Mono', monospace;
+  --spac-radius-sm: 6px;
+  --spac-radius-md: 8px;
+  --spac-radius-lg: 12px;
+  --spac-radius-xl: 16px;
+  --spac-radius-pill: 9999px;
+}

@@ -1,0 +1,82 @@
+---
+title: Getting Started
+description: Build your first OpenAPI spec with spac in 5 minutes
+---
+
+## Install
+
+<Tabs items={['npm', 'pnpm', 'bun']}>
+  <Tab value="npm">
+  ```bash
+  npm install @spec-spac/spac @sinclair/typebox
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm add @spec-spac/spac @sinclair/typebox
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun add @spec-spac/spac @sinclair/typebox
+  ```
+  </Tab>
+</Tabs>
+
+## Create your first spec
+
+Create a file called `api.ts`:
+
+```spac
+import { Api, named } from '@spec-spac/spac'
+import { Type } from '@sinclair/typebox'
+const Pet = named('Pet', Type.Object({
+  id: Type.String({ format: 'uuid' }),
+  name: Type.String(),
+  tag: Type.Optional(Type.String()),
+}))
+const api = new Api('3.1', 'Petstore', {
+  version: '1.0.0',
+  description: 'A sample pet store API',
+})
+api.group('/pets', g => {
+  g.get('/').response(Type.Array(Pet)).summary('List all pets').tag('pets')
+  g.post('/').body(Pet).response(Pet).summary('Create a pet').tag('pets')
+  g.get('/:id')
+    .params(Type.Object({ id: Type.String() }))
+    .response(Pet)
+    .summary('Get a pet by ID')
+    .tag('pets')
+})
+export default api
+```
+
+## Run it
+
+<Tabs items={['npx', 'pnpm', 'bunx']}>
+  <Tab value="npx">
+  ```bash
+  npx tsx api.ts
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx tsx api.ts
+  ```
+  </Tab>
+  <Tab value="bunx">
+  ```bash
+  bunx tsx api.ts
+  ```
+  </Tab>
+</Tabs>
+
+This outputs a complete OpenAPI 3.1.2 JSON document with:
+- All routes under `/pets`
+- `Pet` schema hoisted to `components.schemas` with `$ref` pointers
+- Tags, summaries, and parameter definitions
+
+## Next steps
+
+- [Defining Routes](/docs/guides/defining-routes) — learn about route configuration options
+- [API Reference](/docs/reference/api) — full type reference for the `Api` class

@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "fumadocs-ui/css/preset.css";
+@import "@spac/theme/fumadocs.css";
+@import "@spac/theme/theme.css";
+
+/* ══════════════════════════════════════════════════════════════
+ *  Synthwave '84 — additional styling for Fumadocs
+ *  Colors come from @spac/theme/fumadocs.css (generated)
+ * ══════════════════════════════════════════════════════════════ */
+
+/* ── Typography ── */
+
+body {
+  font-family: var(--spac-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+code,
+pre,
+.fd-codeblock {
+  font-family: var(--spac-font-code) !important;
+}
+
+/* ── Code blocks — padding, word wrap, backgrounds ── */
+
+.dark figure.shiki,
+.dark [data-rehype-pretty-code-figure] {
+  background-color: #262335 !important;
+  border: 1px solid hsla(250, 20%, 35%, 0.4) !important;
+}
+
+:root:not(.dark) figure.shiki,
+:root:not(.dark) [data-rehype-pretty-code-figure] {
+  background-color: #f5f0fa !important;
+  border: 1px solid #d0c5dd !important;
+}
+
+figure.shiki > div {
+  padding: 0 !important;
+}
+
+/* Fumadocs scroll container — disable horizontal scroll for word wrap
+   Tailwind overflow-auto utility needs !important to override */
+.fd-scroll-container {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+pre {
+  padding: 12px 16px !important;
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-x: hidden !important;
+}
+
+pre code {
+  white-space: pre-wrap !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Shiki line spans */
+pre code .line {
+  display: block !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.dark .prose pre {
+  background-color: transparent !important;
+}
+
+/* ── Shiki dual theme — dark mode CSS variable switching ── */
+
+html.dark .shiki,
+html.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+}
+
+/* ── Inline code ── */
+
+.dark :not(pre) > code {
+  color: #ff7edb;
+  background-color: #2a2139;
+  border: 1px solid hsla(250, 20%, 35%, 0.4);
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.875em;
+}
+
+:root:not(.dark) :not(pre) > code {
+  color: #a0389a;
+  background-color: #ece4f4;
+  border: 1px solid #d0c5dd;
+  border-radius: 4px;
+  padding: 0.15em 0.35em;
+  font-size: 0.875em;
+}
+
+/* ── Subtle grid background (dark mode only) ── */
+
+.dark body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(54, 249, 246, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(54, 249, 246, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+/* ── Nav brand styling ── */
+
+nav a[href="/"] {
+  font-weight: 700 !important;
+  letter-spacing: 0.05em;
+}

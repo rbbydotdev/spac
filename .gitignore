@@ -2,4 +2,17 @@ node_modules
 dist
 *.tsbuildinfo
 .DS_Store
-packages/examples/cloudflare/*
+.agents
+.vercel
+skills-lock.json
+node-compile-cache/
+tsx-501/
+
+# Large examples — synced from the `examples` orphan branch via `pnpm sync-examples`
+packages/examples/cloudflare/
+
+# Generated from specs by codegen-from-specs.ts — always regenerated, never hand-edited
+packages/playground/scripts/petstore/
+packages/playground/scripts/plantstore/
+packages/playground/scripts/serpapi/
+packages/playground/scripts/cloudflare/

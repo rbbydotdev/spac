@@ -1,5 +1,6 @@
 packages:
   - packages/*
+  - packages/from-openapi/plugins/*
 
 onlyBuiltDependencies:
   - esbuild

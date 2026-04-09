@@ -1,0 +1,527 @@
+---
+title: API Reference
+description: Complete type reference for the spac library
+---
+
+## Creating an Api
+
+```ts
+const api = new Api('3.1', 'My API', {
+  version: '1.0.0',
+  description: 'A sample API',
+  debug: true,
+})
+```
+
+The first argument is the spec version (currently only `'3.1'`), the second is the API title, and the third is an optional config object:
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="ApiConfig" />
+
+---
+
+## Defining Routes
+
+HTTP methods are available on both `Api` and `GroupBuilder`. They accept only a path and return a `RouteBuilder` for chaining everything — request inputs, responses, and metadata.
+
+```ts
+api.get('/pets/:petId')
+  .params(Type.Object({ petId: Type.String() }))
+  .response(Pet)
+  .error(404, ErrorSchema)
+  .summary('Get a pet by ID')
+  .tag('pets')
+```
+
+### .params(schema) / .query(schema) / .headers(schema) / .cookies(schema)
+
+Set request parameter schemas.
+
+```ts
+api.get('/pets')
+  .query(Type.Object({ status: Type.Optional(Type.String()) }))
+```
+
+### .body(schema)
+
+Set the request body schema.
+
+```ts
+api.post('/pets')
+  .body(CreatePet)
+  .bodyDescription('The pet to create')
+  .bodyRequired()
+```
+
+### .response(schema)
+
+Shorthand for a 200 response.
+
+```ts
+api.get('/pets').response(Type.Array(Pet))
+```
+
+### .respond(status, schema)
+
+Response for any status code. Accepts a `StatusCode` — a number, wildcard string, or `'default'`.
+
+```ts
+type StatusCode = number | '1XX' | '2XX' | '3XX' | '4XX' | '5XX' | 'default'
+```
+
+The schema can be a TypeBox schema or a `ResponseDef` with metadata:
+
+```ts
+api.post('/pets')
+  .body(CreatePet)
+  .respond(201, Pet)
+  .respond(201, {
+    schema: Pet,
+    description: 'Pet created',
+    headers: { 'x-request-id': Type.String() },
+  })
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="ResponseDef" />
+
+#### HeaderConfig
+
+Used within `ResponseDef.headers` for enriched header definitions:
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="HeaderConfig" />
+
+#### ExampleConfig
+
+Used within `ResponseDef.examples` for named examples:
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="ExampleConfig" />
+
+### .error(status, schema)
+
+Error response for any `StatusCode`. Same status code type as `.respond()`.
+
+```ts
+api.get('/pets/:petId')
+  .params(Type.Object({ petId: Type.String() }))
+  .response(Pet)
+  .error(404, ErrorSchema)
+  .error('5XX', ErrorSchema)
+```
+
+### .link(name, config) / .link(status, name, config)
+
+Attach an OpenAPI Link Object to a response. Without a status code, attaches to the 200 response.
+
+```ts
+api.get('/pets/:petId')
+  .params(Type.Object({ petId: Type.String() }))
+  .response(Pet)
+  .link('GetOwner', {
+    operationId: 'getOwner',
+    parameters: { ownerId: '$response.body#/ownerId' },
+  })
+
+api.post('/pets')
+  .body(CreatePet)
+  .respond(201, Pet)
+  .link(201, 'GetPetById', {
+    operationId: 'getPet',
+    parameters: { petId: '$response.body#/id' },
+  })
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="LinkConfig" />
+
+### .summary(text) / .description(text) / .operationId(id)
+
+```ts
+api.get('/pets')
+  .response(Type.Array(Pet))
+  .summary('List all pets')
+  .description('Returns a paginated list of pets with optional status filter.')
+  .operationId('listPets')
+```
+
+### .tag(name) / .tags(...names)
+
+```ts
+api.get('/pets').response(Type.Array(Pet)).tag('pets')
+api.get('/admin/stats').response(Stats).tags('admin', 'analytics')
+```
+
+### .deprecated()
+
+```ts
+api.get('/pets/findByTags').response(Type.Array(Pet)).deprecated()
+```
+
+### .security(...schemes)
+
+Operation-level security. Accepts scheme name strings or scope maps.
+
+```ts
+api.get('/pets')
+  .response(Type.Array(Pet))
+  .security('bearer')
+  .security({ oauth2: ['read:pets'] })
+```
+
+### .server(config)
+
+Operation-level server override.
+
+```ts
+api.get('/health')
+  .response(Type.Object({ status: Type.Literal('ok') }))
+  .server({ url: 'http://localhost:3000', description: 'Health check only' })
+```
+
+### .externalDocs(config)
+
+```ts
+api.get('/pets').response(Type.Array(Pet))
+  .externalDocs({ url: 'https://docs.example.com/pets', description: 'Pet docs' })
+```
+
+### .extension(name, value)
+
+Add an `x-` prefixed extension field. The `x-` prefix is added automatically.
+
+```ts
+api.get('/pets').response(Type.Array(Pet))
+  .extension('rate-limit', 100)     // emits x-rate-limit
+  .extension('x-internal', true)    // kept as x-internal
+```
+
+### .callback(name, expression, cb)
+
+Register an out-of-band callback operation.
+
+```ts
+api.post('/webhooks/subscribe')
+  .body(Type.Object({ url: Type.String({ format: 'uri' }) }))
+  .respond(201, Subscription)
+  .callback('onEvent', '{$request.body#/url}', g => {
+    g.post('/')
+      .body(Type.Object({ event: Type.String(), payload: Type.Unknown() }))
+      .response(Type.Object({ received: Type.Boolean() }))
+  })
+```
+
+### .use(macro)
+
+Apply a reusable `RouteMacro`. Multiple macros compose by chaining.
+
+```ts
+const authenticated = macro.route(r =>
+  r.security('bearer').error(401, ErrorSchema).error(403, ErrorSchema)
+)
+const validated = macro.route(r => r.error(422, ValidationError))
+
+api.post('/pets')
+  .body(CreatePet)
+  .response(Pet)
+  .use(authenticated)
+  .use(validated)
+```
+
+---
+
+## Groups
+
+Groups collect routes under a shared path prefix. Tags, security, and extensions cascade to all child routes.
+
+```ts
+api.group('/pets', g => {
+  g.tag('pets')
+  g.security('bearer')
+
+  g.get('/').response(Type.Array(Pet)).summary('List pets')
+  g.post('/').body(CreatePet).respond(201, Pet).summary('Create a pet')
+
+  g.group('/:petId', { params: Type.Object({ petId: Type.String() }) }, pet => {
+    pet.get('/').response(Pet).summary('Get a pet')
+    pet.delete('/').respond(204, noContent()).summary('Delete a pet')
+  })
+})
+```
+
+### Group methods
+
+| Method | Description |
+|--------|------------|
+| `.tag(name)` | inherited by all routes |
+| `.security(...schemes)` | inherited by all routes |
+| `.description(text)` | group description |
+| `.server(config)` | group-level server override |
+| `.extension(name, value)` | `x-*` on all path items |
+| `.pathSummary(text)` | `summary` on path item object |
+| `.pathDescription(text)` | `description` on path item object |
+| `.use(macro)` | apply a `GroupMacro` |
+| `.group(prefix, cb)` | nested group |
+
+### Group macros
+
+```ts
+const adminSection = macro.group(g =>
+  g.tag('admin').security({ bearer: ['admin'] })
+)
+
+api.group('/admin', g => {
+  g.use(adminSection)
+  g.get('/stats').response(StatsResponse)
+})
+```
+
+---
+
+## Api-level Methods
+
+### .server(config)
+
+Add a server to the top-level `servers` array.
+
+```ts
+api.server({ url: 'https://api.example.com/v1', description: 'Production' })
+api.server({
+  url: 'https://{env}.example.com/v1',
+  description: 'Configurable environment',
+  variables: {
+    env: { default: 'api', enum: ['api', 'staging', 'sandbox'] },
+  },
+})
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="ServerConfig" />
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="ServerVariableConfig" />
+
+### .securityScheme(name, config)
+
+Register a security scheme in `components.securitySchemes`.
+
+```ts
+api.securityScheme('bearer', { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' })
+api.securityScheme('apiKey', { type: 'apiKey', name: 'X-API-Key', in: 'header' })
+api.securityScheme('oauth2', {
+  type: 'oauth2',
+  flows: {
+    authorizationCode: {
+      authorizationUrl: 'https://example.com/oauth/authorize',
+      tokenUrl: 'https://example.com/oauth/token',
+      scopes: { 'read:pets': 'Read pets', 'write:pets': 'Modify pets' },
+    },
+  },
+})
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="SecuritySchemeConfig" />
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="OAuthFlowsConfig" />
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="OAuthFlowConfig" />
+
+### .tag(config)
+
+Add a tag to the top-level `tags` array. Accepts a string or a `TagConfig` object.
+
+```ts
+api.tag('pets')
+api.tag({ name: 'pets', description: 'Everything about pets',
+  externalDocs: { url: 'https://docs.example.com/pets' } })
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="TagConfig" />
+
+### .schema(name, schema)
+
+Register a named schema in `components.schemas`.
+
+```ts
+const Pet = named('Pet', Type.Object({ id: Type.Integer(), name: Type.String() }))
+api.schema('Pet', Pet)
+```
+
+### .security(...schemes)
+
+Set global security requirements.
+
+```ts
+api.security('bearer')
+api.security({ oauth2: ['read:pets'] })
+```
+
+### .externalDocs(config)
+
+```ts
+api.externalDocs({ url: 'https://docs.example.com', description: 'Full documentation' })
+```
+
+### .extension(name, value)
+
+```ts
+api.extension('x-logo', { url: 'https://example.com/logo.png' })
+```
+
+### .webhook(name, cb)
+
+Define a webhook (OpenAPI 3.1 `webhooks`).
+
+```ts
+api.webhook('petAdopted', g => {
+  g.post('/').body(PetEvent).summary('Pet adopted notification')
+})
+```
+
+### .component(type, name, config)
+
+Register arbitrary components (responses, parameters, headers, examples, links, callbacks, pathItems).
+
+```ts
+api.component('headers', 'X-Rate-Limit', { schema: Type.Integer() })
+api.component('parameters', 'PageSize', { in: 'query', schema: Type.Integer() })
+```
+
+### .use(macro)
+
+Apply an `ApiMacro`.
+
+```ts
+const withServers = macro.api(a =>
+  a.server({ url: 'https://api.example.com/v1', description: 'Production' })
+   .server({ url: 'https://staging.example.com/v1', description: 'Staging' })
+)
+api.use(withServers)
+```
+
+---
+
+## Macros
+
+Macros are reusable configuration functions created with `macro.route()`, `macro.group()`, or `macro.api()` and applied via `.use()`.
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="RouteMacro" />
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="GroupMacro" />
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="ApiMacro" />
+
+---
+
+## Version Policy
+
+When multiple teams contribute modules to a single API, they may target different OpenAPI patch versions. The version policy system coordinates these declarations and catches mismatches at composition time.
+
+### Configuring the policy
+
+Pass `versionPolicy` in the `ApiConfig`:
+
+```ts
+// Strict: error on any patch mismatch (e.g. 3.1.0 vs 3.1.2)
+const api = new Api('3.1', 'My API', { versionPolicy: 'strict' })
+
+// Warn (default): log warnings for patch mismatches, error on major.minor
+const api = new Api('3.1', 'My API', { versionPolicy: 'warn' })
+
+// Lenient: silently accept patch mismatches, error only on major.minor
+const api = new Api('3.1', 'My API', { versionPolicy: 'lenient' })
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="VersionPolicy" />
+
+### .assertVersion(version, label?)
+
+Declare the OpenAPI version a team module was written for. Call this at the top of each team registration function.
+
+```ts
+export function registerCalls(api: Api<'3.1'>) {
+  api.assertVersion('3.1.0', 'calls')
+  api.group('/calls', g => { /* ... */ })
+}
+```
+
+The comparison is asymmetric — the direction of the mismatch matters:
+
+- **Major mismatch** (e.g. `2.0` vs `3.1`): always throws.
+- **Team minor higher** than central (e.g. team at `3.2`, central at `3.1`): always throws — the team may use features the output format doesn't support.
+- **Team minor lower** than central (e.g. team at `3.0`, central at `3.1`): generally safe — the team uses a subset of features. Handled per policy (same as patch mismatches).
+- **Patch mismatch** (e.g. `3.1.0` vs `3.1.2`): depends on the active policy — `'strict'` throws, `'warn'` logs, `'lenient'` is silent.
+
+### .versionAudit()
+
+Audit all version declarations across team modules. Returns a `VersionAudit` object useful for CI checks.
+
+```ts
+const audit = api.versionAudit()
+if (!audit.compatible) {
+  console.error('Incompatible versions:', audit.errors)
+  process.exit(1)
+}
+```
+
+<AutoTypeTable cwd path="../spac/src/types.ts" name="VersionAudit" />
+
+### Audit at emit time
+
+Pass `audit: true` to `.emit()` to include the version audit in the result:
+
+```ts
+const result = api.emit({ audit: true })
+console.log(result.versionAudit)
+// { target: '3.1.2', policy: 'warn', declarations: [...], compatible: true, warnings: [...], errors: [] }
+```
+
+---
+
+## Emit
+
+```ts
+api.emit()                                   // JSON object
+api.emit({ yaml: true })                     // { doc, yaml }
+api.emit({ sourceTable: true })              // { doc, sourceTable }
+api.emit({ sourceMap: true })                // { doc, yaml, sourceTable, sourceMap }
+api.emit({ audit: true })                    // { doc, versionAudit }
+```
+
+<AutoTypeTable cwd path="../spac/src/emit.ts" name="EmitOptions" />
+
+---
+
+## Helpers
+
+### named(name, schema)
+
+Annotates a TypeBox schema for hoisting to `components.schemas`. Referenced via `$ref` in the output.
+
+```ts
+const Pet = named('Pet', Type.Object({ id: Type.Integer(), name: Type.String() }))
+```
+
+### noContent(description?)
+
+Creates a 204 No Content response definition.
+
+<JSDocExample cwd path="../spac/src/helpers.ts" name="noContent" />
+
+### created(schema, description?)
+
+Creates a 201 Created response definition.
+
+<JSDocExample cwd path="../spac/src/helpers.ts" name="created" />
+
+### errorSchema(fields?)
+
+Standard error schema with `message` and optional `code` fields. Accepts additional fields.
+
+<JSDocExample cwd path="../spac/src/helpers.ts" name="errorSchema" />
+
+### paginated(schema)
+
+Wraps a schema in `{ items, total, page, pageSize }`.
+
+<JSDocExample cwd path="../spac/src/helpers.ts" name="paginated" />
+
+### envelope(schema)
+
+Wraps a schema in `{ data: T }`.
+
+<JSDocExample cwd path="../spac/src/helpers.ts" name="envelope" />

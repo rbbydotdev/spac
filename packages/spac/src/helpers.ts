@@ -1,5 +1,6 @@
-import { Type, type TSchema } from '@sinclair/typebox'
-import type { ResponseDef } from './types'
+import { Type, type TSchema } from "@sinclair/typebox";
+import type { ResponseDef } from "./types";
+import { captureSource } from "./sourcemap";
 
 /**
  * Wrap a schema as an `application/json` body hint.
@@ -11,13 +12,13 @@ import type { ResponseDef } from './types'
  *
  * @example
  * ```ts
- * api.post('/pets', { body: json(CreatePet), response: Pet })
+ * api.post('/pets').body(json(CreatePet)).response(Pet)
  * // Equivalent to:
- * api.post('/pets', { body: CreatePet, response: Pet })
+ * api.post('/pets').body(CreatePet).response(Pet)
  * ```
  */
 export function json(schema: TSchema): TSchema {
-  return schema
+  return schema;
 }
 
 /**
@@ -28,17 +29,16 @@ export function json(schema: TSchema): TSchema {
  *
  * @example
  * ```ts
- * api.delete('/pets/:petId', {
- *   params: Type.Object({ petId: Type.String() }),
- *   responses: { 204: noContent() },
- * })
+ * api.delete('/pets/:petId')
+ *   .params(Type.Object({ petId: Type.String() }))
+ *   .respond(204, noContent())
  *
  * // Custom description
- * responses: { 204: noContent('Resource deleted') }
+ * .respond(204, noContent('Resource deleted'))
  * ```
  */
-export function noContent(description = 'No Content'): ResponseDef {
-  return { description }
+export function noContent(description = "No Content"): ResponseDef {
+  return { description, _source: captureSource(noContent) };
 }
 
 /**
@@ -50,17 +50,16 @@ export function noContent(description = 'No Content'): ResponseDef {
  *
  * @example
  * ```ts
- * api.post('/pets', {
- *   body: CreatePet,
- *   responses: { 201: created(Pet) },
- * })
+ * api.post('/pets')
+ *   .body(CreatePet)
+ *   .respond(201, created(Pet))
  *
  * // Custom description
- * responses: { 201: created(Pet, 'Pet successfully created') }
+ * .respond(201, created(Pet, 'Pet successfully created'))
  * ```
  */
-export function created(schema: TSchema, description = 'Created'): ResponseDef {
-  return { description, schema }
+export function created(schema: TSchema, description = "Created"): ResponseDef {
+  return { description, schema, _source: captureSource(created) };
 }
 
 /**
@@ -83,7 +82,7 @@ export function created(schema: TSchema, description = 'Created'): ResponseDef {
  *   })),
  * })
  *
- * api.get('/pets/:petId', { response: Pet }).error(404, Error)
+ * api.get('/pets/:petId').response(Pet).error(404, Error)
  * ```
  */
 export function errorSchema(fields?: Record<string, TSchema>) {
@@ -91,7 +90,7 @@ export function errorSchema(fields?: Record<string, TSchema>) {
     message: Type.String(),
     code: Type.Optional(Type.String()),
     ...fields,
-  })
+  });
 }
 
 /**
@@ -103,13 +102,12 @@ export function errorSchema(fields?: Record<string, TSchema>) {
  *
  * @example
  * ```ts
- * api.get('/pets', {
- *   query: Type.Object({
+ * api.get('/pets')
+ *   .query(Type.Object({
  *     page: Type.Optional(Type.Integer({ default: 1 })),
  *     pageSize: Type.Optional(Type.Integer({ default: 20 })),
- *   }),
- *   response: paginated(Pet),
- * })
+ *   }))
+ *   .response(paginated(Pet))
  * // Response shape: { items: Pet[], total: number, page: number, pageSize: number }
  * ```
  */
@@ -119,7 +117,7 @@ export function paginated(itemSchema: TSchema) {
     total: Type.Integer(),
     page: Type.Integer(),
     pageSize: Type.Integer(),
-  })
+  });
 }
 
 /**
@@ -130,15 +128,14 @@ export function paginated(itemSchema: TSchema) {
  *
  * @example
  * ```ts
- * api.get('/pets/:petId', {
- *   params: Type.Object({ petId: Type.String() }),
- *   response: envelope(Pet),
- * })
+ * api.get('/pets/:petId')
+ *   .params(Type.Object({ petId: Type.String() }))
+ *   .response(envelope(Pet))
  * // Response shape: { data: Pet }
  * ```
  */
 export function envelope(dataSchema: TSchema) {
   return Type.Object({
     data: dataSchema,
-  })
+  });
 }

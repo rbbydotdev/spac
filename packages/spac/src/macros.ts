@@ -1,4 +1,4 @@
-import type { RouteMacro, GroupMacro, ApiMacro } from './types'
+import type { RouteMacro, GroupMacro, ApiMacro } from "./types";
 
 /**
  * Create a route-level macro — a reusable function that configures a {@link RouteBuilder}.
@@ -18,13 +18,13 @@ import type { RouteMacro, GroupMacro, ApiMacro } from './types'
  * const validated = macro.route(r => r.error(422, DetailedError))
  *
  * // Compose macros on a route
- * api.post('/pets', { body: CreatePet, response: Pet })
+ * api.post('/pets').body(CreatePet).response(Pet)
  *   .use(authenticated)
  *   .use(validated)
  * ```
  */
 function route(fn: RouteMacro): RouteMacro {
-  return fn
+  return fn;
 }
 
 /**
@@ -42,12 +42,12 @@ function route(fn: RouteMacro): RouteMacro {
  *
  * api.group('/admin', g => {
  *   g.use(adminSection)
- *   g.get('/stats', { response: StatsResponse })
+ *   g.get('/stats').response(StatsResponse)
  * })
  * ```
  */
 function group(fn: GroupMacro): GroupMacro {
-  return fn
+  return fn;
 }
 
 /**
@@ -64,12 +64,12 @@ function group(fn: GroupMacro): GroupMacro {
  *    .server({ url: 'https://staging.example.com/v1', description: 'Staging' })
  * )
  *
- * const api = new Api('My API')
+ * const api = new Api('3.1', 'My API')
  * api.use(withServers)
  * ```
  */
 function api(fn: ApiMacro): ApiMacro {
-  return fn
+  return fn;
 }
 
 /**
@@ -85,4 +85,4 @@ function api(fn: ApiMacro): ApiMacro {
  * const withServers = macro.api(a => a.server({ url: 'https://api.example.com' }))
  * ```
  */
-export const macro = { route, group, api } as const
+export const macro = { route, group, api } as const;

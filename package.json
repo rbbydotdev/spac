@@ -1,4 +1,13 @@
 {
   "private": true,
-  "packageManager": "pnpm@10.24.0"
+  "packageManager": "pnpm@10.24.0",
+  "scripts": {
+    "format": "biome format --write packages/spac packages/from-openapi packages/examples packages/playground/scripts",
+    "format:check": "biome format packages/spac packages/from-openapi packages/examples packages/playground/scripts",
+    "sync-examples": "bash scripts/sync-examples.sh",
+    "publish-pkg": "bash scripts/publish.sh"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.7"
+  }
 }

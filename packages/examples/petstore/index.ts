@@ -1,5 +1,14 @@
 import { Type } from "@sinclair/typebox";
-import { Api, created, envelope, errorSchema, macro, named, noContent, paginated } from "spac";
+import {
+  Api,
+  created,
+  envelope,
+  errorSchema,
+  macro,
+  named,
+  noContent,
+  paginated,
+} from "spac";
 
 // =============================================================================
 // Schemas
@@ -26,7 +35,11 @@ const Pet = named(
   Type.Object({
     id: Type.Integer(),
     name: Type.String(),
-    status: Type.Union([Type.Literal("available"), Type.Literal("pending"), Type.Literal("sold")]),
+    status: Type.Union([
+      Type.Literal("available"),
+      Type.Literal("pending"),
+      Type.Literal("sold"),
+    ]),
     category: Type.Optional(Category),
     tags: Type.Optional(Type.Array(Tag)),
     photoUrls: Type.Array(Type.String({ format: "uri" })),
@@ -37,7 +50,13 @@ const CreatePet = named(
   "CreatePet",
   Type.Object({
     name: Type.String({ minLength: 1 }),
-    status: Type.Optional(Type.Union([Type.Literal("available"), Type.Literal("pending"), Type.Literal("sold")])),
+    status: Type.Optional(
+      Type.Union([
+        Type.Literal("available"),
+        Type.Literal("pending"),
+        Type.Literal("sold"),
+      ]),
+    ),
     categoryId: Type.Optional(Type.Integer()),
     tagIds: Type.Optional(Type.Array(Type.Integer())),
     photoUrls: Type.Array(Type.String({ format: "uri" })),
@@ -48,7 +67,13 @@ const UpdatePet = named(
   "UpdatePet",
   Type.Object({
     name: Type.Optional(Type.String({ minLength: 1 })),
-    status: Type.Optional(Type.Union([Type.Literal("available"), Type.Literal("pending"), Type.Literal("sold")])),
+    status: Type.Optional(
+      Type.Union([
+        Type.Literal("available"),
+        Type.Literal("pending"),
+        Type.Literal("sold"),
+      ]),
+    ),
     categoryId: Type.Optional(Type.Integer()),
     tagIds: Type.Optional(Type.Array(Type.Integer())),
     photoUrls: Type.Optional(Type.Array(Type.String({ format: "uri" }))),
@@ -62,7 +87,11 @@ const Order = named(
     petId: Type.Integer(),
     quantity: Type.Integer({ minimum: 1 }),
     shipDate: Type.Optional(Type.String({ format: "date-time" })),
-    status: Type.Union([Type.Literal("placed"), Type.Literal("approved"), Type.Literal("delivered")]),
+    status: Type.Union([
+      Type.Literal("placed"),
+      Type.Literal("approved"),
+      Type.Literal("delivered"),
+    ]),
     complete: Type.Boolean(),
   }),
 );
@@ -134,13 +163,17 @@ const DetailedError = errorSchema({
 // =============================================================================
 
 // Route macro: adds auth + standard error responses
-const authenticated = macro.route((r) => r.security("bearerAuth").error(401, Error).error(403, Error));
+const authenticated = macro.route((r) =>
+  r.security("bearerAuth").error(401, Error).error(403, Error),
+);
 
 // Route macro: adds validation error
 const validated = macro.route((r) => r.error(422, DetailedError));
 
 // Group macro: admin section setup
-const adminSection = macro.group((g) => g.tag("admin").security({ bearerAuth: ["admin"] }));
+const adminSection = macro.group((g) =>
+  g.tag("admin").security({ bearerAuth: ["admin"] }),
+);
 
 // Api macro: adds common servers
 const withServers = macro.api((a) =>
@@ -170,7 +203,7 @@ const withServers = macro.api((a) =>
 // API Definition
 // =============================================================================
 
-const api = new Api("Petstore", {
+const api = new Api("3.1", "Petstore", {
   version: "1.0.0",
   description:
     "A classic Pet Store API demonstrating all spac features: groups, " +
@@ -258,47 +291,55 @@ api.group("/pets", (g) => {
   g.tag("pets");
 
   // List pets — paginated, filterable
-  g.get("/", {
-    query: Type.Object({
-      status: Type.Optional(Type.Union([Type.Literal("available"), Type.Literal("pending"), Type.Literal("sold")])),
-      category: Type.Optional(Type.String()),
-      tags: Type.Optional(Type.Array(Type.String())),
-      page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
-      pageSize: Type.Optional(Type.Integer({ minimum: 1, maximum: 100, default: 20 })),
-    }),
-    response: paginated(Pet),
-  })
+  g.get("/")
+    .query(
+      Type.Object({
+        status: Type.Optional(
+          Type.Union([
+            Type.Literal("available"),
+            Type.Literal("pending"),
+            Type.Literal("sold"),
+          ]),
+        ),
+        category: Type.Optional(Type.String()),
+        tags: Type.Optional(Type.Array(Type.String())),
+        page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
+        pageSize: Type.Optional(
+          Type.Integer({ minimum: 1, maximum: 100, default: 20 }),
+        ),
+      }),
+    )
+    .response(paginated(Pet))
     .summary("List all pets")
     .description("Returns a paginated list of pets with optional filters.")
     .operationId("listPets");
 
   // Get single pet
-  g.get("/:petId", {
-    params: Type.Object({ petId: Type.Integer() }),
-    response: envelope(Pet),
-  })
+  g.get("/:petId")
+    .params(Type.Object({ petId: Type.Integer() }))
+    .response(envelope(Pet))
     .summary("Get a pet by ID")
     .operationId("getPet")
     .error(404, Error);
 
   // Create pet (authenticated + validated)
-  g.post("/", {
-    body: CreatePet,
-    responses: {
-      201: created(Pet),
-    },
-  })
+  g.post("/")
+    .body(CreatePet)
+    .respond(201, created(Pet))
     .summary("Add a new pet")
     .operationId("createPet")
     .use(authenticated)
-    .use(validated);
+    .use(validated)
+    .link(201, "GetPetById", {
+      operationId: "getPet",
+      parameters: { petId: "$response.body#/id" },
+    });
 
   // Update pet
-  g.put("/:petId", {
-    params: Type.Object({ petId: Type.Integer() }),
-    body: UpdatePet,
-    response: Pet,
-  })
+  g.put("/:petId")
+    .params(Type.Object({ petId: Type.Integer() }))
+    .body(UpdatePet)
+    .response(Pet)
     .summary("Update a pet")
     .operationId("updatePet")
     .use(authenticated)
@@ -306,85 +347,81 @@ api.group("/pets", (g) => {
     .error(404, Error);
 
   // Partial update
-  g.patch("/:petId", {
-    params: Type.Object({ petId: Type.Integer() }),
-    body: UpdatePet,
-    response: Pet,
-  })
+  g.patch("/:petId")
+    .params(Type.Object({ petId: Type.Integer() }))
+    .body(UpdatePet)
+    .response(Pet)
     .summary("Partially update a pet")
     .operationId("patchPet")
     .use(authenticated);
 
   // Delete pet
-  g.delete("/:petId", {
-    params: Type.Object({ petId: Type.Integer() }),
-    responses: {
-      204: noContent(),
-    },
-  })
+  g.delete("/:petId")
+    .params(Type.Object({ petId: Type.Integer() }))
+    .respond(204, noContent())
     .summary("Delete a pet")
     .operationId("deletePet")
     .use(authenticated)
     .error(404, Error);
 
   // Find by status (explicit response with custom header)
-  g.get("/findByStatus", {
-    query: Type.Object({
-      status: Type.Union([Type.Literal("available"), Type.Literal("pending"), Type.Literal("sold")]),
-    }),
-    responses: {
-      200: {
-        description: "Pets matching the status filter",
-        schema: Type.Array(Pet),
-        headers: {
-          "X-Total-Count": Type.Integer(),
-        },
+  g.get("/findByStatus")
+    .query(
+      Type.Object({
+        status: Type.Union([
+          Type.Literal("available"),
+          Type.Literal("pending"),
+          Type.Literal("sold"),
+        ]),
+      }),
+    )
+    .respond(200, {
+      description: "Pets matching the status filter",
+      schema: Type.Array(Pet),
+      headers: {
+        "X-Total-Count": Type.Integer(),
       },
-    },
-  })
+    })
     .summary("Find pets by status")
     .operationId("findPetsByStatus");
 
   // Find by tags
-  g.get("/findByTags", {
-    query: Type.Object({
-      tags: Type.Array(Type.String()),
-    }),
-    response: Type.Array(Pet),
-  })
+  g.get("/findByTags")
+    .query(
+      Type.Object({
+        tags: Type.Array(Type.String()),
+      }),
+    )
+    .response(Type.Array(Pet))
     .summary("Find pets by tags")
     .operationId("findPetsByTags")
     .deprecated();
 
   // Upload image (custom content type)
-  g.post("/:petId/image", {
-    params: Type.Object({ petId: Type.Integer() }),
-    headers: Type.Object({
-      "Content-Length": Type.Integer(),
-    }),
-    responses: {
-      200: {
-        description: "Upload result",
-        schema: Type.Object({
-          url: Type.String({ format: "uri" }),
-          size: Type.Integer(),
-        }),
-      },
-    },
-  })
+  g.post("/:petId/image")
+    .params(Type.Object({ petId: Type.Integer() }))
+    .headers(
+      Type.Object({
+        "Content-Length": Type.Integer(),
+      }),
+    )
+    .respond(200, {
+      description: "Upload result",
+      schema: Type.Object({
+        url: Type.String({ format: "uri" }),
+        size: Type.Integer(),
+      }),
+    })
     .summary("Upload pet image")
     .operationId("uploadPetImage")
     .use(authenticated)
     .extension("x-codegen-request-body-name", "file");
 
   // Head request (check pet existence)
-  g.head("/:petId", {
-    params: Type.Object({ petId: Type.Integer() }),
-    responses: {
-      200: noContent("Pet exists"),
-      404: noContent("Pet not found"),
-    },
-  })
+  g.head("/:petId")
+    .params(Type.Object({ petId: Type.Integer() }))
+    .respond(200, noContent("Pet exists"))
+    .respond(404, noContent("Pet not found"))
     .summary("Check if pet exists")
     .operationId("petExists");
 });
@@ -397,42 +434,38 @@ api.group("/store", (g) => {
   g.tag("store");
 
   // Inventory
-  g.get("/inventory", {
-    response: InventoryResponse,
-  })
+  g.get("/inventory")
+    .response(InventoryResponse)
     .summary("Returns pet inventories by status")
     .operationId("getInventory")
     .security("apiKey");
 
   // Place order
-  g.post("/orders", {
-    body: CreateOrder,
-    responses: {
-      201: created(Order),
-    },
-  })
+  g.post("/orders")
+    .body(CreateOrder)
+    .respond(201, created(Order))
     .summary("Place an order for a pet")
     .operationId("placeOrder")
     .use(authenticated)
-    .use(validated);
+    .use(validated)
+    .link(201, "GetOrderById", {
+      operationId: "getOrder",
+      parameters: { orderId: "$response.body#/id" },
+    });
 
   // Get order
-  g.get("/orders/:orderId", {
-    params: Type.Object({ orderId: Type.Integer() }),
-    response: Order,
-  })
+  g.get("/orders/:orderId")
+    .params(Type.Object({ orderId: Type.Integer() }))
+    .response(Order)
     .summary("Find purchase order by ID")
     .operationId("getOrder")
     .use(authenticated)
     .error(404, Error);
 
   // Delete order
-  g.delete("/orders/:orderId", {
-    params: Type.Object({ orderId: Type.Integer() }),
-    responses: {
-      204: noContent(),
-    },
-  })
+  g.delete("/orders/:orderId")
+    .params(Type.Object({ orderId: Type.Integer() }))
+    .respond(204, noContent())
     .summary("Delete purchase order by ID")
     .operationId("deleteOrder")
     .use(authenticated)
@@ -443,8 +476,9 @@ api.group("/store", (g) => {
     admin.use(adminSection);
 
     admin
-      .get("/stats", {
-        response: Type.Object({
+      .get("/stats")
+      .response(
+        Type.Object({
           totalOrders: Type.Integer(),
           totalRevenue: Type.Number(),
           averageOrderValue: Type.Number(),
@@ -456,22 +490,21 @@ api.group("/store", (g) => {
             }),
           ),
         }),
-      })
+      )
       .summary("Store statistics")
       .operationId("getStoreStats")
       .extension("x-internal", true);
 
     admin
-      .delete("/orders", {
-        query: Type.Object({
+      .delete("/orders")
+      .query(
+        Type.Object({
           before: Type.String({ format: "date-time" }),
         }),
-        responses: {
-          200: {
-            description: "Purge result",
-            schema: Type.Object({ deleted: Type.Integer() }),
-          },
-        },
+      )
+      .respond(200, {
+        description: "Purge result",
+        schema: Type.Object({ deleted: Type.Integer() }),
       })
       .summary("Purge old orders")
       .operationId("purgeOrders");
@@ -486,80 +519,76 @@ api.group("/users", (g) => {
   g.tag("users");
 
   // Register
-  g.post("/", {
-    body: CreateUser,
-    responses: {
-      201: created(User),
-    },
-  })
+  g.post("/")
+    .body(CreateUser)
+    .respond(201, created(User))
     .summary("Create a new user")
     .operationId("createUser")
-    .use(validated);
+    .use(validated)
+    .link(201, "GetUserByName", {
+      operationId: "getUserByName",
+      parameters: { username: "$response.body#/username" },
+    });
 
   // Batch create
-  g.post("/batch", {
-    body: Type.Array(CreateUser),
-    responses: {
-      201: created(Type.Array(User)),
-    },
-  })
+  g.post("/batch")
+    .body(Type.Array(CreateUser))
+    .respond(201, created(Type.Array(User)))
     .summary("Create multiple users")
     .operationId("createUsersFromList")
     .use(authenticated)
     .use(validated);
 
   // Login
-  g.post("/login", {
-    body: Type.Object({
-      username: Type.String(),
-      password: Type.String(),
-    }),
-    responses: {
-      200: {
-        description: "Login successful",
-        schema: LoginResponse,
-        headers: {
-          "X-Rate-Limit": Type.Integer({ description: "Calls per hour allowed" }),
-          "X-Expires-After": Type.String({
-            format: "date-time",
-            description: "Token expiration time",
-          }),
-        },
+  g.post("/login")
+    .body(
+      Type.Object({
+        username: Type.String(),
+        password: Type.String(),
+      }),
+    )
+    .respond(200, {
+      description: "Login successful",
+      schema: LoginResponse,
+      headers: {
+        "X-Rate-Limit": Type.Integer({ description: "Calls per hour allowed" }),
+        "X-Expires-After": Type.String({
+          format: "date-time",
+          description: "Token expiration time",
+        }),
       },
-      401: {
-        description: "Invalid credentials",
-        schema: Error,
-      },
-    },
-  })
+    })
+    .respond(401, {
+      description: "Invalid credentials",
+      schema: Error,
+    })
     .summary("Log in a user")
-    .operationId("loginUser");
+    .operationId("loginUser")
+    .link(200, "GetLoggedInUser", {
+      operationId: "getUserByName",
+      parameters: { username: "$request.body#/username" },
+    });
 
   // Logout
-  g.post("/logout", {
-    responses: {
-      204: noContent("Logged out"),
-    },
-  })
+  g.post("/logout")
+    .respond(204, noContent("Logged out"))
     .summary("Log out the current user")
     .operationId("logoutUser")
     .use(authenticated);
 
   // Get user by username
-  g.get("/:username", {
-    params: Type.Object({ username: Type.String() }),
-    response: User,
-  })
+  g.get("/:username")
+    .params(Type.Object({ username: Type.String() }))
+    .response(User)
     .summary("Get user by username")
     .operationId("getUserByName")
     .error(404, Error);
 
   // Update user
-  g.put("/:username", {
-    params: Type.Object({ username: Type.String() }),
-    body: CreateUser,
-    response: User,
-  })
+  g.put("/:username")
+    .params(Type.Object({ username: Type.String() }))
+    .body(CreateUser)
+    .response(User)
     .summary("Update user")
     .operationId("updateUser")
     .use(authenticated)
@@ -567,12 +596,9 @@ api.group("/users", (g) => {
     .error(404, Error);
 
   // Delete user
-  g.delete("/:username", {
-    params: Type.Object({ username: Type.String() }),
-    responses: {
-      204: noContent(),
-    },
-  })
+  g.delete("/:username")
+    .params(Type.Object({ username: Type.String() }))
+    .respond(204, noContent())
     .summary("Delete user")
     .operationId("deleteUser")
     .use(authenticated)
@@ -585,24 +611,25 @@ api.group("/users", (g) => {
 
 // Health check — no auth, no tags
 api
-  .get("/health", {
-    response: Type.Object({
+  .get("/health")
+  .response(
+    Type.Object({
       status: Type.Literal("ok"),
       uptime: Type.Number(),
       version: Type.String(),
     }),
-  })
+  )
   .summary("Health check")
   .operationId("healthCheck")
-  .server({ url: "http://localhost:3000", description: "Health check only on local" });
+  .server({
+    url: "http://localhost:3000",
+    description: "Health check only on local",
+  });
 
 // OPTIONS for CORS preflight
 api
-  .options("/pets", {
-    responses: {
-      204: noContent("CORS preflight"),
-    },
-  })
+  .options("/pets")
+  .respond(204, noContent("CORS preflight"))
   .summary("CORS preflight for /pets")
   .extension("x-internal", true);
 

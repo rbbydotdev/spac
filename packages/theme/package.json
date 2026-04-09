@@ -1,0 +1,26 @@
+{
+  "name": "@spac/theme",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./colors.ts",
+    "./codemirror": "./codemirror.ts",
+    "./theme.css": "./theme.css",
+    "./fumadocs.css": "./fumadocs.css",
+    "./shiki-dark.json": "./shiki-dark.json",
+    "./shiki-light.json": "./shiki-light.json"
+  },
+  "scripts": {
+    "build": "tsx build-css.ts"
+  },
+  "dependencies": {
+    "@codemirror/language": "^6.12.2",
+    "@codemirror/view": "^6.40.0",
+    "@lezer/highlight": "^1.2.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0",
+    "typescript": "~5.9.3"
+  }
+}

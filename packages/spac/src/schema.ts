@@ -1,7 +1,7 @@
-import type { TSchema } from '@sinclair/typebox'
+import type { TSchema } from "@sinclair/typebox";
 
 /** Symbol used to annotate a TypeBox schema with a component name. */
-export const SCHEMA_NAME = Symbol.for('spac.schemaName')
+export const SCHEMA_NAME = Symbol.for("spac.schemaName");
 
 /**
  * Annotate a TypeBox schema with a name so it gets hoisted into
@@ -24,12 +24,12 @@ export const SCHEMA_NAME = Symbol.for('spac.schemaName')
  * }))
  *
  * // When used in a route, emits as $ref: '#/components/schemas/Pet'
- * api.get('/pets', { response: Type.Array(Pet) })
+ * api.get('/pets').response(Type.Array(Pet))
  * ```
  */
 export function named<T extends TSchema>(name: string, schema: T): T {
-  ;(schema as unknown as Record<symbol, unknown>)[SCHEMA_NAME] = name
-  return schema
+  (schema as unknown as Record<symbol, unknown>)[SCHEMA_NAME] = name;
+  return schema;
 }
 
 /**
@@ -48,5 +48,7 @@ export function named<T extends TSchema>(name: string, schema: T): T {
  * ```
  */
 export function getSchemaName(schema: TSchema): string | undefined {
-  return (schema as unknown as Record<symbol, unknown>)[SCHEMA_NAME] as string | undefined
+  return (schema as unknown as Record<symbol, unknown>)[SCHEMA_NAME] as
+    | string
+    | undefined;
 }

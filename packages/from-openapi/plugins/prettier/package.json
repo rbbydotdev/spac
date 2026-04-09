@@ -1,0 +1,33 @@
+{
+  "name": "@spec-spac/from-openapi-prettier",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Prettier formatter plugin for @spec-spac/from-openapi",
+  "license": "MIT",
+  "author": "rbby",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbbydotdev/spac",
+    "directory": "packages/from-openapi/plugins/prettier"
+  },
+  "keywords": ["openapi", "codegen", "prettier", "formatter", "spac"],
+  "files": ["dist", "README.md"],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "prettier": "^3.0.0",
+    "@spec-spac/from-openapi": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

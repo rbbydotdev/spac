@@ -1,0 +1,66 @@
+/* ═══════════════════════════════════════════════════════════
+ *  GENERATED — do not edit directly.
+ *  Edit colors.ts then run: pnpm --filter @spac/theme build
+ * ═══════════════════════════════════════════════════════════ */
+
+/* Light mode (default) */
+@theme {
+  --color-fd-background: #f5f0fa;
+  --color-fd-foreground: #1a1525;
+  --color-fd-muted: #e4dbed;
+  --color-fd-muted-foreground: #7a7590;
+  --color-fd-popover: #f9f6fd;
+  --color-fd-popover-foreground: #1a1525;
+  --color-fd-card: #ece4f4;
+  --color-fd-card-foreground: #1a1525;
+  --color-fd-border: #d0c5dd;
+  --color-fd-primary: #a0389a;
+  --color-fd-primary-foreground: #ffffff;
+  --color-fd-secondary: #e4dbed;
+  --color-fd-secondary-foreground: #3d3552;
+  --color-fd-accent: #dbd2e6;
+  --color-fd-accent-foreground: #1a1525;
+  --color-fd-ring: #0a8a88;
+  --color-fd-overlay: rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode — Synthwave '84 */
+.dark {
+  --color-fd-background: #262335;
+  --color-fd-foreground: #ffffff;
+  --color-fd-muted: #2a2139;
+  --color-fd-muted-foreground: #848bbd;
+  --color-fd-popover: #2a2139;
+  --color-fd-popover-foreground: #ffffff;
+  --color-fd-card: #241b2f;
+  --color-fd-card-foreground: #ffffff;
+  --color-fd-border: hsla(250, 20%, 35%, 0.4);
+  --color-fd-primary: #ff7edb;
+  --color-fd-primary-foreground: #171520;
+  --color-fd-secondary: #34294f;
+  --color-fd-secondary-foreground: #b6b1b1;
+  --color-fd-accent: #34294f;
+  --color-fd-accent-foreground: #ffffff;
+  --color-fd-ring: #36f9f6;
+  --color-fd-overlay: rgba(0, 0, 0, 0.4);
+}
+
+/* Sidebar dark mode override */
+.dark #nd-sidebar {
+  --color-fd-muted: #241b2f;
+  --color-fd-secondary: #2a2139;
+  --color-fd-muted-foreground: #848bbd;
+}
+
+/* Static semantic colors (required by preset.css) */
+@theme static {
+  --color-fd-info: oklch(62.3% 0.214 259.815);
+  --color-fd-warning: oklch(76.9% 0.188 70.08);
+  --color-fd-error: oklch(63.7% 0.237 25.331);
+  --color-fd-success: oklch(72.3% 0.219 149.579);
+  --color-fd-idea: oklch(70.5% 0.209 60.849);
+  --color-fd-diff-remove: rgba(200, 10, 100, 0.12);
+  --color-fd-diff-remove-symbol: rgb(230, 10, 100);
+  --color-fd-diff-add: rgba(14, 180, 100, 0.1);
+  --color-fd-diff-add-symbol: rgb(10, 200, 100);
+}

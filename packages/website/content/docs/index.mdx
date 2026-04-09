@@ -1,0 +1,146 @@
+---
+title: spac
+description: TypeScript DSL for authoring OpenAPI 3.1+ specs
+---
+
+**spac** is a TypeScript DSL for authoring OpenAPI 3.1+ specs. You write TypeScript — OpenAPI is the output.
+
+```spac
+import { Api, named } from '@spec-spac/spac'
+import { Type } from '@sinclair/typebox'
+const Pet = named('Pet', Type.Object({
+  id: Type.String(),
+  name: Type.String(),
+}))
+const api = new Api('3.1', 'Petstore')
+api.group('/pets', g => {
+  g.get('/').response(Type.Array(Pet)).tag('pets')
+  g.post('/').body(Pet).response(Pet).tag('pets')
+})
+export default api
+```
+
+## Install
+
+<Tabs items={['npm', 'pnpm', 'bun']}>
+  <Tab value="npm">
+  ```bash
+  npm install @spec-spac/spac @sinclair/typebox
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm add @spec-spac/spac @sinclair/typebox
+  ```
+  </Tab>
+  <Tab value="bun">
+  ```bash
+  bun add @spec-spac/spac @sinclair/typebox
+  ```
+  </Tab>
+</Tabs>
+
+## Packages
+
+| Package | What it does |
+|---|---|
+| `@spec-spac/spac` | Core library — define routes, groups, schemas, emit OpenAPI 3.1 JSON/YAML with source maps |
+| `@spec-spac/from-openapi` | CLI + library — reverse-generate spac TypeScript from an existing OpenAPI spec |
+| `@spec-spac/from-openapi-biome` | Biome formatter plugin for the code generator |
+| `@spec-spac/from-openapi-prettier` | Prettier formatter plugin for the code generator |
+
+## Why spac?
+
+- **TypeBox schemas directly** — no wrapper DSL, full JSON Schema type inference
+- **Named schemas auto-hoist** to `components.schemas` as `$ref`
+- **Group inheritance** — tags and security cascade from groups to routes
+- **Macro system** — reusable route/group/api transforms
+- **Source maps** — trace emitted YAML back to TypeScript source lines
+- **Reverse generator** — already have an OpenAPI spec? Generate spac code from it with [`spac-from-openapi`](/docs/guides/from-openapi-cli)
+
+## Quick start
+
+Create `api.ts`:
+
+```ts
+import { Api, named } from '@spec-spac/spac'
+import { Type } from '@sinclair/typebox'
+
+const User = named('User', Type.Object({
+  id: Type.String(),
+  name: Type.String(),
+  email: Type.String({ format: 'email' }),
+}))
+
+const api = new Api('3.1', 'My API', { version: '1.0.0' })
+
+api.group('/users', g => {
+  g.tag('users')
+  g.get('/').response(Type.Array(User)).summary('List users')
+  g.post('/').body(User).response(User).summary('Create user')
+})
+
+console.log(JSON.stringify(api.emit(), null, 2))
+```
+
+Run it:
+
+<Tabs items={['npx', 'pnpm', 'bunx']}>
+  <Tab value="npx">
+  ```bash
+  npx tsx api.ts > openapi.json
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx tsx api.ts > openapi.json
+  ```
+  </Tab>
+  <Tab value="bunx">
+  ```bash
+  bunx tsx api.ts > openapi.json
+  ```
+  </Tab>
+</Tabs>
+
+That's it — `openapi.json` is a valid OpenAPI 3.1 document.
+
+## `spac-from-openapi` CLI
+
+Already have an OpenAPI spec? Generate spac TypeScript from it:
+
+<Tabs items={['npx', 'pnpm', 'bunx']}>
+  <Tab value="npx">
+  ```bash
+  npx spac-from-openapi petstore.json --out ./generated
+  ```
+  </Tab>
+  <Tab value="pnpm">
+  ```bash
+  pnpm dlx spac-from-openapi petstore.json --out ./generated
+  ```
+  </Tab>
+  <Tab value="bunx">
+  ```bash
+  bunx spac-from-openapi petstore.json --out ./generated
+  ```
+  </Tab>
+</Tabs>
+
+Use `--strip` to clean up deeply nested paths:
+
+```bash
+spac-from-openapi cloudflare.json --out ./generated \
+  --strip '/accounts/{account_id}'
+```
+
+See the full [CLI reference](/docs/guides/from-openapi-cli) for all options.
+
+## Documentation
+
+<Cards>
+  <Card title="Getting Started" href="/docs/tutorials/getting-started" description="Build your first OpenAPI spec with spac in 5 minutes" />
+  <Card title="Defining Routes" href="/docs/guides/defining-routes" description="Routes, groups, macros, and response helpers" />
+  <Card title="from-openapi CLI" href="/docs/guides/from-openapi-cli" description="Generate spac code from existing OpenAPI specs" />
+  <Card title="API Reference" href="/docs/reference/api" description="Full type reference for the Api class" />
+</Cards>

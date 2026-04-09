@@ -1,0 +1,112 @@
+---
+title: Defining Routes
+description: How to define routes, groups, and attach metadata
+---
+
+## Route basics
+
+Every HTTP method returns a builder that you configure entirely through chaining:
+
+```ts
+api.get('/users/:id')
+  .params(Type.Object({ id: Type.String() }))
+  .query(Type.Object({ fields: Type.Optional(Type.String()) }))
+  .response(User)
+  .error(404, ErrorSchema)
+  .summary('Get a user by ID')
+  .operationId('getUser')
+  .tag('users')
+```
+
+Request inputs (`params`, `query`, `headers`, `cookies`, `body`) and responses are all set via chained methods.
+
+## Response methods
+
+| Method | Usage |
+|--------|-------|
+| `.response(schema)` | Shorthand for a 200 response |
+| `.respond(status, schema)` | Response for any status code |
+| `.error(status, schema)` | Error response |
+
+Status codes accept numbers or OpenAPI wildcards: `'1XX'`, `'2XX'`, `'3XX'`, `'4XX'`, `'5XX'`, `'default'`.
+
+```ts
+api.post('/users')
+  .body(CreateUser)
+  .respond(201, User)
+  .error(422, ValidationError)
+  .error('4XX', GenericError)
+  .summary('Create a user')
+```
+
+## Groups
+
+Groups collect routes under a shared path prefix with inherited metadata:
+
+```spac
+import { Api, named } from '@spec-spac/spac'
+import { Type } from '@sinclair/typebox'
+const User = named('User', Type.Object({ id: Type.String(), name: Type.String() }))
+const CreateUser = named('CreateUser', Type.Object({ name: Type.String() }))
+const Post = named('Post', Type.Object({ id: Type.String(), title: Type.String() }))
+const api = new Api('3.1', 'Groups Example')
+api.group('/users', g => {
+  g.get('/').response(Type.Array(User))
+  g.post('/').body(CreateUser).response(User)
+  g.group('/:userId/posts', posts => {
+    posts.get('/').response(Type.Array(Post))
+  })
+}).tag('users').security({ bearer: [] })
+export default api
+```
+
+Tags and security set on a group cascade to all child routes.
+
+## Links
+
+Links describe follow-up operations using values from the response (OpenAPI Link Object):
+
+```ts
+api.post('/pets')
+  .body(CreatePet)
+  .respond(201, Pet)
+  .link(201, 'GetPetById', {
+    operationId: 'getPet',
+    parameters: { petId: '$response.body#/id' },
+  })
+```
+
+Without a status code, links attach to the 200 response:
+
+```ts
+api.get('/pets/:petId')
+  .params(Type.Object({ petId: Type.String() }))
+  .response(Pet)
+  .link('GetOwner', {
+    operationId: 'getOwner',
+    parameters: { ownerId: '$response.body#/ownerId' },
+  })
+```
+
+## Macros
+
+Macros are reusable transforms applied via `.use()`:
+
+```spac
+import { Api, named, macro } from '@spec-spac/spac'
+import { Type } from '@sinclair/typebox'
+const ErrorSchema = named('Error', Type.Object({ message: Type.String() }))
+const Pet = named('Pet', Type.Object({ id: Type.String(), name: Type.String() }))
+const authenticated = macro.route(r =>
+  r.security({ bearer: [] }).error(401, ErrorSchema).error(403, ErrorSchema)
+)
+const validated = macro.route(r => r.error(422, ErrorSchema))
+const api = new Api('3.1', 'Macros Example')
+api.securityScheme('bearer', { type: 'http', scheme: 'bearer' })
+api.post('/pets')
+  .body(Pet).response(Pet)
+  .use(authenticated).use(validated)
+export default api
+```
+
+Macros work at route, group, and api level.

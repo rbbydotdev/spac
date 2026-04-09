@@ -1,0 +1,97 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@spac/theme/theme.css";
+
+/* ── Synthwave '84 palette mapped to shadcn CSS variables ── */
+
+:root {
+    --background: var(--spac-bg);
+    --foreground: var(--spac-text-strong);
+    --card: var(--spac-surface);
+    --card-foreground: var(--spac-text-strong);
+    --popover: var(--spac-surface-alt);
+    --popover-foreground: var(--spac-text-strong);
+    --primary: var(--spac-pink);
+    --primary-foreground: var(--spac-surface-deep);
+    --secondary: var(--spac-surface-alt);
+    --secondary-foreground: var(--spac-text);
+    --muted: var(--spac-surface-alt);
+    --muted-foreground: var(--spac-text-muted);
+    --accent: var(--spac-surface-hover);
+    --accent-foreground: var(--spac-text-strong);
+    --destructive: var(--spac-red);
+    --border: var(--spac-border-muted);
+    --input: var(--spac-border-muted);
+    --ring: var(--spac-cyan);
+    --radius: 0.5rem;
+    --sidebar: var(--spac-surface);
+    --sidebar-foreground: var(--spac-text);
+    --sidebar-primary: var(--spac-pink);
+    --sidebar-primary-foreground: var(--spac-surface-deep);
+    --sidebar-accent: var(--spac-surface-hover);
+    --sidebar-accent-foreground: var(--spac-text-strong);
+    --sidebar-border: var(--spac-border-muted);
+    --sidebar-ring: var(--spac-cyan);
+}
+
+@theme inline {
+    --font-sans: var(--spac-font-body);
+    --font-mono: var(--spac-font-code);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* File tree expand/collapse animation */
+.file-tree-collapsible {
+  overflow: hidden;
+  height: var(--collapsible-panel-height);
+  transition: height 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.file-tree-collapsible[data-starting-style],
+.file-tree-collapsible[data-ending-style] {
+  height: 0;
+}

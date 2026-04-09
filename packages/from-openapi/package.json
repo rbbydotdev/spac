@@ -1,0 +1,41 @@
+{
+  "name": "@spec-spac/from-openapi",
+  "version": "0.0.2",
+  "type": "module",
+  "description": "Generate idiomatic spac TypeScript from existing OpenAPI specs",
+  "license": "MIT",
+  "author": "rbby",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbbydotdev/spac",
+    "directory": "packages/from-openapi"
+  },
+  "keywords": ["openapi", "codegen", "typescript", "spac", "reverse-engineer"],
+  "files": ["dist", "README.md"],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "spac-from-openapi": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "generate": "tsx src/cli.ts",
+    "dry-run": "tsx src/cli.ts"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@biomejs/js-api": "~0.6.2",
+    "@biomejs/wasm-nodejs": "1.8.3"
+  }
+}

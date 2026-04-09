@@ -1,0 +1,82 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAGES: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Sync large examples (cloudflare spec)
+      - run: bash scripts/sync-examples.sh
+
+      # Build spac core + from-openapi (website + playground depend on them)
+      - run: pnpm --filter @spec-spac/spac build
+      - run: pnpm --filter @spec-spac/from-openapi build
+
+      # Build website (Next.js static export)
+      - run: pnpm --filter website build
+
+      # Build playground (Vite)
+      - run: pnpm --filter spac-playground generate
+      - run: pnpm --filter spac-playground build
+        env:
+          GITHUB_PAGES: true
+
+      # Assemble combined site
+      - name: Assemble _site
+        run: |
+          mkdir -p _site
+          cp -r packages/website/out/* _site/
+          mkdir -p _site/playground
+          cp -r packages/playground/dist/* _site/playground/
+
+          # SPA fallback for playground client-side routes
+          cat > _site/404.html << 'FOUROHFOUR'
+          <!DOCTYPE html><html><head><meta charset="utf-8"><script>
+          var p = window.location.pathname;
+          if (p.startsWith('/spac/playground')) {
+            var base = '/spac/playground/';
+            var route = p.slice(base.length);
+            window.location.replace(base + '?route=' + encodeURIComponent(route) + window.location.hash);
+          }
+          </script></head><body></body></html>
+          FOUROHFOUR
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

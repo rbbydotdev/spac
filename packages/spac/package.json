@@ -1,13 +1,24 @@
 {
-  "name": "spac",
-  "version": "0.0.1",
+  "name": "@spec-spac/spac",
+  "version": "0.0.2",
   "type": "module",
+  "description": "TypeScript DSL for authoring OpenAPI 3.1+ specs with TypeBox schemas",
+  "license": "MIT",
+  "author": "rbby",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rbbydotdev/spac",
+    "directory": "packages/spac"
+  },
+  "keywords": ["openapi", "typescript", "dsl", "schema", "typebox", "api", "rest"],
+  "files": ["dist", "README.md"],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
@@ -22,5 +33,10 @@
     "@sinclair/typebox": "latest",
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@jridgewell/gen-mapping": "^0.3.13",
+    "@jridgewell/trace-mapping": "^0.3.31",
+    "yaml": "^2.8.2"
   }
 }
