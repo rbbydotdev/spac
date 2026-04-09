@@ -23,5 +23,6 @@ jobs:
       - run: pnpm --filter @spec-spac/from-openapi test
       - run: pnpm --filter spac-playground generate
       - run: pnpm --filter spac-playground build
-      - run: pnpm exec --filter spac-playground playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium
+        working-directory: packages/playground
       - run: pnpm --filter spac-playground test:e2e
