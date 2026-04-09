@@ -8,7 +8,6 @@ TypeScript DSL for authoring OpenAPI 3.1+ specs. Uses [TypeBox](https://github.c
 
 **[Docs](https://rbbydotdev.github.io/spac/)** · **[Playground](https://rbbydotdev.github.io/spac/playground)** · **[Getting Started](https://rbbydotdev.github.io/spac/docs/tutorials/getting-started)** · **[API Reference](https://rbbydotdev.github.io/spac/docs/reference/api)**
 
-### Hover docs in the playground
 
 ![Hover tooltip showing .get() method signature and JSDoc in the plantstore example](assets/hover-get-route.png)
 
