@@ -16,18 +16,6 @@ const EXAMPLE_OPTIONS: Record<string, ExampleOption> = {
 }
 
 function getExampleFromPath(): string | null {
-  // Check for SPA fallback redirect (GitHub Pages 404.html sets __route param)
-  const params = new URLSearchParams(window.location.search)
-  const route = params.get('__route')
-  if (route) {
-    // Clean up the __route param from the URL
-    params.delete('__route')
-    const clean = params.toString()
-    const newUrl = `${baseUrl}${route}${clean ? '?' + clean : ''}${window.location.hash}`
-    window.history.replaceState({}, '', newUrl)
-    return route.split('/')[0] || null
-  }
-
   // Strip the Vite base URL before parsing
   const path = window.location.pathname.replace(baseUrl.replace(/\/$/, ''), '')
   const seg = path.split('/').filter(Boolean)[0]
