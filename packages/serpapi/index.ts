@@ -12,8 +12,9 @@ import { registerYandex } from "./yandex"
 import { registerYouTube } from "./youtube"
 import { registerAccount } from "./account"
 
-const api = new Api("3.1", "SerpAPI", {
+export const api = new Api("3.1", "SerpAPI", {
   version: "1.0.0",
+  debug: true,
   description:
     "Comprehensive OpenAPI specification for SerpAPI — the real-time search engine results API. " +
     "Supports 107+ search engines including Google, Bing, Yahoo, YouTube, Amazon, Walmart, and more. " +
@@ -66,5 +67,8 @@ registerYandex(api)
 registerYouTube(api)
 registerAccount(api)
 
-const spec = api.emit()
-console.log(JSON.stringify(spec, null, 2))
+// When run directly, emit the spec to stdout
+if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/.*\//, ''))) {
+  const spec = api.emit()
+  console.log(JSON.stringify(spec, null, 2))
+}
