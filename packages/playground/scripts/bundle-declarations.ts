@@ -79,14 +79,14 @@ const spacDtsFiles = fs
     (f) => f.endsWith(".d.ts") && !f.includes(".test.") && !f.startsWith("__"),
   );
 for (const name of spacDtsFiles) {
-  files[`/node_modules/spac/${name}`] = fs.readFileSync(
+  files[`/node_modules/@spec-spac/spac/${name}`] = fs.readFileSync(
     path.join(spacDistDir, name),
     "utf-8",
   );
 }
 // Add a package.json so TS can resolve the module
-files["/node_modules/spac/package.json"] = JSON.stringify({
-  name: "spac",
+files["/node_modules/@spec-spac/spac/package.json"] = JSON.stringify({
+  name: "@spec-spac/spac",
   types: "./index.d.ts",
 });
 
