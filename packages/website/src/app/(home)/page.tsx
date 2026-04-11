@@ -128,7 +128,7 @@ export default async function HomePage() {
           ({ icon: Icon, accent, title, body, hintNode }) => (
             <div
               key={title}
-              className="group relative overflow-hidden rounded-lg border border-fd-border bg-fd-card p-5 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-fd-ring/50"
+              className="group relative flex flex-col overflow-hidden rounded-lg border border-fd-border bg-fd-card p-5 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-fd-ring/50"
             >
               {/* Top accent rail */}
               <div
@@ -157,8 +157,10 @@ export default async function HomePage() {
                 {body}
               </p>
 
-              {/* Shiki-tokenized one-line code hint */}
-              <div className="shiki-inline mt-4 pt-3 border-t border-dashed border-fd-border/60 text-[10.5px] leading-snug">
+              {/* Shiki-tokenized one-line code hint — pushed to the card
+                 bottom via mt-auto so all three cards align regardless of
+                 body text length. */}
+              <div className="shiki-inline mt-auto pt-4 border-t border-dashed border-fd-border/60 text-[10.5px] leading-snug">
                 {hintNode}
               </div>
             </div>

@@ -118,6 +118,15 @@ html.dark .shiki span {
   line-height: inherit !important;
 }
 
+/* Zero out the per-line padding fumadocs-ui adds via `--padding-left` /
+   `--padding-right` — we don't want the inline card hint or the composition
+   block to have horizontal indent inside the code itself. */
+.shiki-inline .shiki,
+.shiki-block .shiki {
+  --padding-left: 0;
+  --padding-right: 0;
+}
+
 /* Dark mode: the global `html.dark .shiki span` rule forces a
    --shiki-dark-bg (#262335) background on every token, which leaks
    through the card's bg-fd-card (#241b2f). Override the per-span bg
