@@ -1,0 +1,230 @@
+---
+title: Why spac
+description: The problems with hand-authored OpenAPI, and what spac does about them
+---
+
+OpenAPI as a *format* is great. OpenAPI as *a thing you author by hand in
+a 10,000-line YAML file* is not. spac is a reaction to the second
+problem, not the first.
+
+The output of `spac` is a vanilla OpenAPI 3.1 document. Swagger UI,
+codegen tools, API gateways, and linters all consume it unchanged.
+There is no lock-in — the *authoring experience* is what changes.
+
+## Six pain points `spac` is designed to solve
+
+### 1. The monolithic YAML file
+
+The canonical OpenAPI authoring experience is one giant `openapi.yaml`.
+In a real organization it becomes the file nobody wants to touch:
+
+- Merge conflicts are indentation battles, not semantic diffs.
+- Two teams can't edit the same file without stepping on each other.
+- Jumping to *"where is `POST /pets` defined?"* is find-in-file.
+- Refactoring a schema is find-and-replace with your fingers crossed.
+
+**In spac**, each team owns a TypeScript module that exports a
+`register*(api)` function. The root `index.ts` imports them and calls
+them in order. Two teams touching different files is a no-op for git.
+Two teams touching the same file produce a line-level diff — not an
+indentation re-align.
+
+```ts
+// teams/pets/routes.ts
+import type { Api } from '@spec-spac/spac'
+
+export function registerPets(api: Api<'3.1'>) {
+  api.assertVersion('3.1.2', 'pets')
+  api.group('/pets', g => {
+    g.tag('pets')
+    g.get('/').response(PetList)
+    g.post('/').body(CreatePet).response(Pet)
+  })
+}
+```
+
+```ts
+// index.ts
+import { Api } from '@spec-spac/spac'
+import { registerPets } from './teams/pets/routes'
+import { registerOrders } from './teams/orders/routes'
+import { registerUsers } from './teams/users/routes'
+
+const api = new Api('3.1', 'Company API', { versionPolicy: 'strict' })
+
+registerPets(api)
+registerOrders(api)
+registerUsers(api)
+
+const spec = api.emit() // plain OpenAPI 3.1
+```
+
+The same pattern works in a monorepo (local imports) or a multi-repo
+(each team publishes `@company/api-pets`, the root consumes them). The
+output is identical: one OpenAPI 3.1 document.
+
+### 2. No compile-time guarantees
+
+YAML is just text. If you rename `Pet` to `PetV2`, nothing tells you
+which `$ref`s just broke. If you typo a security scheme name, you find
+out at runtime — or worse, never.
+
+**In spac**, everything is TypeScript. Rename a schema and every
+reference updates. Typo a security scheme and TypeScript catches it.
+Hover over any builder method and get full JSDoc. Jump-to-definition on
+a schema actually jumps to the schema.
+
+Named schemas are even more direct: wrap with `named('Pet', ...)` once,
+and every reference in the emit pipeline becomes a `$ref` to
+`components.schemas/Pet`. Zero boilerplate, zero typos.
+
+### 3. Versioning is scary
+
+"Let's bump to OpenAPI 3.2" is a days-long project because you have to
+hand-audit every team's YAML for features that broke. There is no
+mechanism to say *"team A wrote this against 3.1.0, team B against
+3.1.2"* and get a compatibility report.
+
+**In spac**, OpenAPI version drift is a first-class concern:
+
+- **Compile time:** `Api<'3.1'>` in function signatures.
+  `registerPets: (api: Api<'3.1'>) => void` won't accept an `Api<'4.0'>`.
+- **Runtime / CI:** `api.assertVersion('3.1.2', 'pets')` at the top of
+  each team module declares the target version.
+- **Audit:** `api.versionAudit()` returns a structured
+  `{ compatible, warnings, errors }` report.
+- **Policy:** `versionPolicy: 'strict' | 'warn' | 'lenient'` controls
+  tolerance.
+
+The risk is asymmetric and spac treats it that way: a team targeting a
+*higher* minor than the central project always throws (they may use
+features the output format can't represent). A team targeting a *lower*
+minor is policy-gated and generally safe because it's a subset of the
+superset the central project emits.
+
+```ts
+export function registerCalls(api: Api<'3.1'>) {
+  api.assertVersion('3.1.0', 'calls')
+  // ...
+}
+
+// In CI
+const audit = api.versionAudit()
+if (!audit.compatible) {
+  console.error(audit.errors)
+  process.exit(1)
+}
+```
+
+This is how you bump OpenAPI versions without a three-day audit.
+
+### 4. Extensions are string soup
+
+Every company ends up with custom `x-` extensions — `x-rate-limit`,
+`x-billing-tier`, `x-internal`, `x-audit-level`. In YAML these are just
+keys you type from memory. There is no import, no autocomplete, no
+"where else is this used", no "update the whole company at once."
+
+**In spac**, macros are plain functions. Publish them as a library:
+
+```ts
+// @company/spac-macros
+import { macro } from '@spec-spac/spac'
+
+export const authenticated = macro.route(r =>
+  r.security('bearer').error(401, Error).error(403, Error)
+)
+
+export const audited = macro.group(g =>
+  g.tag('audited').extension('x-audit-level', 'high')
+)
+
+export const withRateLimit = (calls: number) =>
+  macro.route(r => r.extension('x-rate-limit', { calls, window: '1h' }))
+```
+
+Then every team imports them:
+
+```ts
+import { authenticated, withRateLimit } from '@company/spac-macros'
+
+api.post('/pets')
+  .body(CreatePet)
+  .response(Pet)
+  .use(authenticated)
+  .use(withRateLimit(1000))
+```
+
+Change the macro, every spec that uses it picks up the change on the
+next emit. No hand-audit, no company-wide find-and-replace in YAML.
+
+### 5. Bespoke tooling → the TypeScript ecosystem
+
+Every good feature of the YAML workflow — linting, formatting,
+validation, refactoring, schema reuse — is a bespoke tool built for
+OpenAPI. `spectral` for linting, `openapi-format` for formatting, some
+other thing for bundling `$ref`s. None of them integrate with the tools
+your codebase already uses for TypeScript.
+
+Because a spac project is *just TypeScript*:
+
+- **Formatting:** Biome or Prettier, with the same config as the rest
+  of your repo.
+- **Linting:** ESLint or Biome, with the same rules.
+- **Testing:** Vitest against the emitted spec — *"every route under
+  `/admin` must require bearer auth"* is a three-line unit test.
+- **Refactoring:** rename-symbol, find-references, jump-to-def.
+- **Packaging:** pnpm workspaces, npm versioning, changesets.
+- **CI diffs:** `tsx api.ts > openapi.json && git diff openapi.json`
+  produces a human-readable diff of spec changes.
+
+Same toolbox, new job.
+
+### 6. Reuse is copy-paste
+
+Common patterns — *"every admin route needs bearer auth + 401/403 + an
+audit header"* — get copy-pasted across endpoints. YAML anchors (`&` /
+`*`) technically exist but nobody uses them because they're a footgun.
+
+**In spac**, reuse is first-class:
+
+- **Groups** cascade tags, security, and path prefixes to child routes.
+  Define `/admin` once — every nested route inherits it.
+- **Macros** encapsulate reusable configuration at the route, group, or
+  api level. Apply with `.use()`. Compose freely.
+
+```ts
+api.group('/admin', g => {
+  g.tag('admin')
+  g.security('bearer')      // ← inherited by every route below
+  g.get('/stats').response(Stats)
+  g.get('/audit').response(AuditLog)
+  g.delete('/cache').respond(204, noContent())
+})
+```
+
+## What spac is *not*
+
+- **Not a runtime framework.** spac doesn't handle requests, route
+  dispatch, or validation-at-the-door. It's an authoring tool. Pair it
+  with Hono, Express, Fastify, or whatever you already use.
+- **Not a lock-in.** `api.emit()` returns a plain OpenAPI 3.1 JSON
+  object. Swagger UI, Redoc, codegen tools, API gateways — all consume
+  it unchanged. You can walk away from spac at any time and keep a
+  working OpenAPI document.
+- **Not a new schema DSL.** It uses
+  [TypeBox](https://github.com/sinclairzx81/typebox) directly —
+  `Type.String()`, not `spac.string()`. If you already know TypeBox,
+  you're productive immediately.
+
+## Next steps
+
+- Read the [Philosophy](/docs/explanation/philosophy) page for the
+  design decisions behind the DSL itself.
+- Walk through [Getting Started](/docs/tutorials/getting-started) to
+  write your first spec.
+- See [Defining Routes](/docs/guides/defining-routes) for the full
+  builder surface area.
+- Browse the [API Reference](/docs/reference/api) for types and method
+  signatures, including `assertVersion`, `versionAudit`, and the
+  `versionPolicy` options.

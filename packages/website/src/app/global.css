@@ -6,6 +6,26 @@
 @import "@spac/theme/fumadocs.css";
 @import "@spac/theme/theme.css";
 
+/* ── Home page: per-feature accent tokens that switch on light/dark.
+      Values mirror @spac/theme/colors.ts synthwave-84 light + dark palettes
+      so they match the shiki theme colors used in the code blocks below. ── */
+:root {
+  --feat-accent-merge: #2d8a5e;    /* synthwave-84 light green  */
+  --feat-accent-version: #a0389a;  /* synthwave-84 light pink   */
+  --feat-accent-macros: #0a8a88;   /* synthwave-84 light cyan   */
+  --feat-dot-red: #c4551a;
+  --feat-dot-yellow: #8a6d15;
+  --feat-dot-green: #2d8a5e;
+}
+html.dark {
+  --feat-accent-merge: #72f1b8;    /* synthwave-84 dark green   */
+  --feat-accent-version: #ff7edb;  /* synthwave-84 dark pink    */
+  --feat-accent-macros: #36f9f6;   /* synthwave-84 dark cyan    */
+  --feat-dot-red: #f97e72;
+  --feat-dot-yellow: #fede5d;
+  --feat-dot-green: #72f1b8;
+}
+
 /* ══════════════════════════════════════════════════════════════
  *  Synthwave '84 — additional styling for Fumadocs
  *  Colors come from @spac/theme/fumadocs.css (generated)
@@ -64,7 +84,6 @@ pre code {
 
 /* Shiki line spans */
 pre code .line {
-  display: block !important;
   word-wrap: break-word !important;
   overflow-wrap: break-word !important;
 }
@@ -81,6 +100,58 @@ html.dark .shiki span {
   background-color: var(--shiki-dark-bg) !important;
   font-style: var(--shiki-dark-font-style) !important;
   font-weight: var(--shiki-dark-font-weight) !important;
+}
+
+/* ── Home page: compact inline shiki (card hints) ── */
+/* Strip the <pre> chrome so the tokenized spans flow as a single line. */
+
+.shiki-inline .shiki,
+.shiki-inline pre {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  white-space: pre !important;
+  overflow: hidden !important;
+  font-family: var(--spac-font-code) !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Dark mode: the global `html.dark .shiki span` rule forces a
+   --shiki-dark-bg (#262335) background on every token, which leaks
+   through the card's bg-fd-card (#241b2f). Override the per-span bg
+   inside our wrappers so the card background shows through. */
+html.dark .shiki-inline,
+html.dark .shiki-inline .shiki,
+html.dark .shiki-inline .shiki span,
+html.dark .shiki-inline pre,
+html.dark .shiki-inline pre span {
+  background-color: transparent !important;
+}
+
+.shiki-inline code {
+  font-family: inherit !important;
+}
+
+/* ── Home page: shiki block inside window-chrome card ── */
+/* Let the parent card's background show through instead of shiki's own. */
+
+.shiki-block .shiki,
+.shiki-block pre {
+  background: transparent !important;
+  margin: 0 !important;
+  border: 0 !important;
+  font-family: var(--spac-font-code) !important;
+}
+
+/* Same dark-mode per-span background override as .shiki-inline. */
+html.dark .shiki-block,
+html.dark .shiki-block .shiki,
+html.dark .shiki-block .shiki span,
+html.dark .shiki-block pre,
+html.dark .shiki-block pre span {
+  background-color: transparent !important;
 }
 
 /* ── Inline code ── */
