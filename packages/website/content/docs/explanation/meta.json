@@ -1,4 +1,5 @@
 {
   "title": "Explanation",
+  "defaultOpen": true,
   "pages": ["why-spac", "philosophy"]
 }

@@ -1,13 +1,4 @@
 {
   "title": "Docs",
-  "pages": [
-    "---Tutorials---",
-    "tutorials",
-    "---Guides---",
-    "guides",
-    "---Explanation---",
-    "explanation",
-    "---Reference---",
-    "reference"
-  ]
+  "pages": ["tutorials", "guides", "explanation", "reference"]
 }
