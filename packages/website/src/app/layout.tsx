@@ -5,19 +5,24 @@ import { Outfit, Orbitron, Fira_Code } from "next/font/google";
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
+const siteTitle = "spac — TypeScript DSL for authoring OpenAPI 3.1+ specs";
+const siteDescription =
+  "Write OpenAPI 3.1+ specs in TypeScript, not YAML. Type-safe schemas, named $refs, source maps — same toolbox you already use for code.";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://rbbydotdev.github.io"),
-  title: "spac - TypeScript DSL for OpenAPI 3.1+",
-  description:
-    "TypeScript DSL for authoring OpenAPI 3.1+ specs. You write TypeScript, OpenAPI is the output.",
+  title: siteTitle,
+  description: siteDescription,
   icons: { icon: `${basePath}/favicon.png` },
   openGraph: {
-    title: "spac",
-    description: "TypeScript DSL for authoring OpenAPI 3.1+ specs",
+    title: siteTitle,
+    description: siteDescription,
     images: `${basePath}/og-image.png`,
   },
   twitter: {
     card: "summary_large_image",
+    title: siteTitle,
+    description: siteDescription,
     images: `${basePath}/og-image.png`,
   },
 };
