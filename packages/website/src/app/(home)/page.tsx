@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { GitMerge, ShieldCheck, Package } from "lucide-react";
+import { GitMerge, Orbit, Package, ShieldCheck } from "lucide-react";
 import { highlight } from "fumadocs-core/highlight";
 import shikiDark from "@spac/theme/shiki-dark.json";
 import shikiLight from "@spac/theme/shiki-light.json";
@@ -94,9 +94,10 @@ export default async function HomePage() {
       {/* Hero */}
       <div className="flex flex-col items-center text-center gap-6">
         <h1
-          className="text-5xl sm:text-6xl font-bold tracking-wider"
+          className="inline-flex items-center gap-3 text-5xl sm:text-6xl font-bold tracking-wider"
           style={{ fontFamily: "var(--font-orbitron), sans-serif" }}
         >
+          <Orbit className="size-12 sm:size-14" />
           spac
         </h1>
         <p className="text-lg text-fd-muted-foreground max-w-xl leading-relaxed">

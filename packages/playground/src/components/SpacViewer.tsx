@@ -1,6 +1,6 @@
 import { useRef, useState, useCallback, useMemo, useEffect, type ReactNode } from 'react'
 import { useQueryState } from 'nuqs'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Orbit } from 'lucide-react'
 import { Panel, Group, Separator } from 'react-resizable-panels'
 import { CodeMirrorPane, type CodeMirrorPaneHandle } from './CodeMirrorPane'
 import { FileExplorer, type FileExplorerHandle } from './FileExplorer'
@@ -189,7 +189,7 @@ export function SpacViewer({ manifest, example, examples, loading, progress, onS
             <div className="flex items-center gap-2">
               <SidebarTrigger className="-ml-1" />
               <div className="h-4 w-px bg-border" />
-              <a href="/spac/" className="text-sm font-semibold hover:text-primary transition-colors" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>spac</a>
+              <a href="/spac/" className="inline-flex items-center gap-1.5 text-sm font-semibold hover:text-primary transition-colors" style={{ fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}><Orbit className="size-4" />spac</a>
               <span className="text-xs text-muted-foreground">playground</span>
               <HelpDialog />
 

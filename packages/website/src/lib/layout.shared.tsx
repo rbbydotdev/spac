@@ -1,5 +1,5 @@
 import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
-import { BookOpen, SquareTerminal, Zap } from "lucide-react";
+import { BookOpen, Orbit, SquareTerminal, Zap } from "lucide-react";
 
 export const gitConfig = {
   user: "rbbydotdev",
@@ -12,12 +12,14 @@ export function baseOptions(): BaseLayoutProps {
     nav: {
       title: (
         <span
+          className="inline-flex items-center gap-1.5"
           style={{
             fontFamily: "var(--font-orbitron), sans-serif",
             fontWeight: 700,
             letterSpacing: "0.05em",
           }}
         >
+          <Orbit className="size-4" />
           spac
         </span>
       ),
