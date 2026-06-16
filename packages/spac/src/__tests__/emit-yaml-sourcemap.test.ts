@@ -118,6 +118,20 @@ describe("emit with sourceTable option", () => {
       expect(entry.source.line).toBeGreaterThan(0);
     }
   });
+
+  it("records named() schemas with their call-site source", () => {
+    const api = buildPetstore();
+    const result = api.emit({ sourceTable: true });
+    const st = result.sourceTable!;
+
+    // `Pet` is defined via `named()` (not `api.schema()`) and referenced by routes.
+    expect(st.has("components.schemas.Pet")).toBe(true);
+    const entry = st.get("components.schemas.Pet")!;
+    expect(entry.kind).toBe("schema");
+    // Points at the `named("Pet", ...)` call site in this test file.
+    expect(entry.source.file).toContain(".test.ts");
+    expect(entry.source.line).toBe(7);
+  });
 });
 
 describe("emit with sourceMap option", () => {

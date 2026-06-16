@@ -95,6 +95,9 @@ export type SourceEntryKind =
  * @returns The parsed source location, or `undefined` if unparseable.
  */
 export function captureSource(caller: Function): SourceLocation | undefined {
+  // `Error.captureStackTrace` is V8-only. `named()` calls this unconditionally
+  // at module load, so guard against non-V8 runtimes rather than throwing.
+  if (typeof Error.captureStackTrace !== "function") return undefined;
   const err = {} as { stack: string };
   Error.captureStackTrace(err, caller);
   return parseStack(err.stack);

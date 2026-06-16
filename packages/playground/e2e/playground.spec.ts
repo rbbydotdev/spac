@@ -54,6 +54,36 @@ test.describe("playground", () => {
     await expect(tsPane).toBeVisible();
   });
 
+  test("clicking a schema line in YAML jumps to its named() definition", async ({
+    page,
+  }) => {
+    // Regression: schemas defined via named() must be source-mapped.
+    // Scroll the YAML pane into the components/schemas section and click `User:`.
+    await page.evaluate(() => {
+      const ed = document.querySelectorAll(".cm-editor")[1] as HTMLElement;
+      const scroller = ed.querySelector(".cm-scroller") as HTMLElement;
+      // `User:` sits near the end of the document; scroll so the
+      // components/schemas section renders, then CodeMirror will mount the line.
+      scroller.scrollTop = scroller.scrollHeight - 18.2 * 60;
+    });
+    const userLine = page
+      .locator(".cm-editor")
+      .nth(1)
+      .locator(".cm-line")
+      .filter({ hasText: /^\s*User:\s*$/ });
+    await expect(userLine.first()).toBeVisible({ timeout: 10_000 });
+    await userLine.first().click();
+
+    // The TS pane should switch to users/schemas.ts and the breadcrumb
+    // should reflect the schema (not fall through to a paths/* entry).
+    await expect(
+      page.locator("header").getByText("users/schemas.ts"),
+    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByText(/components.*schemas.*User/)).toBeVisible({
+      timeout: 10_000,
+    });
+  });
+
   test("hover on a symbol shows a tooltip with type info", async ({
     page,
   }) => {

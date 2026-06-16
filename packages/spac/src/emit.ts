@@ -12,7 +12,7 @@ import type {
   VersionAudit,
 } from "./types";
 import { versionCapabilities } from "./types";
-import { getSchemaName } from "./schema";
+import { getSchemaName, getSchemaSource } from "./schema";
 import {
   type SourceTable,
   type SourceEntry,
@@ -808,7 +808,18 @@ export function emitOpenApi(
         if (resolved.has(name)) continue;
         resolved.add(name);
         schemas[name] = resolveSchemaBody(schema);
-        record(`components.schemas.${name}`, api._sources, "schema", name);
+        // Prefer an explicit `api.schema()` registration site; otherwise fall
+        // back to the `named()` call site captured on the schema itself. Without
+        // this fallback, schemas defined via `named()` (the common case) get no
+        // source mapping and clicking them in the viewer jumps to the wrong line.
+        const jsonPath = `components.schemas.${name}`;
+        record(jsonPath, api._sources, "schema", name);
+        if (st && !st.has(jsonPath)) {
+          const schemaSource = getSchemaSource(schema);
+          if (schemaSource) {
+            st.set(jsonPath, { source: schemaSource, kind: "schema", detail: name });
+          }
+        }
         pending = true;
       }
     }
