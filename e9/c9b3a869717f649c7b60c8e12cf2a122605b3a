@@ -1,0 +1,30 @@
+packages/spac/src/emit.ts
+  s_4e1fe5aee2420c::t_c32eb03acf44c2 15
+  s_4e1fe5aee2420c::t_462c19b63787ab 811-822
+packages/spac/src/schema.ts
+  s_4e1fe5aee2420c::t_f41434b00bc936 36-42,46-56
+  s_4e1fe5aee2420c::t_206ddaf6c96dde 2,7-8
+packages/playground/e2e/playground.spec.ts
+  s_4e1fe5aee2420c::t_0b233cc7310787 57-64,67-86
+  s_4e1fe5aee2420c::t_b02973c2297c35 65-66
+packages/spac/src/sourcemap.ts
+  s_4e1fe5aee2420c::t_be69a789ba8ae8 98-100
+packages/spac/src/__tests__/emit-yaml-sourcemap.test.ts
+  s_4e1fe5aee2420c::t_ba60bac07badda 121-134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.7",
+  "base_commit_sha": "e9c9b3a869717f649c7b60c8e12cf2a122605b3a",
+  "prompts": {},
+  "sessions": {
+    "s_4e1fe5aee2420c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cba0f27a-dcc8-4b7a-b637-46adcf8f01a4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "robby <robby.polana+github@gmail.com>"
+    }
+  }
+}
