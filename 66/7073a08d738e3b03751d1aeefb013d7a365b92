@@ -1,0 +1,21 @@
+packages/website/content/docs/guides/its-just-typescript.mdx
+  s_4e1fe5aee2420c::t_f1abe68bc87cd0 1-160
+packages/website/content/docs/guides/meta.json
+  s_4e1fe5aee2420c::t_007e54f97ae563 4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.8",
+  "base_commit_sha": "667073a08d738e3b03751d1aeefb013d7a365b92",
+  "prompts": {},
+  "sessions": {
+    "s_4e1fe5aee2420c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cba0f27a-dcc8-4b7a-b637-46adcf8f01a4",
+        "model": "claude-opus-4-8"
+      },
+      "human_author": "robby <robby.polana+github@gmail.com>"
+    }
+  }
+}
