@@ -1,0 +1,160 @@
+---
+title: It's Just TypeScript
+description: Build your own schema helpers to keep spac definitions DRY
+---
+
+A spac document is not a config format with an escape hatch — it is a
+TypeScript program. Schemas are [TypeBox](https://github.com/sinclairzx81/typebox)
+values, routes are method calls, and everything composes with ordinary
+functions, variables, and imports. There is no wrapper DSL to fight (see
+[Philosophy → No wrapper DSL](/docs/explanation/philosophy)).
+
+The practical payoff: when a shape repeats across your API, you don't reach
+for a plugin or a code generator — you write a function. This guide shows how
+to fold common patterns into a small helper layer so route definitions stay
+readable.
+
+## Alias TypeBox for shorter calls
+
+`Type` is just an import, so rename it:
+
+```ts
+import { Type as T } from '@sinclair/typebox'
+
+const PetId = T.Integer({ minimum: 1 })
+const Name = T.String({ minLength: 1 })
+```
+
+That trims noise, but the larger win is collapsing repeated *patterns*.
+
+## Group your conventions into a helper object
+
+Put project conventions — IDs, pagination defaults, your standard error
+shape — behind one object. Each entry is a plain function returning a TypeBox
+schema:
+
+```ts
+// schemaHelpers.ts
+import { Type, type TSchema } from '@sinclair/typebox'
+
+export const $ = {
+  // thin aliases — purely shorter names
+  obj: Type.Object,
+  str: Type.String,
+  opt: Type.Optional,
+
+  // pattern helpers — encode a convention once
+  id: () => Type.Integer({ minimum: 1 }),
+  page: () => Type.Integer({ default: 1, minimum: 1 }),
+  pageSize: () => Type.Integer({ default: 20, minimum: 1, maximum: 100 }),
+
+  error: () =>
+    Type.Object({
+      message: Type.String(),
+      code: Type.Optional(Type.String()),
+    }),
+
+  paginated: <T extends TSchema>(item: T) =>
+    Type.Object({
+      items: Type.Array(item),
+      total: Type.Integer({ minimum: 0 }),
+    }),
+} as const
+```
+
+Keep the raw aliases (`$.obj`, `$.str`, …) alongside the pattern helpers so
+one-off shapes are still easy to express.
+
+## Use them in routes
+
+Because the helpers return ordinary schemas, they drop straight into any
+builder method. Here is a complete API built almost entirely from `$`, with
+the OpenAPI it emits:
+
+```spac
+import { Api, named } from '@spec-spac/spac'
+import { Type } from '@sinclair/typebox'
+
+const $ = {
+  id: () => Type.Integer({ minimum: 1 }),
+  page: () => Type.Integer({ default: 1, minimum: 1 }),
+  pageSize: () => Type.Integer({ default: 20, minimum: 1, maximum: 100 }),
+  error: () =>
+    Type.Object({
+      message: Type.String(),
+      code: Type.Optional(Type.String()),
+    }),
+  paginated: (item) =>
+    Type.Object({
+      items: Type.Array(item),
+      total: Type.Integer({ minimum: 0 }),
+    }),
+}
+
+const Pet = named('Pet', Type.Object({ id: $.id(), name: Type.String() }))
+
+const api = new Api('3.1', 'Pet Store')
+
+api.group('/pets', (g) => {
+  g.tag('pets')
+
+  g.get('/')
+    .query(Type.Object({ page: $.page(), pageSize: $.pageSize() }))
+    .response($.paginated(Pet))
+    .summary('List pets')
+
+  g.get('/:petId')
+    .params(Type.Object({ petId: $.id() }))
+    .response(Pet)
+    .error(404, $.error())
+    .summary('Get a pet')
+})
+
+export default api
+```
+
+The pagination defaults, the integer-ID constraint, and the error shape each
+live in exactly one place — change `pageSize`'s ceiling once and every route
+follows.
+
+## spac already ships a few
+
+The built-in helpers are written the same way — they are just exported
+functions that return TypeBox schemas or response definitions. Reach for these
+before rolling your own:
+
+| Helper | Returns |
+|--------|---------|
+| `errorSchema(fields?)` | `{ message, code?, ...fields }` object schema |
+| `paginated(item)` | `{ items, total, page, pageSize }` envelope |
+| `envelope(data)` | `{ data }` wrapper |
+| `created(schema)` | a `201` response definition |
+| `noContent()` | a `204` response definition |
+
+```ts
+import { errorSchema, created, paginated } from '@spec-spac/spac'
+
+api.post('/pets')
+  .body(CreatePet)
+  .respond(201, created(Pet))
+  .error(422, errorSchema({ details: Type.Array(Type.String()) }))
+
+api.get('/pets').response(paginated(Pet))
+```
+
+See the [API reference](/docs/reference/api) for the full list.
+
+## Helpers for the route shape, too
+
+The same idea applies to repeated *route* configuration — shared error
+responses, auth, headers. That's what [macros](/docs/guides/defining-routes)
+are for: reusable transforms applied with `.use()`. Schema helpers keep the
+*data* shapes DRY; macros keep the *route* shapes DRY.
+
+## Keep it from overgrowing
+
+- Tie helpers to clear, repeated patterns — pagination, errors, `{ data }`.
+  Don't pre-build for shapes that appear once.
+- Keep the raw constructors available so unusual endpoints stay expressible.
+- Avoid "too-smart" helpers that hide differences that actually matter between
+  endpoints. A helper should remove boilerplate, not meaning.

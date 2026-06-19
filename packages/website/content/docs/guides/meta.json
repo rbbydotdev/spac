@@ -1,5 +1,5 @@
 {
   "title": "Guides",
   "defaultOpen": true,
-  "pages": ["defining-routes", "from-openapi-cli", "contributing"]
+  "pages": ["defining-routes", "its-just-typescript", "from-openapi-cli", "contributing"]
 }
